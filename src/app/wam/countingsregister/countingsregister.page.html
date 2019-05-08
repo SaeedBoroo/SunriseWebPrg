@@ -1,0 +1,184 @@
+﻿<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false" [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+
+  <page-content>
+    <dx-validation-group #form>
+      <div [hidden]="lessMode">
+        <div class="row">
+          <div class="col-sm-3 col-xs-12">
+            <dx-label text="{{' انبار '|translate}}">
+              <dx-lov formCode="LOV-WAM-003"
+                      [displayMode]="'ComboBox'"
+                      (dataChange)="onDataChange($event)"
+                      allowClear="true"
+                      [readOnly]="true"
+                      [(value)]="headerItem.WarehouseId">
+              </dx-lov>
+            </dx-label>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <dx-label text="{{' وضعیت '|translate}}">
+              <dx-lov formCode="LOV-WAM-252"
+                      [value]="headerItem.State"
+                      [displayMode]="'ComboBox'"
+                      (dataChange)="onDataChange($event)"
+                      [readOnly]="false"
+                      allowClear="true">
+              </dx-lov>
+            </dx-label>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <dx-label text="{{' شماره انبارگردانی '|translate}}">
+              <dx-text-box [(value)]="headerItem.CountingsNumber"
+                           [readOnly]="true">
+              </dx-text-box>
+            </dx-label>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <dx-label text="{{'تاریخ انجام انبارگردانی'| translate}}">
+              <dx-date [(value)]="headerItem.DoDate"
+                       required="true"
+                       [readOnly]="true"
+                       class="text-left ltr">
+              </dx-date>
+            </dx-label>
+          </div>
+        </div>
+        <div class="margin-20"></div>
+        <div class="row">
+          <div class="col-sm-1 col-xs-12">
+            <dx-label text="{{'ردیف'| translate}}">
+              <dx-text-box [(value)]="SearchItem.SequenceNumber"
+                           class="text-left ltr" style="margin-right:20px">
+              </dx-text-box>
+            </dx-label>
+          </div>
+          <div class="col-sm-2 col-xs-12">
+            <dx-button type="success" (onClick)="onSearchClick()" text="واکشی اطلاعات" [width]="280" [height]="37"></dx-button>
+          </div>
+          <div class="col-sm-2 col-xs-12">
+            <dx-label text="{{'کد کالا'| translate}}">
+              <dx-text-box [(value)]="SearchItem.ItemCode"
+                           required="true"
+                           [readOnly]="true"
+                           class="text-left ltr">
+              </dx-text-box>
+            </dx-label>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <dx-label text="{{'شرح کالا'| translate}}">
+              <dx-text-box [(value)]="SearchItem.ItemDescription"
+                           required="true"
+                           [readOnly]="true"
+                           class="text-left ltr">
+              </dx-text-box>
+            </dx-label>
+          </div>
+          <div class="col-sm-2 col-xs-12">
+            <dx-label text="{{'مقدار'| translate}}">
+              <dx-text-box [(value)]="SearchItem.Quentity"
+                           required="true"
+                           class="text-left ltr">
+              </dx-text-box>
+            </dx-label>
+          </div>
+          <div class="col-sm-2 col-xs-12">
+            <dx-button type="success" (onClick)="onRegisterClick()" text="ثبت" [width]="280" [height]="37"></dx-button>
+          </div>
+        </div>
+        <div class="margin-10"></div>
+      </div>
+    </dx-validation-group>
+    <div class="margin-20"></div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)">
+
+          <!--<gt-datasource loadUrl="/WAM/CountingsItems/List"
+                         [(loadParams)]="loadParams"
+                         insertUrl="/WAM/Setup/CountingsItems/Save"
+                         updateUrl="/WAM/Setup/CountingsItems/Save"
+                         [(saveParams)]="saveParams"
+                         removeUrl="/WAM/CountingsItems/Delete">
+          </gt-datasource>-->
+
+          <dx-data-grid #CountingsRegisterItems
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [height]="400"
+                        [(selectedRowKeys)]="CountingItemsSelectedKeys"
+                        (onSelectionChanged)="CountingItemsselectionChangedHandler()"
+                        (onEditorPreparing)="onEditorPreparingCountingsGrid($event)">
+
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="false">
+            </dxo-editing>
+
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+
+            <dxi-column dataField="SequenceNumber" caption="{{'CNIT_SEQ'| translate}}" width="100">
+            </dxi-column>
+
+
+
+            <dxi-column dataField="ItemCode" caption="{{ 'CNIT_ITEM_ID' | translate }}" editCellTemplate="ItemCode" [setCellValue]="setCellValueWorkStation" width="200">
+              <div *dxTemplate="let cell of 'ItemCode'">
+                <dx-lov formCode="LOV-WAM-040"
+                        [text]="cell.data.ItemCode"
+                        (dataChange)="onCellItemChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+
+
+
+            <dxi-column dataField="ItemDescription" caption="{{'ITEM_DES'| translate}}" width="300">
+              <!--<div *dxTemplate="let cell of 'cell01'">
+                <dx-text-box [(value)]="editItem.ItemDescription"  readOnly="true"></dx-text-box>
+              </div>-->
+            </dxi-column>
+
+
+
+            <dxi-column dataField="UnitItem" caption="{{'ITEM_UNIT_SCALE'| translate}}" >
+
+            </dxi-column>
+
+
+
+            <!--<dxi-column dataField="CNIT_QTY_INV" caption="{{'CNIT_QTY_INV'| translate}}">
+
+            </dxi-column>-->
+
+
+
+            <dxi-column dataField="Quentity1" caption="{{'CNIT_QTY_CNT1'| translate}}" [visible]="headerItem.State == 1 || headerItem.State == 5 ">
+
+            </dxi-column>
+
+
+
+            <dxi-column dataField="Quentity2" caption="{{'CNIT_QTY_CNT2'| translate}}" [visible]="headerItem.State == 2 || headerItem.State == 5 ">
+
+            </dxi-column>
+
+
+            <dxi-column dataField="Quentity3" caption="{{'CNIT_QTY_CNT3'| translate}}" [visible]="headerItem.State == 3 || headerItem.State == 4 || headerItem.State == 5">
+
+            </dxi-column>
+
+
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+    <br><br><br><br><br><br><br><br><br>
+  </page-content>
+</page>

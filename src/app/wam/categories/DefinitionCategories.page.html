@@ -1,0 +1,75 @@
+<page>
+  <page-toolbar *ngIf="!isPopup" helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <tree-toolbar (onMenuItemClick)="onTreeItemClick($event)"
+                      [rowMenuItems]="treeItems">
+
+
+          <dx-tree-list #Treegrid
+                        [dataSource]="dataSource"
+                        keyExpr="ID"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        parentIdExpr="CategoryCategoryId"
+                        [height]="gridHeight">
+            <dxo-editing mode="row"
+                         [allowAdding]="!isPopup"
+                         [allowUpdating]="!isPopup"
+                         [allowDeleting]="!isPopup">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxi-column dataField="Code" caption="{{'PUB_COD'| translate}}" [width]="200">
+            </dxi-column>
+            <dxi-column dataField="Description" caption="{{'PUB_DES'| translate}}">
+            </dxi-column>
+          </dx-tree-list>
+        </tree-toolbar>
+      </div>
+    </div>
+    <div class="row" *ngIf="isPopup">
+      <div class="footer-popup">
+        <dx-button type="default" (onClick)="onSelectClick()" text="{{  'PUB_SELECT' | translate }}" [width]="100"></dx-button>
+        <dx-button type="danger" (onClick)="onCancelSelectClick($event)" text="{{  'PUB_CANCEL' | translate }}" [width]="100"></dx-button>
+      </div>
+    </div>
+  </page-content>
+</page>
+
+
+<dx-popup class="popup"
+          [width]="700"
+          [height]="200"
+          [showTitle]="true"
+          [showCloseButton]="true"
+          [dragEnabled]="true"
+          [closeOnOutsideClick]="true"
+          [(visible)]="InputPopup">
+  <div *dxTemplate="let data of 'content'">
+    <div class="row">
+
+      <div class="col-sm-4 col-xs-12">
+        <dx-label text="{{  'PUB_COD' | translate }}">
+          <dx-text-box [(value)]="InsertParam.Code" [(text)]="InsertParam.Code">
+          </dx-text-box>
+        </dx-label>
+      </div>
+      <div class="col-sm-8 col-xs-12">
+        <dx-label text="{{  'PUB_DES' | translate }}">
+          <dx-text-box [(value)]="InsertParam.Description" [(text)]="InsertParam.Description">
+          </dx-text-box>
+        </dx-label>
+      </div>
+    </div>
+    <div class="row footer-popup">
+      <dx-button type="success" text="{{'PUB_SAVE'| translate }}" [height]="36" [width]="100" (onClick)="onSaveClick()">
+      </dx-button>
+      <dx-button type="danger" text="{{'PUB_CANCEL'| translate }}" [height]="36" [width]="100" (onClick)="onCancelClick()">
+      </dx-button>
+
+    </div>
+  </div>
+</dx-popup>

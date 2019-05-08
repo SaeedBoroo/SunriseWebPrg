@@ -1,0 +1,52 @@
+<page>
+  <page-toolbar *ngIf="!showButtons"  helpUrl="http://google.com" showHelp="false"  [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <tree-toolbar (onMenuItemClick)="onTreeItemClick($event)"
+                      [rowMenuItems]="treeItems"
+                      (onMenuItemPrepering)="onTreeItemPrepering($event)">
+          <dx-tree-list #Treegrid
+                        [dataSource]="dataSource"
+                        keyExpr="ID"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        parentIdExpr="ParentID"
+                        [columnAutoWidth]="true"
+                        [wordWrapEnabled]="true"
+                        [height]="gridHeight">
+            <dxo-editing mode="row"
+                         [allowAdding]="!showButtons"
+                         [allowUpdating]="!showButtons"
+                         [allowDeleting]="!showButtons">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+
+            <dxi-column dataField="LocationCode" caption="{{'کد محل'| translate}}" [width]="150">
+              <dxi-validation-rule type="required" message="{{'PUB_REQUIRED' | translate}}"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column dataField="LocationDescription" caption="{{'نام محل'| translate}}">              
+            </dxi-column>
+            <dxi-column dataField="LocationTypeDescription" caption="{{'نوع محل'| translate}}" editCellTemplate="celLovLocationDescription" [width]="200">
+              <div *dxTemplate="let cell of 'celLovLocationDescription'">
+                <dx-lov formCode="LOV-WAM-059" [text]="cell.data.Code" (dataChange)="onLovLocationDescription($event)"></dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="IsActive" caption="{{'فعال'| translate}}" dataType="boolean" [width]="80">
+            </dxi-column>
+          </dx-tree-list>
+        </tree-toolbar>
+      </div>
+    </div>
+    <div class="row" *ngIf="showButtons">
+      <div class="footer-popup">
+        <dx-button type="default" (onClick)="onSelectClick()" text="{{  'PUB_SELECT' | translate }}" [width]="100"></dx-button>
+        <dx-button type="danger" (onClick)="onCancelClick($event)" text="{{  'PUB_CANCEL' | translate }}" [width]="100"></dx-button>
+      </div>
+    </div>
+  </page-content>
+</page>
+  
+

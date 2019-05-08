@@ -1,0 +1,9 @@
+<image-upload 
+(uploadFinished)="uploadsimple($event)" 
+ dropBoxMessage=""  
+ [max]="1"  
+ [buttonCaption]="AddAction" 
+  clearButtonCaption="-" 
+  [extensions]="['jpeg','jpg','png']"
+  (removed)="onRemoved($event)"
+  ></image-upload>

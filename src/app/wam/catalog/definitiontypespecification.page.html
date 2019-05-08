@@ -1,0 +1,45 @@
+<page>
+  <page-toolbar helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)"></page-toolbar>
+  <page-content>
+    <div class="row" [hidden]="lessMode">
+      <div class="col-sm-4 col-xs-12">
+        <dx-label text="{{'PUB_CODE'|translate}}">
+          <dx-text-box [(value)]="searchitem.Code">
+          </dx-text-box>
+        </dx-label>
+      </div>
+      <div class="col-sm-4 col-xs-12">
+        <dx-label text="{{'PUB_DES'|translate}}">
+          <dx-text-box [(value)]="searchitem.Description">
+          </dx-text-box>
+        </dx-label>
+      </div>
+      <div class="col-sm-4 col-xs-12">
+        <dx-button type="default" (onClick)="onSearchClick()" text="{{  'PUB_FTC_DATA'| translate }}" [width]="400" [height]="37"></dx-button>
+      </div>
+    </div>
+    <div class="margin-10"></div>
+    <div class="row">
+      <div class="col-sm-12">
+
+        <grid-toolbar (onRowDbClick)="dbClickEdit()">
+          <gt-datasource loadUrl="/WAM/ItemCatalogue/List" [(loadParams)]="loadParams">
+          </gt-datasource>
+          <dx-data-grid #grid keyExpr="ID" [height]="500" (onSelectionChanged)="selectionChangedHandler()" [(selectedRowKeys)]="selectedKeys">
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxi-column dataField="Code" caption="{{'PUB_CODE'| translate}}" width="150">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column dataField="Description" caption="{{'PUB_DES'| translate}}">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column dataField="IsActive" caption="{{'PUB_ACTIVE'| translate}}" dataType="boolean" [width]="80">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            </dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>

@@ -1,0 +1,102 @@
+<page>
+  <page-toolbar helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'WAM_ITEM_CATEGORY'| translate}}">
+            <dx-lov [(value)]="filter.CategoryId" [(text)]="filter.CategoryName" formCode="LOV-WAM-006" [(params)]="categoryFilter" [allowClear]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'ITEM_ITGR'| translate}}">
+            <dx-lov [(value)]="filter.GroupId" [(text)]="filter.GroupDescription" formCode="LOV-WAM-032" [allowClear]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'WAM_ITEM_CATALOGUE'| translate}}">
+            <dx-lov [(value)]="filter.CatalogueId" [(text)]="filter.CatalogueDescription" formCode="LOV-WAM-023" [allowClear]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'PUB_CODE'| translate}}">
+            <dx-lov [(value)]="filter.ItemId" #codeLov [(text)]="filter.Code" formCode="LOV-WAM-105" [allowClear]="true" (dataChange)="codeChanged($event)">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'PUB_TITLE'| translate}}">
+            <dx-label-box [text]="codeLov.data.Title"></dx-label-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'PUB_ITEM_COD_TCNL'| translate}}">
+            <dx-text-box [(value)]="filter.CodeTCNL"></dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'PUB_MUNIT'| translate}}">
+            <dx-lov [(value)]="filter.MeasurementUnitlId" [(text)]="filter.MeasurementUnitDescription" formCode="LOV-WAM-027" [allowClear]="true"
+              #lovMvmn></dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'PUB_MUNIT_CMM'| translate}}">
+            <dx-lov [(value)]="filter.MeasurementUnitCommercialId" [(text)]="filter.MeasurementUnitCommercialDescription" formCode="LOV-WAM-027"
+              [allowClear]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+
+      </div>
+    </dx-validation-group>
+    <div class="margin-5"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" [rowMenuItems]="gridItems" (onRowDbClick)="onRowDbClickRouting($event)">
+          <gt-datasource loadUrl="/WAM/Item/ListHeader" 
+          [loadParams]="filter">
+          </gt-datasource>
+          <dx-data-grid #dataGrid keyExpr="ID" 
+             [dataSource]="dataSource" 
+             [(selectedRowKeys)]="selectedKeys" 
+             (onSelectionChanged)="selectionChangedHandler()"
+             [height]="500">
+            <dxo-editing mode="row">
+              
+            </dxo-editing>
+            <dxo-paging  [enabled]="true" [pageSize]="100"></dxo-paging>
+            <dxo-remote-operations
+              [sorting]="false"
+              [paging]="true"
+              [filtering]="false">
+            </dxo-remote-operations>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxi-column dataField="Code" caption="{{'PUB_CODE'| translate}}"></dxi-column>
+            <dxi-column dataField="Description" caption="{{'PUB_TITLE'| translate}}"></dxi-column>
+            <dxi-column dataField="DescriptionLatin" caption="{{'PUB_TITLE_LATIN'| translate}}"></dxi-column>
+            <dxi-column dataField="CodeTCNL" caption="{{'PUB_ITEM_COD_TCNL'| translate}}"></dxi-column>
+            <dxi-column dataField="GroupCode" caption="{{'ITGR_CODE'| translate}}"></dxi-column>
+            <dxi-column dataField="GroupDescription" caption="{{'ITGR_DES'| translate}}"></dxi-column>
+            <dxi-column dataField="MeasurementUnitDescription" caption="{{'PUB_MUNIT'| translate}}"></dxi-column>
+            <dxi-column dataField="MeasurementUnitCommercialDescription" caption="{{'PUB_MUNIT_CMM'| translate}}"></dxi-column>
+            <dxi-column dataField="CategoryName" caption="{{'WAM_ITEM_CATEGORY'| translate}}"></dxi-column>
+            <dxi-column dataField="CatalogueDescription" caption="{{'WAM_ITEM_CATALOGUE'| translate}}"></dxi-column>
+            <dxi-column dataField="IsActive" caption="{{'PUB_ACTIVE'| translate}}"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+    <!-- <wam-additemgroup-popup [(visible)]="addItemGroupPopup" [(flag)]="branchFlag" [(parentCode)]="currentCode"
+                            [(parentId)]="currentItgrId"
+                            [(itcdId)]="currentItcdId">
+    </wam-additemgroup-popup> -->
+  </page-content>
+</page>

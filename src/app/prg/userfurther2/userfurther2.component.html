@@ -1,0 +1,34 @@
+<page>
+    <page-toolbar helpUrl="#" [items]="menuItems" (onItemClick)="onClickBtn($event)" ></page-toolbar>
+    
+    <page-content>
+            <dx-validation-group #form>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <dx-label text="{{ 'PRG_UNIT_NAM' | translate }}">
+                          <dx-text-box [(value)]="editItem.UFIF_NAM_UNIT">
+                            <dx-validator>
+                              <dxi-validation-rule type="required" message="این فیلد اجباری است"></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </dx-label>
+                      </div>
+
+                      <div class="col-sm-4">
+                            <dx-label text="{{ 'PRG_UNIT_TYP' | translate }}">
+                              <dx-lov [(value)]="editItem.UFIF_TYP_UNIT" [(text)]="editItem.UFIF_TYP_UNIT_Caption" formCode="LOV-PRG-001"
+                                [required]="true" [displayMode]="'ComboBox'"></dx-lov>
+                            </dx-label>
+                          </div>
+                          
+                          <div class="col-sm-4">
+                            <dx-label text="{{ 'PRG_UNIT_DEGREE' | translate }}">
+                              <dx-lov [(value)]="editItem.UFIF_DEG_UNIT" [(text)]="editItem.UFIF_DEG_UNIT_Caption" formCode="LOV-PRG-002"
+                                [required]="true" [displayMode]="'ComboBox'"></dx-lov>
+                            </dx-label>
+                          </div>
+                          
+                    </div>
+            </dx-validation-group>
+    </page-content>
+</page>

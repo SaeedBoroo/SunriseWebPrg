@@ -1,0 +1,14 @@
+<div  class="dx-lov-container">
+    <div class="dx-lov-textbox-container">
+      <dx-text-box [(value)]="text" [readOnly]="readOnly" [placeholder]="placeholder" [showClearButton]="allowClear" (onValueChanged)="onTextChange($event)"
+        (onKeyDown)="onKeyDown($event)" #textBox>
+        <dx-validator>
+        </dx-validator>
+      </dx-text-box>
+    </div>
+    <div class="dx-lov-button-container">
+      <button (click)="onButtonClick()" type="button">
+        <i class="fa fa-search"></i>
+      </button>
+    </div>    
+  </div>

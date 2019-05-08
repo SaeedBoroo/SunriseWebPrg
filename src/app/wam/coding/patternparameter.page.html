@@ -1,0 +1,70 @@
+﻿<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)"></page-toolbar>
+  <page-content>
+    <div class="row">
+      <h3 class="form-title">پارامترهای الگو</h3>
+
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" [rowMenuItems]="gridItems">
+          <gt-datasource loadUrl="/WAM/CodingPatternParameter/List"
+                         insertUrl="/WAM/CodingPatternParameter/Save"
+                         updateUrl="/WAM/CodingPatternParameter/Save"
+                         removeUrl="/WAM/CodingPatternParameter/Delete"
+                         [(loadParams)]="loadParams">
+          </gt-datasource>
+          <dx-data-grid #gridMaster
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        (onEditorPreparing)="onEditorPreparingOtherResourcesGrid($event)"
+                        [height]="200">
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxi-column dataField="Code" caption="{{'PUB_CODE'| translate}}" width="150"></dxi-column>
+            <dxi-column dataField="Description" caption="{{'PUB_TITLE'| translate}}"></dxi-column>
+            <dxi-column dataField="SystemTableFlag" caption="{{'PUB_SYSTEM_VARIABLE'| translate}}" allowEditing="false"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+    <div class="margin-20"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onDetailGridItemClick($event)" [rowMenuItems]="gridItems">
+          <gt-datasource loadUrl="/WAM/CodingPatternParameterDetail/List"
+                         insertUrl="/WAM/CodingPatternParameterDetail/Save"
+                         updateUrl="/WAM/CodingPatternParameterDetail/Save"
+                         removeUrl="/WAM/CodingPatternParameterDetail/Delete"
+                         [(loadParams)]="loadParams"
+                         [(saveParams)]="loadParams">
+          </gt-datasource>
+          <dx-data-grid #gridDetail
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="detailSelectedKeys"
+                        (onSelectionChanged)="detailSelectionChangedHandler()"
+                        [height]="200">
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxi-column dataField="Code" caption="{{'کد'| translate}}" width="150"></dxi-column>
+            <dxi-column dataField="Description" caption="{{'شرح'| translate}}"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>

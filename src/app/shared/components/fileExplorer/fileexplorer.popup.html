@@ -1,0 +1,91 @@
+<page>
+    <page-toolbar [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+    </page-toolbar>
+    <page-content>
+        <!-- <div class="container"> -->
+        <!-- <div class="row file-explorer-toolbar"> -->
+        <!-- <div class="col-sm-9 col-xs-12"> -->
+        <!-- </div> -->
+        <!-- <div class="col-sm-3 col-xs-12">
+                    <input-group (onButtonClick)="clicked()" icon="fa fa-search green">
+                        <dx-text-box>
+                        </dx-text-box>
+                    </input-group>
+                </div> -->
+        <!-- </div> -->
+        <div class="row">
+            <div class="col-sm-3 col-xs-12 file-explorer-container">
+                <panel-box caption="{{ 'پرونده ها' | translate }}" [allowCollapse]="false">
+                    <dx-tree-view #treeview [dataSource]="treeDataSource" dataStructure="plain" parentIdExpr="parentFolderId" keyExpr="id" displayExpr="name"
+                        [searchEnabled]="false" [height]="450" (onItemClick)="onItemClick($event)" [searchValue]='searchValue'
+                        expandItem="expandItem($event)" selectionMode='single' itemTemplate="itemTemplate">
+                        <div *dxTemplate="let itemObj of 'itemTemplate'">
+                            <i class='fa fa-folder'></i>
+                            {{itemObj.name}}
+                        </div>
+                    </dx-tree-view>
+                </panel-box>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <div class="row" *ngIf="gridMode">
+                    <ng-template ngFor let-item [ngForOf]="gridSource" let-i="index">
+                        <div class="col-md-12 col-sm-12" [attr.data-index]="i" style="margin-bottom: 10px;">
+                            <dx-check-box *ngIf="config.MultiSelect" (valueChange)="onDataChange(item)" [value]="item.selected"></dx-check-box>
+                            <a (click)="showDetail(item)" class="pointer">
+                                <div class="col-sm-4 pr0">
+                                    <span>
+                                        {{item.title}}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4 ">
+                                    <a [ngStyle]="getImageStyle(item)" [style.height]="65">
+                                        <!-- <img [src]="getImage(item.thumbnail)" class="img-responsive" width="65" /> -->
+                                    </a>
+                                </div>
+                            </a>
+                        </div>
+                    </ng-template>
+
+                </div>
+                <div class="row" *ngIf="tileMode">
+                    <div class="col-sm-4 col-xs-12" *ngFor="let item of gridSource">
+                        <div class="card">
+                            <dx-check-box *ngIf="config.MultiSelect" [value]="item.selected" (valueChange)="onDataChange(item)"></dx-check-box>
+                            <a (click)="showDetail(item)" [ngStyle]="getImageStyle(item)" class="pointer">
+                                <!-- <img [src]="getImage(item.thumbnail)" height="120" /> -->
+                            </a>
+                            <div class="card-body">
+                                <i [class]="item.icon"></i>
+                                {{item.title}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-3 col-xs-12" *ngIf="detailmode">
+                <img [src]="getImage(currentDetailItem.preview)" height="120" />
+                <div>
+                    <span>کد فایل: {{currentDetailItem.code}}</span>
+                </div>
+                <div>
+                    <span>عنوان فایل: {{currentDetailItem.title}}</span>
+                </div>
+                <div *ngIf="currentDetailItem.size">
+                    <span>سایز فایل: {{currentDetailItem.size}}</span>
+                </div>
+                <div *ngIf="currentDetailItem.filetype">
+                    <span>نوع فایل: {{currentDetailItem.filetype}}</span>
+                </div>
+                <div *ngIf="currentDetailItem.modifydate">
+                    <span>تاریخ آخرین ویرایش: {{currentDetailItem.modifydate}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-popup" *ngIf="popupInstance">
+            <dx-button type="success" text="انتخاب فایل" [width]="100" (click)="submitExplorer()"></dx-button>
+            <dx-button type="danger" text="انصراف" [width]="100" (click)="closeExplorer()"></dx-button>
+        </div>
+        <!-- </div> -->
+    </page-content>
+</page>

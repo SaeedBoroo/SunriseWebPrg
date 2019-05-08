@@ -1,0 +1,76 @@
+﻿<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+
+      <div class="row">
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="کد کلاس">
+            <dx-text-box [(value)]="headerItem.Code">
+            </dx-text-box>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="نام">
+            <dx-text-box [(value)]="headerItem.Name">
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="کد واحد اصلی">
+            <dx-text-box [(value)]="headerItem.MainMeasurementUnitCode">
+            </dx-text-box>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="نام واحد اصلی">
+            <dx-text-box [(value)]="headerItem.MainMeasurementUnitDescription">
+            </dx-text-box>
+          </dx-label>
+        </div>
+      </div>
+
+      <div class="margin-20"></div>
+      <grid-toolbar >
+        <gt-datasource loadUrl="/WAM/MeasurementScale/List"
+                       insertUrl="/WAM/MeasurementScale/Save"
+                       [(saveParams)]="filter"
+                       updateUrl="/WAM/MeasurementScale/Save"
+                       removeUrl="/WAM/MeasurementScale/Delete"
+                       >
+        </gt-datasource>
+        <dx-data-grid #scaleGrid
+                      keyExpr="ID"
+                      [dataSource]="dataSource"
+                      
+                      
+                      
+                      [height]="200">
+          <dxo-editing mode="row"
+                       [allowUpdating]="true"
+                       [allowDeleting]="true"
+                       [allowAdding]="true">
+          </dxo-editing>
+          <dxi-column dataField="MeasurementUnitCommercialDescription" caption="{{'PUB_MUNIT_CMM'| translate}}" editCellTemplate="MeasurementUnitCode" width="180">
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            <div *dxTemplate="let cell of 'MeasurementUnitCode'">
+              <dx-lov formCode="LOV-WAM-027"
+                      [text]="cell.data.Title"
+                      (dataChange)="onCellUnitChanged($event,cell)">
+              </dx-lov>
+            </div>
+          </dxi-column>
+          <dxi-column dataField="Quantity" caption="{{'PUB_SCLAE'| translate}}"></dxi-column>
+          <!--<dxi-column dataField="t" caption=""  editCellTemplate="Description"></dxi-column>
+        <div *dxTemplate="let cell of 'Description'">
+          {{formula}}
+        </div>-->
+        </dx-data-grid>
+      </grid-toolbar>
+</page-content>
+</page>

@@ -1,0 +1,57 @@
+﻿<page>
+    <page-toolbar helpUrl="http://google.com"
+                  showHelp="false"
+                  [items]="menuItems"
+                  (onItemClick)="onMenuItemClick($event)"></page-toolbar>
+    <page-content>
+        <div class="row">
+            <div class="col-sm-12">
+                <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" [rowMenuItems]="gridItems">
+                    <gt-datasource loadUrl="/WAM/ItemCoding/List"
+                                   insertUrl="/WAM/ItemCoding/Save"
+                                   updateUrl="/WAM/ItemCoding/Save"
+                                   removeUrl="/WAM/ItemCoding/Delete"
+                                   [(saveParams)]="saveParams">
+                    </gt-datasource>
+                    <dx-data-grid #gridMaster
+                                  keyExpr="ID"
+                                  [dataSource]="dataSource"
+                                  [(selectedRowKeys)]="selectedKeys"
+                                  
+                                  [height]="500">
+                        <dxo-editing mode="row"
+                                     [allowUpdating]="true"
+                                     [allowDeleting]="true"
+                                     [allowAdding]="true">
+                        </dxo-editing>
+                        <dxo-selection mode="single"></dxo-selection>
+                        <dxo-paging enabled="true"></dxo-paging>
+                        <dxi-column dataField="BusinessUnitName" caption="{{'WAM_COST_CENTER'| translate}}" editCellTemplate="BusinessUnit"[visible] = "flagSimpleMode">
+                            <div *dxTemplate="let cell of 'BusinessUnit'">
+                                <dx-lov formCode="LOV-EIM-030"
+                                        [(value)]="cell.data.BusinessUnitID"
+                                        [text] = "cell.data.BusinessUnitName"
+                                        (dataChange)="onCellBusinessUnitChanged($event,cell)"
+                                        >
+                                </dx-lov>
+                            </div>
+                        </dxi-column>
+                        <dxi-column dataField="Code" caption="{{'PUB_CODE'| translate}}"></dxi-column>
+                        <dxi-column dataField="Description" caption="{{'PUB_TITLE'| translate}}"></dxi-column>
+                        <dxi-column dataField="LengthLevel1" caption="{{'WAM_LEN_LVL1'| translate}}"></dxi-column>
+                        <dxi-column dataField="LengthLevel2" caption="{{'WAM_LEN_LVL2'| translate}}"></dxi-column>
+                        <dxi-column dataField="LengthLevel3" caption="{{'WAM_LEN_LVL3'| translate}}"></dxi-column>
+                        <dxi-column dataField="LengthLevel4" caption="{{'WAM_LEN_LVL4'| translate}}"></dxi-column>
+                        <dxi-column dataField="LengthLevel5" caption="{{'WAM_LEN_LVL5'| translate}}"></dxi-column>
+                        <dxi-column dataField="DescriptionLevel1" caption="{{'WAM_DES_LVL1'| translate}}"></dxi-column>
+                        <dxi-column dataField="DescriptionLevel2" caption="{{'WAM_DES_LVL2'| translate}}"></dxi-column>
+                        <dxi-column dataField="DescriptionLevel3" caption="{{'WAM_DES_LVL3'| translate}}"></dxi-column>
+                        <dxi-column dataField="DescriptionLevel4" caption="{{'WAM_DES_LVL4'| translate}}"></dxi-column>
+                        <dxi-column dataField="DescriptionLevel5" caption="{{'WAM_DES_LVL5'| translate}}"></dxi-column>
+                        <dxi-column dataField="Active" caption="{{'PUB_FLG_ACT'| translate}}"></dxi-column>
+                    </dx-data-grid>
+                </grid-toolbar>
+            </div>
+        </div>
+    </page-content>
+</page>

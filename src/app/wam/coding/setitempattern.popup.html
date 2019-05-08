@@ -1,0 +1,35 @@
+﻿<dx-popup class="popup"
+          [width]="800"
+          [height]="500"
+          [showTitle]="true"
+          (onShowing)="onShow($event)"
+          [showCloseButton]="true"
+          [dragEnabled]="true"
+          [closeOnOutsideClick]="true"
+          [(visible)]="visible">
+  <div *dxTemplate="let data of 'content'">
+      <page-content class="rak-page">
+        <div class="padding-5">
+          <div class="margin-10"></div>
+            <div *ngFor="let item of model.Details" >              
+              <dx-label text ="{{item.ParameterDescription}}">
+                <dx-lov [(value)] ="item.CollumnValue"
+                        [(text)]="item.CollumnText"
+                        [formCode] = item.LovName
+                        [allowClear]="true"  
+                        [(params)]=item.Parameter
+                        [readOnly]="item.MainFlag"
+                        (dataChange)="patternChanged($event,item.ID)"
+                        required="true">
+                </dx-lov>
+              </dx-label>           
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 pull-left">
+            <dx-button type="success" [text]=buttonText [width]="100" (onClick)="onSaveClick()" [useSubmitBehavior]="true"></dx-button>
+          </div>
+        </div>
+      </page-content>
+</div>
+</dx-popup>

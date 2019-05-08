@@ -1,0 +1,128 @@
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                >
+  </page-toolbar>
+  <page-content>
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="header-title">
+          "{{  'WAM_MEASURMENT_CLASSES'| translate }}"
+        </h5>
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)">
+          <gt-datasource loadUrl="/WAM/MeasurementClass/List"
+                         insertUrl="/WAM/MeasurementClass/Save"
+                         updateUrl="/WAM/MeasurementClass/Save"
+                         removeUrl="/WAM/MeasurementClass/Delete">
+          </gt-datasource>
+          <dx-data-grid #gridMaster
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        
+                        [height]="200">
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxi-column dataField="Code" caption="{{'PUB_CODE'| translate}}" width="150"></dxi-column>
+            <dxi-column dataField="Name" caption="{{'PUB_TITLE'| translate}}"></dxi-column>
+            <!--<dxi-column dataField="SystemTableFlag" caption="{{'PUB_SYSTEM_VARIABLE'| translate}}" allowEditing="false"></dxi-column>-->
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+    <!--<div class="row">
+      <div class="col-sm-4 col-xs-12">
+        <dx-label text="کد کلاس اندازه گیری">
+          <dx-text-box [(value)]="headerItem.Code">
+            <dx-validator>
+              <dxi-validation-rule type="required"
+                                   message="این فیلد اجباری است"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </dx-label>
+      </div>
+
+      <div class="col-sm-4 col-xs-12">
+        <dx-label text="نام">
+          <dx-text-box [(value)]="headerItem.Name">
+            <dx-validator>
+              <dxi-validation-rule type="required"
+                                   message="این فیلد اجباری است"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </dx-label>
+      </div>
+
+    </div>-->
+
+    <div class="row">
+      <div class="col-sm-12">
+          <h5 class="header-title">
+            واحد های اندازه گیری
+           </h5>
+        <grid-toolbar (onMenuItemClick)="onDetailGridItemClick($event)" >
+          <gt-datasource loadUrl="/WAM/MeasurementUnit/List"
+                         insertUrl="/WAM/MeasurementUnit/Save"
+                         updateUrl="/WAM/MeasurementUnit/Save"
+                         removeUrl="/WAM/MeasurementUnit/Delete"
+                         [(loadParams)]="loadParams"
+                         [(saveParams)]="loadParams">
+          </gt-datasource>
+          <dx-data-grid #gridDetail
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        
+                        (onSelectionChanged)="detailSelectionChangedHandler()"
+                        (ngOnInitNewRow)="msunGridOnInitNewRow($event)"
+                        [height]="400">
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxi-column dataField="Code" caption="{{'PUB_CODE'| translate}}" [width]="90" required="true">
+
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+            </dxi-column>
+            <dxi-column dataField="Description" caption="{{'PUB_DES'| translate}}" required="true">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+            </dxi-column>
+            <dxi-column dataField="BaseFlag" caption="{{  'WAM_MSUN_COD'| translate }}" dataType="boolean">
+
+
+            </dxi-column>
+            <dxi-column dataField="DescriptionLatin" caption="{{  'PUB_LATIN_DES'| translate }}">
+
+            </dxi-column>
+            <dxi-column dataField="DecimalFlag" caption="{{  'WAM_HAS_POINT'| translate }}" dataType="boolean">
+
+            </dxi-column>
+            <dxi-column dataField="DecimalQuantity" caption="{{  'WAM_DECIMAL_COUNT'| translate }}" editCellTemplate="DecimalQuantity"></dxi-column>
+            <div *dxTemplate="let cell of 'DecimalQuantity'">
+              <dx-number-box [(value)]="cell.data.DecimalQuantity" min="1"></dx-number-box>
+            </div>
+            <dxi-column dataField="Scale" caption="{{  'WAM_TOMAIN_RATIO'| translate }}" editCellTemplate="scaleQuantity"></dxi-column>
+            <div *dxTemplate="let cell of 'scaleQuantity'">
+              <dx-number-box [(value)]="cell.data.Scale" min="0.0001"></dx-number-box>
+            </div>
+            <dxi-column dataField="IsActive" caption="{{'PUB_ACTIVE'| translate}}" dataType="boolean" required="true">
+
+            </dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+
+  </page-content>
+</page>

@@ -1,0 +1,99 @@
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)"></page-toolbar>
+  <page-content>
+    <dx-validation-group #formValidation>
+      <div class="row">
+        <div class="col-sm-5 col-xs-12">
+          <dx-label text="{{'PUB_CODE'|translate}}">
+            <dx-text-box [(value)]="editItem.Code" required="true">
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-5 col-xs-12">
+          <dx-label text="{{'PUB_DES'|translate}}">
+            <dx-text-box [(value)]="editItem.Description" required="true">
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-2 col-xs-12">
+          <dx-check-box [(value)]="editItem.IsActive" text="{{  'PUB_ACTIVE'| translate }}" required="true">
+          </dx-check-box>
+        </div>
+      </div>
+      <div class="margin-10"></div>
+      <div class="row">
+        <div class="col-sm-12">
+          <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" [rowMenuItems]="gridItems">
+            <dx-data-grid #grid
+                          keyExpr="ID"
+                          [height]="500"
+                          [dataSource]="dataSource"
+                          [(selectedRowKeys)]="selectedKeys"
+                          (onRowInserted)="itemInserted()"
+                          (onRowUpdated)="itemInserted()"
+                          (onRowRemoving)="itemInserted()">
+              <dxo-selection mode="single"></dxo-selection>
+              <dxo-paging enabled="true"></dxo-paging>
+              <dxo-editing mode="row"
+                           [allowUpdating]="true"
+                           [allowDeleting]="true"
+                           [allowAdding]="true">
+              </dxo-editing>
+              <dxi-column dataField="CatalogeParameterTypeID" caption="{{'QUM_PARAMETER'| translate}}" width="150">
+                <dxo-lookup [dataSource]="CodeParamDataSource"
+                            valueExpr="ID"
+                            displayExpr="Title"
+                            allowClearing="true">
+                </dxo-lookup>
+                <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              </dxi-column>
+              <!-- <dxi-column dataField="CatalogeParameterTypeName" caption="{{'عنوان پارامتر'| translate}}"></dxi-column> -->
+              <!-- <dxi-column dataField="DataTypeId" caption="{{'نوع مقادیر'| translate}}">
+                <dxo-lookup [dataSource]="QuantityTypeDataSource"
+                            valueExpr="ID"
+                            displayExpr="Title"
+                            allowClearing="true">
+                </dxo-lookup>
+              </dxi-column> -->
+              <dxi-column dataField="DisplaySequence" caption="{{'PUB_ORDER'| translate}}" editCellTemplate="DisplaySequence"></dxi-column>
+              <div *dxTemplate="let cell of 'DisplaySequence'">
+                <dx-number-box [(value)]="cell.data.DisplaySequence" min="1" required="true">
+                  <dx-validator>
+                    <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
+              </div>
+              <dxi-column dataField="DefaultValue" caption="{{'QUM_DEFAULT_VALUE'| translate}}">
+
+              </dxi-column>
+
+              <dxi-column dataField="UnitId" caption="{{'WAM_MESERMENT_UNIT'| translate}}" width="150">
+                <dxo-lookup [dataSource]="UnitDataSource"
+                            valueExpr="ID"
+                            displayExpr="Title"
+                            allowClearing="true">
+                </dxo-lookup>
+                <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              </dxi-column>
+              <!-- <dxi-column dataField="CatalogueTypeID" caption="{{'نوع کاتالوگ'| translate}}">
+                <dxo-lookup [dataSource]="CatalogTypeDataSource"
+                            valueExpr="ID"
+                            displayExpr="Title"
+                            allowClearing="true">
+                </dxo-lookup>
+              </dxi-column> -->
+              <!--<dxi-column dataField="CatalogueTypeDescroptin" caption="{{'WCTE_DES'| translate}}" width="180"></dxi-column>-->
+
+              <dxi-column dataField="Requierd" caption="{{'PUB_MANDATORY'| translate}}" dataType="boolean">
+
+              </dxi-column>
+            </dx-data-grid>
+          </grid-toolbar>
+        </div>
+      </div>
+    </dx-validation-group>
+  </page-content>
+</page>

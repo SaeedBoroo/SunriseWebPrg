@@ -1,0 +1,43 @@
+    <dx-popup class="popup"  [showTitle]="true" title="{{ 'PRG_SUGGESTS_SHOW' | translate }}  ---  {{ITEM_DESC}}"
+      [showCloseButton]="true" [dragEnabled]="true" [(visible)]="ShowSuggestPopupVisible"  (onShowing)="popup_showing($event)" (onHiding)="popup_hiding($event)">
+      <div *dxTemplate="let data of 'content'">
+        <grid-toolbar >
+          <dx-data-grid id="gridContainer"  #Suggest_Grid keyExpr="ID" [dataSource]="datasource_suggest" [hoverStateEnabled]="true"
+            [(selectedRowKeys)]="selectedKeys"  [rowAlternationEnabled]="true" [showBorders]="true"
+            [showRowLines]="true"  [height]=500>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-editing 
+            mode="row"
+            [allowUpdating]="true"
+            [allowAdding]="false">
+        </dxo-editing>
+            <dxi-column dataField="REPS_PrimeCost"  format="fixedPoint" caption="{{'PRG_REPS_PrimeCost'| translate}}" [width]="150" [allowEditing]="false"></dxi-column>
+            <dxi-column dataField="REPS_ExtraCost"  format="fixedPoint" caption="{{'PRG_REPS_ExtraCost'| translate}}" [width]="80"[allowEditing]="false"></dxi-column>
+            <dxi-column dataField="REPS_WageCost"   format="fixedPoint" caption="{{'PRG_REPS_WageCost'| translate}}" [width]="100" [allowEditing]="false"></dxi-column>
+            <dxi-column dataField="REPS_CostPrecent"   format="fixedPoint" caption="{{'PRG_REPS_CostPrecent'| translate}}" [width]="100"[allowEditing]="false"></dxi-column>
+            <dxi-column dataField="REPS_CostPrice"  format="fixedPoint" caption="{{'PRG_REPS_CostPrice'| translate}}" [width]="100"[allowEditing]="false"></dxi-column>
+            <dxi-column dataField="REPS_TotalCost"  format="fixedPoint" caption="{{'PRG_REPS_TotalCost'| translate}}" [width]="100"[allowEditing]="false"></dxi-column>
+            <dxi-column dataField="REPS_Profit"  format="fixedPoint" caption="{{'PRG_REPS_Profit'| translate}}" [width]="100"[allowEditing]="false"></dxi-column>
+            <dxi-column dataField="REPS_EndPrice"  format="fixedPoint"  caption="{{'PRG_REPS_EndPrice'| translate}}" [width]="100"[allowEditing]="false"></dxi-column>
+            <dxi-column dataField="REPS_Confirm"  format="fixedPoint"caption="{{'PUB_STATUS'| translate}}" cellTemplate="cell1">
+
+            <dxo-lookup [dataSource]="ConfirmTypes" valueExpr="Value" displayExpr="Title"></dxo-lookup>
+            <div *dxTemplate="let cell of 'cell1'">
+              <div class="padding-5 {{findColor(cell.data.REPS_Confirm,cell.data.Value)}}">
+                <i class="fa {{findIcon(cell.data.REPS_Confirm,cell.data.Value)}}"></i>&nbsp;
+                <span>{{findTitle(cell.data.REPS_Confirm,cell.data.Value)}}</span>
+              </div>
+            </div>                        
+
+            </dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+
+        <div class="footer-popup">
+          <dx-button type="danger" (onClick)="close_popup();" text="انصراف" [width]="100"></dx-button>
+
+        </div>
+
+      </div>
+    </dx-popup>

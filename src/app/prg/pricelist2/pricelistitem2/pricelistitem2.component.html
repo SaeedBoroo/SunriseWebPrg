@@ -1,0 +1,72 @@
+<page>
+    <page-toolbar helpUrl="#" showHelp="true"  [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+    </page-toolbar>
+
+
+    <page-content>
+        <dx-validation-group #form>
+          <div class="row">
+            <div class="col-md-4">
+              <dx-label text="{{ 'PRG_PRICELIST_NUM' | translate }}">
+                <dx-text-box [(value)]="headerItem.PRLNUM" [readOnly]="true">
+                  <dx-validator>
+                    <dxi-validation-rule type="required" message="این فیلد اجباری است"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-text-box>
+              </dx-label>
+            </div>
+            <div class="col-md-4">
+                <dx-label text="{{ 'PRG_PRICELIST_PRLCREATEDATE' | translate }}">
+                  <dx-date [(value)]="headerItem.PRLCREATEDATE" showToday="true" [readOnly]="true">
+                  </dx-date>
+                </dx-label>
+              </div>
+              <div class="col-md-4">
+                <dx-label text="{{ 'PRG_PRICELIST_DESC' | translate }}">
+                  <dx-text-box [(value)]="headerItem.PRLDESC">
+                  </dx-text-box>
+                </dx-label>
+              </div>
+          </div>
+        </dx-validation-group>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+              <grid-toolbar  (onMenuItemClick)="onGridItemClick($event)"
+                (onMenuItemPrepering)="onGridItemPrepering($event)"
+                 [rowMenuItems]="gridItems">
+                <dx-data-grid id="gridContainer"
+                 #grid 
+                 keyExpr="ID"
+                  [dataSource]="dataSource" 
+                  [hoverStateEnabled]="true"
+                  [(selectedRowKeys)]="selectedKeys"
+                   [columnAutoWidth]="true" [rowAlternationEnabled]="true" [showBorders]="true"
+                  [showRowLines]="true" [height]="400">
+                  <dxo-scrolling mode="virtual"></dxo-scrolling>
+                  <dxo-selection mode="single"></dxo-selection>
+                  <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>          
+                  <dxi-column dataField="Item_Code" caption="{{'PRG_PRODUCT_CODE'| translate}}" [width]="100"
+                    editCellTemplate="Item_Code" [setCellValue]="setCellValueOfItemCode">
+                    <!--setCellValue: وقتی روی یکی از آیتمهای الووی کلیک شد مقدار جدید را در نیودیتا قرار میگیرد-->
+                    <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+                    <!--وقتی روی یکی از ردیفها در جدول کلی که دابل کلیک میکنیم  این "دی ایکس تمپلیت" که به صورت شخصی توسط کمپانی دوو نوشته شده
+                    روی رویداد کلیک اطلاعات را بهش پاس میده-->
+                    <div *dxTemplate="let cell of 'Item_Code'">
+                      <!-- در فرم کد مقادیری که میخواهیم صدا زده شده فقط باید کدش را بگذاریم.-->
+                      <dx-lov formCode="LOV-WAM-101" [text]="cell.data.Item_Code"  [readOnly]="flgUpdateCode"
+                        (dataChange)="onItemCodeChange($event,cell)"></dx-lov>
+                    </div>
+                  </dxi-column>
+                  <dxi-column dataField="Item_Des" caption="{{'PRG_PRODUCT_NAME'| translate}}" [width]="200"></dxi-column>
+                  <dxi-column dataField="Msun_Des" caption="{{'PRG_PRODUCT_UNIT'| translate}}" [width]="200" [allowEditing]="false" ></dxi-column>
+                  <dxi-column dataField="PrldPrice"  format="fixedPoint"  caption="{{'PRG_PRODUCT_PRICE'| translate}}" [width]="100"></dxi-column>
+                  <dxi-column dataField="PrldDesc" caption="{{'PRG_PRODUCT_DESC'| translate}}"></dxi-column>
+                </dx-data-grid>
+              </grid-toolbar>
+            </div>
+          </div>
+    </page-content>
+    
+</page>

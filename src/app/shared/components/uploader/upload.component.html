@@ -1,0 +1,50 @@
+<div fileDrop (fileOver)="onFileOver($event)" (fileDrop)="onFileChange($event)" [ngClass]="cssClass" [ngClass]="{'file-ul-file-is-over': fileOver}"
+  [ngStyle]="style?.layout">
+  <div class="file-ul-file-upload file-ul-hr-inline-group row">
+    <div class="col-md-4">
+      <div class="row">
+        <div class="col-md-12">
+
+          <label *ngIf="fileCounter != max" class="file-ul-upload file-ul-button dx-button dx-button-success dx-widget dx-rtl dx-button-has-text"
+            [ngStyle]="style?.selectButton" [ngClass]="{'file-ul-disabled': disabled}">
+            <span [innerText]="buttonCaption"></span>
+            <input type="file" [disabled]="disabled" [accept]="supportedExtensions" [multiple]="multiple" (change)="onFileChange(input.files)"
+              #input>
+          </label>
+        </div>
+        <div class="col-md-12" *ngIf="fileCounter > 0">
+          <dx-button [width]="100" [height]="39" [disabled]="disabled" type="default" [text]="uploadButtonCaption" (onClick)="startUpload()"></dx-button>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md-8">
+      <!-- use directive for drop file -->
+        <!-- <div class="file-ul-drag-box-msg" [innerText]="dropBoxMessage"></div> -->
+
+        <!-- use this for clear all -->
+      <!-- <button *ngIf="fileCounter > 0"
+        [disabled]="disabled"
+        class="file-ul-clear file-ul-button" 
+        (click)="deleteAll()" 
+        [ngStyle]="style?.clearButton"
+        [innerText]="clearButtonCaption">
+      </button>
+       -->
+      <!-- </div> -->
+
+      <!-- <p class="file-ul-file-too-large" *ngIf="showFileTooLargeMessage" [innerText]="fileTooLargeMessage"></p> -->
+
+      <div *ngIf="preview" class="file-ul-container file-ul-hr-inline-group" [ngStyle]="style?.previewPanel">
+        <div class="file-ul-file" *ngFor="let file of files" [ngStyle]="{'background-image': 'url('+ file.src +')'}">
+          <div *ngIf="file.pending" class="file-ul-loading-overlay">
+            <div class="file-ul-spinning-circle"></div>
+          </div>
+          <div *ngIf="!file.pending" [ngClass]="{'file-ul-disabled': disabled}" class="file-ul-x-mark" (click)="deleteFile(file)">
+            <span class="file-ul-close"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

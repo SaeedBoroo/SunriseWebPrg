@@ -1,0 +1,25 @@
+<page>
+  <page-toolbar helpUrl="http://google.com" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <div class="row">
+      <grid-toolbar>
+        <gt-datasource loadUrl="/PRG/request/ListByUser">
+        </gt-datasource>
+        <dx-data-grid #grid keyExpr="ID" [(selectedRowKeys)]="jasem" (onSelectionChanged)="selectionChangedHandler()"
+          [columnAutoWidth]="true" [height]="550">
+          <dxo-scrolling mode="virtual"></dxo-scrolling>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxi-column dataField="REQ_Num" caption="{{'PRG_REQ_Num'| translate}}" [width]="100"></dxi-column>
+          <dxi-column dataField="UFIF_NAM_UNIT" caption="{{'PRG_UNIT_NAM'| translate}}" [width]="150"></dxi-column>
+          <dxi-column dataField="REQ_Unt_Grade_Caption" caption="{{'PRG_UNIT_DEGREE'| translate}}" [width]="80"></dxi-column>
+          <dxi-column dataField="REQ_Unt_Type_Caption" caption="{{'PRG_UNIT_TYP'| translate}}" [width]="80"></dxi-column>
+          <dxi-column dataField="REQ_ConfirmDate" caption="{{'PRG_ConfirmDate'| translate}}" [width]="150"></dxi-column>
+          <dxi-column dataField="REQ_Status_Caption" caption="{{'PRG_Status_Caption'| translate}}" [width]="100"></dxi-column>/dxi-column>
+          <dxi-column dataField="REQ_Desc" caption="{{'PRG_REQ_Desc'| translate}}" [width]="150"></dxi-column>
+          <dxi-column dataField="REQ_CreateDate" dataType="date" caption="{{'PRG_REQ_CreateDate'| translate}}" [width]="100"></dxi-column>
+        </dx-data-grid>
+      </grid-toolbar>
+    </div>
+  </page-content>
+</page>

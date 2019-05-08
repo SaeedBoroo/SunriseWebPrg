@@ -1,0 +1,53 @@
+﻿<page>
+    <page-toolbar helpUrl="http://google.com"
+                  showHelp="false"
+                  [items]="menuItems"
+                  (onItemClick)="onMenuItemClick($event)">
+    </page-toolbar>
+    <page-content>
+      <dx-validation-group #form>
+        <div class="row">          
+          <div class="col-sm-3 col-xs-12">
+            <dx-label text="{{'PUB_DAT'| translate}}">
+              <dx-date [(value)]="filter.Date"                      
+                       class="text-left ltr">
+              </dx-date>
+            </dx-label>
+          </div>
+          <div class="col-sm-3 col-xs-12">
+            <dx-label text="{{'WRHS_CODE'| translate}}">
+              <dx-lov [(value)]="filter.WarehouseID"
+                      [(text)]="filter.WareHouseDes"
+                      formCode="LOV-WAM-003"
+                      [allowClear]="true"
+                      required="true"></dx-lov>
+            </dx-label>
+          </div>
+        </div>  
+      </dx-validation-group>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="margin-20"></div>
+          <grid-toolbar (onRowDbClick)="onRowDbClickRouting($event)">
+            <gt-datasource loadUrl="/WAM/Movement/List"
+                           [(loadParams)]="filter">
+            </gt-datasource>
+            <dx-data-grid #movementGrid
+                          keyExpr="ID"
+                          [dataSource]="dataSource"
+                          [(selectedRowKeys)]="itemSelectedKeys"
+                          (onSelectionChanged)="selectionChangedHandler()"
+                          [height]="400">
+              <dxo-scrolling mode="virtual"></dxo-scrolling>
+              <dxo-selection mode="multiple"></dxo-selection>
+              <dxo-editing mode="row" [allowAdding]="false" [allowUpdating]="false" [allowDeleting]="false"></dxo-editing>              
+              <dxi-column dataField="Date" caption="{{'MVMN_DAT'| translate}}" dataType="date"></dxi-column>
+              <!--<dxi-column dataField="StatusDes" caption="{{'Status'| translate}}"></dxi-column>-->
+              <dxi-column dataField="WarehouseCode" caption="{{'WRHS_CODE'| translate}}"></dxi-column>
+              <dxi-column dataField="WarehouseDescription" caption="{{'WRHS_DES'| translate}}"></dxi-column>             
+            </dx-data-grid>
+          </grid-toolbar>
+        </div>
+      </div>
+    </page-content>
+</page>

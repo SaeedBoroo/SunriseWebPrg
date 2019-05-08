@@ -1,0 +1,27 @@
+<page>
+  <page-toolbar helpUrl="http://google.com" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <div class="row">
+      <div class="col-sm-12">
+
+
+
+
+
+        <grid-toolbar>
+          <gt-datasource loadUrl="/PRG/PriceList/List">
+          </gt-datasource>
+          <dx-data-grid #grid keyExpr="ID" [(selectedRowKeys)]="jasem" (onSelectionChanged)="selectionChangedHandler()"
+            [columnAutoWidth]="true" [height]="400">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxi-column dataField="PRLNUM"   caption="{{'PRG_PRICELIST_NUM'| translate}}" [width]="150"></dxi-column>
+            <dxi-column dataField="PRLCREATEDATE"  dataType="date" caption="{{'PRG_PRICELIST_CREATETDATE'| translate}}" [width]="150"></dxi-column>
+            <dxi-column dataField="PRLDESC"  caption="{{'PRG_PRICELIST_DESC'| translate}}" ></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>

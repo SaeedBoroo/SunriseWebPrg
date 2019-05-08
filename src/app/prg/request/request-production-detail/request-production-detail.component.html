@@ -1,0 +1,34 @@
+<div class="row">
+  <grid-toolbar (onMenuItemClick)="onGridDetailItemClick($event)" [rowMenuItems]="gridItems">
+    <dx-data-grid id="gridContainer" #gridDetail keyExpr="ID" [dataSource]="dataSourceDetail" [hoverStateEnabled]="true"
+      [(selectedRowKeys)]="selectedKeys" [rowAlternationEnabled]="true" 
+      [showRowLines]="true" >
+      <dxo-scrolling mode="virtual"></dxo-scrolling>
+      <!-- <dxo-selection mode="multiple"></dxo-selection> -->
+      <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+      <!-- <dxi-column dataField="Row" caption="{{'PUB_ROW'| translate}}" [width]="100"></dxi-column> -->
+      <dxi-column dataField="ITEM_CODE" caption="{{'PRG_PRODUCT_CODE'| translate}}" [width]="100" editCellTemplate="ITEM_CODE"
+        [setCellValue]="setCellValueOfDetailItemCode">
+        <dxi-validation-rule type="required" message="{{'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+        <div *dxTemplate="let cell of 'ITEM_CODE'">
+          <dx-lov [(params)]="this.itemfilter" formCode="LOV-WAM-200" [text]="cell.data.ITEM_CODE" [readOnly]="flgUpdateCode" (dataChange)="onDetailItemCodeChange($event,cell)"></dx-lov>
+        </div>
+      </dxi-column>
+      <dxi-column dataField="ITEM_DESC" caption="{{'PRG_PRODUCT_NAME'| translate}}" [width]="120"></dxi-column>
+      <dxi-column dataField="MSUN_DES" caption="{{'PRG_PRODUCT_UNIT'| translate}}" [width]="50"></dxi-column>
+      <dxi-column dataField="REPD_DImpure"  format="fixedPoint" caption="{{'PRG_REPD_DImpure'| translate}}" [width]="100"></dxi-column>
+      <dxi-column dataField="REPD_Wastage"   format="fixedPoint" caption="{{'PRG_REPD_Wastage'| translate}}" [width]="100"></dxi-column>
+
+      <dxi-column dataField="REPD_DPure"   caption="{{'PRG_REPD_DPure'| translate}}" [width]="100"
+      [setCellValue]="setCellMultiplicationOfREPD_DPure"></dxi-column>
+
+      <dxi-column dataField="REPD_DSuggestPrice"  format="fixedPoint"  caption="{{'PRG_DSuggestPrice'| translate}}" [width]="150"
+        [setCellValue]="setCellMultiplicationOfDetailItemCode"></dxi-column>
+      <dxi-column dataField="REPD_SUM_ITEM"   format="fixedPoint" caption="{{'PRG_SUM_ITEM'| translate}}"  [width]="100" [allowEditing]="false"></dxi-column>
+      <dxi-column dataField="REPD_DRefrencePrice"   format="fixedPoint" [visible]="allow_REPD_DRefrencePrice" caption="{{'PRG_DRefrencePrice'| translate}}" [width]="100"
+        ></dxi-column>
+      <dxi-column dataField="SUM_DRefrencePrice"  format="fixedPoint" [visible]="allow_REPD_DRefrencePrice" caption="{{'PRG_SUM_DRefrencePrice'| translate}}" [width]="100" [allowEditing]="false"></dxi-column>
+    </dx-data-grid>
+  </grid-toolbar>
+
+</div>

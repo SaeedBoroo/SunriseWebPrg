@@ -1,0 +1,173 @@
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row" *ngIf="flgSearch">
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{  'PUB_BRANCH' | translate }}">
+            <dx-lov [(value)]="filter.BusinessUnitId"
+                    [(text)]="filter.BusinessUnitName"
+                    formCode="LOV-EIM-005"
+                    [allowClear]="true"
+                    required="false"
+                    [visible]="!flagSimpleMode">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{  'WAM_CODE_SERIAL' | translate }}">
+            <dx-lov [(value)]="filter.CodeType"
+                    formCode="LOV-WAM-009"
+                    [allowClear]="true"
+                    [displayMode]="'ComboBox'"
+                    required="false"></dx-lov>
+          </dx-label>
+        </div>
+      </div>
+      <div class="row" *ngIf="flgSearch">
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{  'WAM_ITEM_CATEGORY' | translate }}">
+            <dx-lov [(value)]="filter.CategoryId"
+                    [(text)]="filter.CategoryDescription"
+                    formCode="LOV-WAM-006"
+                    [allowClear]="true"
+                    [(params)]="categoryFilter"
+                    required="false">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{  'WAM_CREATE_METHOD' | translate }}">
+            <dx-lov [(value)]="filter.Method"
+                    formCode="LOV-WAM-010"
+                    [allowClear]="true"
+                    [displayMode]="'ComboBox'"
+                    required="false"></dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3">
+          <dx-button type="success"
+                     text="{{  'PUB_FTC_DATA' | translate }}"
+                     [height]="36"
+                     [width]="400"
+                     (onClick)="loadData()">
+          </dx-button>
+        </div>
+      </div>
+      <div class="margin-5"></div>
+      <div class="row">
+        <div class="col-sm-3 col-xs-12" *ngIf="!flagSimpleMode">
+          <dx-label text="{{  'PUB_BRANCH' | translate }}" *ngIf="!flagSimpleMode">
+            <dx-lov [(value)]="headerItem.BusinessUnitId"
+                    [(text)]="headerItem.BusinessUnitName"
+                    formCode="LOV-EIM-005"
+                    [allowClear]="true"
+                    required="true"
+                    [readOnly]="updateDisabled">
+            </dx-lov>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{  'WAM_ITEM_CATEGORY' | translate }}">
+            <dx-lov [(value)]="headerItem.CategoryId"
+                    [(text)]="headerItem.CategoryDescription"
+                    formCode="LOV-WAM-006"
+                    [allowClear]="true"
+                    [(params)]="categoryFilter"
+                    required="false"
+                    [readOnly]="updateDisabled">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-2 col-xs-12">
+          <dx-label text="{{  'WAM_CODE_SERIAL' | translate }}">
+            <dx-lov [(value)]="headerItem.CodeType"
+                    formCode="LOV-WAM-009"
+                    [allowClear]="true"
+                    [displayMode]="'ComboBox'"
+                    required="true"
+                    [readOnly]="updateDisabled">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <!-- </div>
+        <div class="margin-5"></div>
+        <div class="row"> -->
+        <div class="col-sm-2 col-xs-12">
+          <dx-label text="{{  'WAM_CREATE_METHOD' | translate }}">
+            <dx-lov [(value)]="headerItem.Method"
+                    formCode="LOV-WAM-010"
+                    [allowClear]="true"
+                    [displayMode]="'ComboBox'"
+                    required="true"
+                    [readOnly]="updateDisabled">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-2 col-xs-12">
+          <dx-label text="{{  'PUB_STATUS'| translate }}">
+            <dx-lov [(value)]="headerItem.Status"
+                    [(text)]="headerItem.StatusDescription"
+                    formCode="LOV-WAM-008"
+                    [displayMode]="'ComboBox'"
+                    required="true"
+                    [readOnly]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+      </div>
+      <div class="margin-5"></div>
+
+    </dx-validation-group>
+    <div class="margin-5"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)">
+          <dx-data-grid #datagrid
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="itemSelectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        (onRowInserted)="itemInserted()"
+                        (onRowUpdated)="itemInserted()"
+                        (onRowRemoving)="itemInserted()"
+                        [height]="350">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true" editCellTemplate="DisplaySequence"></dxo-editing>
+            <dxi-column dataField="Sequence" caption="{{'PUB_ORDER'| translate}}"></dxi-column>
+            <div *dxTemplate="let cell of 'DisplaySequence'">
+              <dx-number-box [(value)]="cell.data.Sequence" min="1">
+                <dx-validator>
+
+                  <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+                </dx-validator>
+
+
+              </dx-number-box>
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+            </div>
+            <dxi-column dataField="ParameterDescription" caption="{{'QUM_PARAMETER'| translate}}" editCellTemplate="parameteredit">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'parameteredit'">
+                <dx-lov formCode="LOV-WAM-011"
+                        [(value)]="cell.data.ParameterID"
+                        [text]="cell.data.Title"
+                        (dataChange)="onParameterChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="Seperator" caption="{{  'WAM_SEPRATOR'| translate }}"></dxi-column>
+            <dxi-column dataField="Lenght" caption="{{  'PUB_LENGTH'| translate }}"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>

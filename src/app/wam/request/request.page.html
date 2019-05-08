@@ -1,0 +1,250 @@
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-3">
+          <dx-label text="{{'REQUESTTTYPE'| translate}}">
+            <dx-lov [(value)]="insertItem.RequestTypeID"
+                    [(text)]="insertItem.RequestTypeDes"
+                    formCode="LOV-WAM-045"
+                    (dataChange)="RequesttTypeChanged($event)"
+                    allowClear="true"
+                    [readOnly]="readonly"
+                    [required]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3">
+          <dx-label text="{{'RQST_NUM'| translate}}">
+            <dx-text-box [(value)]="insertItem.Number"
+                         [readOnly]="true">
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-3">
+          <dx-label text="{{'RQST_DAT'| translate}}">
+            <dx-date [(value)]="insertItem.Date"[readOnly]="!flgDate"[required]="true">
+            </dx-date>
+          </dx-label>
+        </div>
+        <div class="col-sm-3">
+          <dx-label text="{{'STATUS'| translate}}">
+            <dx-lov [(value)]="insertItem.Status"
+                    [(text)]="insertItem.StatusDes"
+                    formCode="LOV-WAM-042"
+                    [displayMode]="'ComboBox'"
+                    allowClear="true"
+                    [required]="true"
+                    [readOnly]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <dx-label text="{{'WRHS_CODE_DLVR'| translate}}">
+            <dx-lov [(value)]="insertItem.WarehouseID"
+                    [(text)]="insertItem.WareHouseDes"
+                    (dataChange)="warehouseChanged($event)"
+                    formCode="LOV-WAM-114"
+                    [(params)]="warehouseFilter"
+                    [readOnly]="!flgWarehouse"
+                    allowClear="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12" *ngIf="flgWarehouseTargetVisible">
+          <dx-label text="{{'WRHS_CODE_RQST'| translate}}" *ngIf="flgWarehouseTargetVisible">
+            <dx-lov [(value)]="insertItem.WarehouseTargetID"
+                    [(text)]="insertItem.WareHouseDesTarget"
+                    [allowClear]="true"
+                    [readOnly]="!flgWarehouseTarget"
+                    [required]="flgWarehouseTarget"
+                    formCode="LOV-WAM-003">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12" *ngIf="flgCostCenterVisible">
+          <dx-label text="{{'WAM_COST_CENTER'| translate}}" *ngIf="flgCostCenterVisible">
+            <dx-lov [(value)]="insertItem.BusinessUnitID"
+                    [(text)]="insertItem.BusinessUnitName"
+                    (dataChange)="CostCenterChanged($event)"
+                    [allowClear]="true"
+                    [readOnly]="!flgCostCenter"
+                    [required]="flgCostCenter"
+                    formCode="LOV-WAM-138">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12" *ngIf="flgCustomerVisible">
+          <dx-label text="{{'CSTM_CODE'| translate}}" *ngIf="flgCustomerVisible">
+            <dx-lov [(value)]="insertItem.CustomerID"
+                    [(text)]="insertItem.CustomerNam"
+                    (dataChange)="CustomerChanged($event)"
+                    [allowClear]="true"
+                    [readOnly]="!flgCustomer"
+                    [required]="flgCustomer"
+                    formCode="LOV-SAL-005">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12" *ngIf="flgSupplierVisible">
+          <dx-label text="{{'SUPL_COD'| translate}}" *ngIf="flgSupplierVisible">
+            <dx-lov [(value)]="insertItem.SupplierID"
+                    [(text)]="insertItem.SupplierNam"
+                    (dataChange)="SupplierChanged($event)"
+                    [allowClear]="true"
+                    [readOnly]="!flgSupplier"
+                    [required]="flgSupplier"
+                    formCode="LOV-PUR-001">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3">
+          <dx-label text="{{'EMERGENCYTYPE'| translate}}">
+            <dx-lov [(value)]="insertItem.EmergencyType"
+                    [text]="insertItem.EmergencyType"
+                    formCode="LOV-WAM-043"
+                    [displayMode]="'ComboBox'"
+                    [readOnly]="!flgEmergencyType"
+                    allowClear="true"
+                    [required]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12" *ngIf="flgWorkOrderVisible">
+          <dx-label text="{{'WAM_WORKORDER'| translate}}" *ngIf="flgWorkOrderVisible">
+            <dx-lov [(value)]="insertItem.WorkOrderID"
+                    [(text)]="insertItem.WorkOrderNumber"
+                    (dataChange)="workOrderChanged($event)"
+                    [allowClear]="true"
+                    [readOnly]="!flgWorkOrder"
+                    formCode="LOV-MRP-008">
+            </dx-lov>
+          </dx-label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-xs-12">
+          <dx-label text="{{'TEXTNOTE'| translate}}">
+            <dx-text-box [(value)]="insertItem.TextNote"
+                         [readOnly]="!flgTextNote">
+            </dx-text-box>
+          </dx-label>
+        </div>
+      </div>
+    </dx-validation-group>
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridWarehouseItemMenuClick($event)" 
+                      [rowMenuItems]="gridItems"
+                      (onCancelEditRow)="onCanceledItemRowGrid($event)">
+          <dx-data-grid #grid
+                        [keyExpr]="'ID'"
+                        [dataSource]="dataSource"
+                        [hoverStateEnabled]="true"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        (onEditorPreparing)="onEditorPreparingItemsGrid($event)"
+                        (onInitNewRow)="itemGridOnInitNewRow($event)"
+                        [columnAutoWidth]="true"
+                        [rowAlternationEnabled]="true"
+                        [showBorders]="true"
+                        [showRowLines]="true"
+                        (onRowRemoved)="enableHeader($event)"
+                        [height]="400">
+            <dxo-paging [enabled]="false"></dxo-paging>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <!--<dxi-column dataField=" " caption="{{ 'بارکد' | translate }}"></dxi-column>-->
+            <!--<dxi-column dataField=" " caption="{{ 'تیپ' | translate }}"></dxi-column>-->
+            <dxi-column dataField="Sequence" caption="ردیف" [width]="70"></dxi-column>
+
+            <dxi-column dataField="ItemCode" caption="{{'PUB_CODE'| translate}}" editCellTemplate="ItemCode" [width]="130"[setCellValue]=setCellValueOfItemCode>
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'ItemCode'">
+                <dx-lov formCode="LOV-WAM-102"
+                        [text]="cell.data.ItemCode"
+                        [params]="warehouseItemFilter"
+                        [readOnly]="flgUpdateCode"
+                        (dataChange)="onCellWarehouseItemCodeChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="ItemDescription" caption="نام کالا" [width]="220"></dxi-column>
+
+            <dxi-column dataField="ItemTypeId" caption="{{'WAM_TYPE'| translate}}" [visible] = "!flagSimpleMode" >
+                <dxo-lookup [dataSource]="lovIttp" valueExpr="ID" displayExpr="Title">
+                </dxo-lookup>
+              </dxi-column>            
+
+            <dxi-column dataField="WarehouseCode" caption="{{'WRHS'| translate}}" editCellTemplate="WarehouseCode" [width]="130" [setCellValue]=setCellValueOfWarehouse>
+              <div *dxTemplate="let cell of 'WarehouseCode'">
+                <dx-lov formCode="LOV-WAM-115"   
+                        [(params)]="warehouseFilter"
+                        [text]="cell.data.WarehouseCode"
+                        [readOnly]="flgUpdateWarehouse"
+                        (dataChange)="onCellRequestItemWarehouseCode($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+
+            <dxi-column dataField="ProjectName" caption="{{'WAM_PROJECT'| translate}}" editCellTemplate="ProjectCode"[visible] = "!flagSimpleMode">
+              <div *dxTemplate="let cell of 'ProjectCode'">
+                <dx-lov [text]="cell.data.ProjectName" (dataChange)="onProjectChanged($event,cell)" formCode="LOV-WAM-111">
+                </dx-lov>
+              </div>
+            </dxi-column>
+
+            <dxi-column dataField="UnitDescriptionCommercial" caption="{{'PUB_UNIT'| translate}}"  editCellTemplate="MeasurementUnitCode" [setCellValue]="setCellValueOfUnitCommercial">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'MeasurementUnitCode'">
+                <dx-lov formCode="LOV-WAM-034"
+                        
+                        [text]="cell.data.UnitDescriptionCommercial"
+                        [params]="itemUnitFilter"
+                        (dataChange)="onCellUnitChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="SecondQuantityCommercial" caption="مقدار" dataType="number" [setCellValue]="setCellValueOfSecondQuantityCommercial">
+              <dxi-validation-rule type="range" [min]="0.001" message="{{  'NON_ZERO' | translate }}">
+              </dxi-validation-rule>
+            </dxi-column>
+            <dxi-column dataField="Inventory" caption="{{'WAM_INVENTORY'| translate}}"  editCellTemplate="Inventory"></dxi-column>
+            <div *dxTemplate="let cell of 'Inventory'">
+              {{ editRow.Inventory}}
+            </div>
+            <!--<dxi-column dataField="QuantityDelivered" caption="{{'WAM_QUANTITY_DELIVERED'| translate}}"  editCellTemplate="QuantityDelivered"></dxi-column>-->
+            <dxi-column dataField="prodProgress" caption="{{ 'WAM_QUANTITY_DELIVERED' | translate }}" cellTemplate="prodProgress">
+
+            </dxi-column>
+            <div *dxTemplate="let cell of 'prodProgress'">
+              <dx-progress-bar [min]="0"
+                               [max]="cell.data.SecondQuantityCommercial"
+                               [value]="cell.data.QuantityDelivered"
+                               [statusFormat]="formatProgress"
+                               [readOnly]="true">
+              </dx-progress-bar>
+            </div>
+            <dxi-column dataField="TextNote" caption="{{'WAM_TEXTNOTE'| translate}}" ></dxi-column>
+            <dxi-column dataField="LocationDescription" caption="{{'WAM_LOCATIONDESCRIPTION'| translate}}" [visible] = "!flagSimpleMode"></dxi-column>
+            <!--<dxi-column dataField="UnitDescription" caption="واحد انباری"> </dxi-column>
+            <dxi-column dataField="Quantity" caption="مقدار انباری"></dxi-column>-->
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+    <wam-movement-popup [(visible)]="movementPopup" [selectedRow]="selectedRow">
+    </wam-movement-popup>
+  </page-content>
+</page>

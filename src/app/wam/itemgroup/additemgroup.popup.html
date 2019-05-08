@@ -1,0 +1,69 @@
+<popup [(visible)]="visible" [width]="1000" [height]="310" title="درج زیر شاخه"
+  (onOpening)="onShow($event)" [isFullScreen]="false" (onSubmitClick)="onFormSubmit($event)" submitText="ذخیره" [showConfirm]="true">
+  <div class="margin-20"></div>
+  <div class="row">
+    <div class="col-sm-4">
+      <dx-label text="{{  'UPPER_GROUP' | translate }}">
+        <dx-text-box [(value)]="_parentCode" class="ltr text-left" [readOnly]="true">
+        </dx-text-box>
+      </dx-label>
+    </div>
+    <div class="col-sm-4">
+      <dx-label text="{{  'UPPER_GROUP_DES' | translate }}">
+        <dx-text-box [(value)]="selectedRow.Description" class="ltr text-left" [readOnly]="true">
+        </dx-text-box>
+      </dx-label>
+    </div>
+    <div class="col-sm-4">
+      <dx-label text="{{  'LEVEL_CODE' | translate }}">
+        <dx-text-box [(value)]="branchItems.LevelCode" (valueChange)="setCode()" class="ltr text-left" [readOnly]="true" required="true">
+        </dx-text-box>
+      </dx-label>
+    </div>
+    <div class="col-sm-4">
+      <dx-label text="{{  'ITGR_CODE' | translate }}">
+        <dx-text-box [(value)]="branchItems.Code" class="ltr text-left" [readOnly]="rootDisabled">
+        </dx-text-box>
+      </dx-label>
+    </div>
+    <div class="col-sm-4">
+      <dx-label text="{{  'ITGR_DES' | translate }}">
+        <dx-text-box [(value)]="branchItems.Description" class="ltr text-left" [readOnly]="false" required="true">
+        </dx-text-box>
+      </dx-label>
+    </div>
+    <!--<div class="col-sm-4">
+      <dx-label text="{{  'TCNL_ABBR' | translate }}">
+        <dx-text-box [(value)]="branchItems.TCNLAbbrevation"
+                     class="ltr text-left"
+                     [readOnly]="false"
+                     required="true">
+        </dx-text-box>
+      </dx-label>
+    </div>-->
+    <!--<div class="col-sm-2">
+      <dx-check-box [(value)]="branchItems.FlagItemLevel" text="قابل تخصیص به کالا"></dx-check-box>
+    </div>-->
+    <div class="col-sm-2">
+      <dx-check-box [(value)]="branchItems.IsActive" text="فعال"></dx-check-box>
+    </div>
+    <div class="col-sm-4">
+      <dx-label text="{{  'PUB_MUNIT' | translate }}">
+        <dx-lov [(value)]="branchItems.MeasurementUnitlId" formCode="LOV-WAM-027"></dx-lov>
+      </dx-label>
+    </div>
+    <div class="col-sm-4">
+      <dx-label text="{{  'PUB_MUNIT_CMM' | translate }}">
+        <dx-lov [(value)]="branchItems.MeasurementUnitCommercialId" formCode="LOV-WAM-027" >
+        </dx-lov>
+      </dx-label>
+    </div>
+    <div class="col-sm-4 col-xs-12">
+      <dx-label text="{{'WAM_ITEM_CATALOGUE'| translate}}">
+        <dx-lov [(value)]="branchItems.CatalogueId" [(text)]="branchItems.CatalogueDescription" formCode="LOV-WAM-023" [allowClear]="true">
+
+        </dx-lov>
+      </dx-label>
+    </div>
+  </div>
+</popup>

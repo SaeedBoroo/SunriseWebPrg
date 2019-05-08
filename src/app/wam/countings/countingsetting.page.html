@@ -1,0 +1,29 @@
+﻿<page>
+    <page-toolbar helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)"></page-toolbar>
+    <page-content>
+        <div class="row">
+            <div class="col-sm-12">
+                <grid-toolbar (onMenuItemClick)="onGridItemClick($event)">
+                    <gt-datasource loadUrl="/WAM/CountingSetting/List" insertUrl="/WAM/CountingSetting/Save" updateUrl="/WAM/CountingSetting/Save"
+                        removeUrl="/WAM/MovementType/Delete" [(saveParams)]="saveParams">
+                    </gt-datasource>
+                    <dx-data-grid #grid keyExpr="ID" [dataSource]="dataSource" (onSelectionChanged)="selectionChangedHandler()" [height]="700">
+                        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true">
+                        </dxo-editing>
+                        <dxo-selection mode="single"></dxo-selection>
+                        <dxo-paging enabled="true"></dxo-paging>
+                        <dxi-column dataField="Number" caption="{{'PUB_COD'| translate}}" width="150"></dxi-column>
+                        <dxi-column dataField="Description" caption="{{'PUB_DES'| translate}}"></dxi-column>
+                        <dxi-column dataField="Method" caption="{{'PUB_METHOD'| translate}}">
+                            <dxo-lookup [dataSource]="lovMethod" valueExpr="ID" displayExpr="Title">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="QuantityMinimum" caption="{{'WAM_INV_MIN'| translate}}"></dxi-column>
+                        <dxi-column dataField="Rounds" caption="{{'WAM_COUNTING_ROUNDS'| translate}}"></dxi-column>
+
+                    </dx-data-grid>
+                </grid-toolbar>
+            </div>
+        </div>
+    </page-content>
+</page>

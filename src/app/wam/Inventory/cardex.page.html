@@ -1,0 +1,160 @@
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <dx-label text="{{'WRHS'| translate}}">
+            <dx-lov [(value)]="searchItem.WarehouseID"
+                    [(text)]="searchItem.WarehouseDescription"
+                    (dataChange)="warehouseChanged($event)"
+                    formCode="LOV-WAM-003"
+                    [allowClear]="true"
+                    selectionMode = "multiple"
+                    required="false"></dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'WAM_ITEM'| translate}}">
+            <dx-lov formCode="LOV-WAM-101"
+                    [(value)]="searchItem.ItemId"
+                    [(text)]="searchItem.ItemCode"
+                    (dataChange)="itemChanged($event)"
+                    [allowClear]="true"
+                    required="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-2 col-xs-12">
+          <dx-label text="{{'WAM_TYPE'| translate}}">
+            <dx-lov formCode="LOV-WAM-024"
+                    [(value)]="searchItem.TypeId"
+                    [params]="typeFilter"                    
+                    [allowClear]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+      </div>
+      <div class="row">      
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'PUB_DAT_FROM'| translate}}">
+            <dx-date [(value)]="searchItem.DateFrom">
+            </dx-date>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'PUB_DAT_END'| translate}}">
+            <dx-date [(value)]="searchItem.DateTo"
+            [showToday]="true">
+            </dx-date>
+          </dx-label>
+        </div>
+
+        <!--<div class="col-sm-3 col-xs-12">
+      <dx-label text="{{'ITEM_ITGR'| translate}}">
+        <dx-lov [(value)]="searchItem.GroupId"
+                [(text)]="searchItem.GroupDescription"
+                formCode="LOV-WAM-032"
+                [allowClear]="true"
+                [readOnly]="readonly"
+                (dataChange)="groupChanged($event)"
+                required="true">
+        </dx-lov>
+      </dx-label>
+    </div>-->
+        <!--<div class="col-sm-3 col-xs-12">
+      <dx-label text="گزارش روی">
+        <dx-lov [(value)]="searchItem.ReportTypeWarehouse"
+                formCode="LOV-WAM-100"
+                [allowClear]="true"
+                [displayMode]="'ComboBox'"
+                required="false"></dx-lov>
+      </dx-label>
+    </div>-->
+    <div class="col-sm-2 col-xs-12">
+      <dx-label text="بر اساس">
+        <dx-lov [(value)]="searchItem.BaseMeasurementUnit"
+                formCode="LOV-WAM-049"                    
+                [displayMode]="'ComboBox'"
+                required="false"></dx-lov>
+      </dx-label>
+    </div>       
+    <div class="col-sm-2 col-xs-12">
+      <dx-check-box [(value)]="searchItem.FlagTemporary" [readOnly]="false" text="{{'WAM_SHOM_TEMP_MVMN'| translate}}" required="true">
+      </dx-check-box>
+    </div>
+        <div class="col-sm-2 col-xs-12">
+          <dx-button text="{{'PUB_QUERY'| translate}}" type="success" (onClick)="loadData()"></dx-button>
+        </div>
+      </div>
+    </dx-validation-group>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="margin-20"></div>
+        <grid-toolbar (onMenuItemClick)="onCardexMenuItemClick($event)"
+                      [rowMenuItems]="gridItems" (onRowDbClick)="onCardexClick($event)">
+          <dx-data-grid #gridContainer
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="itemSelectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        [height]="500">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-editing mode="row" [allowAdding]="false" [allowUpdating]="false" [allowDeleting]="false"></dxo-editing>
+            <!--<dxi-column dataField="ItemCode" caption="{{'ItemCode'| translate}}"></dxi-column>
+            <dxi-column dataField="ItemDescription" caption="{{'WAM_ItemDes'| translate}}"></dxi-column>-->            
+            <dxi-column dataField="MvtpTypeDescription" caption="{{'MOVEMENTTYPE'| translate}}"></dxi-column>
+            <dxi-column dataField="WarehouseCode" caption="{{'WRHS'| translate}}"></dxi-column>
+            <dxi-column dataField="WarehouseDescription" caption="{{'WRHS'| translate}}"></dxi-column>
+            <dxi-column dataField="Number" caption="{{'MVMN_NUM'| translate}}"></dxi-column>
+            <dxi-column dataField="Date" caption="{{'MVMN_DAT'| translate}}" dataType="date"></dxi-column>
+            <dxi-column dataField="Name" caption="عنوان طرف حساب"></dxi-column>
+            <dxi-column dataField="Code" caption="کد طرف حساب"></dxi-column>
+            <dxi-column dataField="ReffrenceNumber" caption="شماره عطف"></dxi-column>
+            <dxi-column dataField="TypeDescription" caption="تیپ"></dxi-column>
+            <dxi-column dataField="MeasurementUnit" caption="{{'PUB_UNIT'| translate}}" [visible]="!flgMesurementType"></dxi-column>
+            <dxi-column dataField="CommercialMeasurementUnit" caption="{{'PUB_UNIT'| translate}}" [visible]="flgMesurementType"></dxi-column>
+            <dxi-column dataField="TransactionQuantityIn" caption="مقدار وارده" [visible]="!flgMesurementType"cellTemplate="TransactionQuantityTempIn"></dxi-column>
+            <dxi-column dataField="CommercialTransactionQuantityIn" caption="مقدار وارده" [visible]="flgMesurementType" cellTemplate="TransactionQuantityTempIn"></dxi-column>
+            <div *dxTemplate="let cell of 'TransactionQuantityTempIn'" [ngClass]="{'inc': cell.value > 0}">
+              <span class="current-value">{{cell.value}}</span>
+            </div>
+            <dxi-column dataField="TransactionQuantityOut" caption="مقدار صادره" [visible]="!flgMesurementType"cellTemplate="TransactionQuantityTempOut"></dxi-column>
+            <dxi-column dataField="CommercialTransactionQuantityOut" caption="مقدار صادره" [visible]="flgMesurementType" cellTemplate="TransactionQuantityTempOut"></dxi-column>
+            <div *dxTemplate="let cell of 'TransactionQuantityTempOut'" [ngClass]="{'dec': cell.value > 0}">
+              <span class="current-value">{{cell.value}}</span>
+            </div>
+            <dxi-column dataField="Inentory" caption="{{'WAM_INVENTORY'| translate}}" [visible]="!flgMesurementType"></dxi-column>
+            <dxi-column dataField="CommerciaInentory" caption="{{'WAM_INVENTORY'| translate}}" [visible]="flgMesurementType"></dxi-column>
+            <dxi-column dataField="CentricAcountName" caption="{{'WAM_SERIAL_CNAC'| translate}}" ></dxi-column>
+            <dxi-column dataField="TextNote" caption="{{'TEXTNOTE'| translate}}"></dxi-column>
+
+            <!--<dxi-column caption="Dynamics" [width]="155" cellTemplate="chartCellTemplate"></dxi-column>
+            <div *dxTemplate="let d of 'chartCellTemplate'">
+              <div class="chart-cell">
+                <dx-sparkline [dataSource]="d.data.Inentory"
+                              argumentField="Inentory"
+                              valueField="Inentory"
+                              type="line"
+                              [showMinMax]="true"
+                              minColor="#f00"
+                              maxColor="#2ab71b"
+                              [pointSize]="6">
+                  <dxo-size [width]="140" [height]="30"></dxo-size>
+                  <dxo-tooltip [enabled]="false"></dxo-tooltip>
+                </dx-sparkline>
+              </div>
+            </div>-->
+
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+
+  </page-content>
+</page>

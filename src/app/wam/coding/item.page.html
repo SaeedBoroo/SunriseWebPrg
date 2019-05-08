@@ -1,0 +1,582 @@
+<page>
+  <page-toolbar helpUrl="https://www.sunrise.ir" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-lov #fastSearchLov formCode="LOV-WAM-101" [(value)]="filter.ItemId" [visible]="false" [popupWidth]="1100" [popupHeight]="700"
+      (dataChange)="onRowDbClick($event)" >
+    </dx-lov>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-3 col-xs-12">
+          <input-group label="{{'WAM_ITEM_CATEGORY'| translate}}" (onButtonClick)="onItctLovClick()" icon="fa fa-sitemap black">
+            <dx-lov [(value)]="headerItem.CategoryId" [(text)]="headerItem.CategoryName" formCode="LOV-WAM-006" [(params)]="categoryFilter"
+              [allowClear]="true" [readOnly]="readonly" (dataChange)="categoryChanged($event)" required="true" [displayMode]="'ComboBox'">
+            </dx-lov>
+          </input-group>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <input-group label="{{'ITEM_ITGR'| translate}}" (onButtonClick)="onGroupLovClick()" icon="fa fa-sitemap black">
+
+            <dx-lov [(value)]="headerItem.GroupId" [(text)]="headerItem.GroupDescription" formCode="LOV-WAM-032" [allowClear]="true"
+              [readOnly]="readonly" (dataChange)="groupChanged($event)" required="true" [displayMode]="'ComboBox'">
+
+            </dx-lov>
+
+            <!--<dx-text-box [(value)]="headerItem.GroupDescription" required="true" [readOnly]="readonly" >
+          <dx-validator>
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>-->
+          </input-group>
+        </div>
+
+
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'PUB_TITLE'| translate}}">
+            <dx-text-box [(value)]="headerItem.Description" required="true" [readOnly]="readonly">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </dx-label>
+        </div>
+
+
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'PUB_MUNIT'| translate}}">
+            <dx-lov [(value)]="headerItem.MeasurementUnitlId" [(text)]="headerItem.MeasurementUnitDescription" formCode="LOV-WAM-122"
+              [allowClear]="true" [readOnly]="readonly" (dataChange)="measurementUnitChanged($event)" required="true" [displayMode]="'ComboBox'">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'PUB_MUNIT_CMM'| translate}}">
+            <dx-lov [(value)]="headerItem.MeasurementUnitCommercialId" [(text)]="headerItem.MeasurementUnitCommercialDescription" formCode="LOV-WAM-141"
+              [params]="CmmUnitFilter" visible="false" [allowClear]="true" (dataChange)="cmmMeasurementUnitChanged($event)"
+              [readOnly]="readonly" required="true" [displayMode]="'ComboBox'">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WAM_ITEM_UNIT_SCALE'| translate}}">
+            <dx-number-box [(value)]="headerItem.UnitScale" [readOnly]="readonly" [min]="0.0001" visible="false">
+            </dx-number-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12" *ngIf="!flagSimpleMode">
+          <dx-label text="{{'WAM_SERIAL_CONTROL_TYPE'| translate}}">
+            <dx-lov [(value)]="headerItem.SerialControlType" [(text)]="headerItem.SerialControlTypeDescription" formCode="LOV-WAM-121"
+              [displayMode]="'ComboBox'" [readOnly]="readonly" >
+            </dx-lov>
+          </dx-label>
+        </div>
+
+      </div>
+
+      <div class="row">    
+          <div class="col-sm-1 col-xs-12" *ngIf="patternFlag">
+              <dx-button [text]="selecPatterntButton" type="success" (onClick)="OnPatternClick()" [visible]="patternFlag"></dx-button>
+          </div>    
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'PUB_CODE'| translate}}">
+            <dx-text-box [(value)]="code" required="true" [readOnly]="patternType" maxLength=20>
+              <dx-validator>
+                <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-3 col-xs-12">
+            <dx-label text="{{'PUB_TITLE_LATIN'| translate}}">
+              <dx-text-box [(value)]="headerItem.DescriptionLatin" required="true" [readOnly]="readonly">
+              </dx-text-box>
+            </dx-label>
+          </div>  
+
+        <div class="col-sm-3 col-xs-12">
+            <dx-label text="{{'PUB_ITEM_COD_TCNL'| translate}}">
+              <dx-text-box [(value)]="headerItem.CodeTCNL" required="true" [readOnly]="readonly">
+              </dx-text-box>
+            </dx-label>
+          </div>
+
+
+
+        <div class="col-sm-1 col-xs-12">
+          <dx-check-box [(value)]="headerItem.IsActive" [readOnly]="false" text="{{'PUB_ACTIVE'| translate}}" required="true">
+          </dx-check-box>
+        </div>
+      </div>
+
+    
+        <div class="col-sm-2 col-xs-12" *ngIf="!flagSimpleMode">
+          <input-group label="{{'WAM_LOCATION'| translate}}" (onButtonClick)="onLocationLovClick()" icon="fa fa-sitemap black">
+            <dx-lov [(value)]="headerItem.LocationID" [(text)]="headerItem.LocationDescription" formCode="LOV-WAM-104" [readOnly]="false"
+              [allowClear]="true" [displayMode]="'ComboBox'">
+            </dx-lov>
+          </input-group>
+        </div>
+        <div class="col-sm-2 col-xs-12" *ngIf="!flagSimpleMode">
+          <dx-check-box [(value)]="headerItem.bomAbleFlag" [readOnly]="formConfig.bomAbleReadOnly" text="{{ 'WAM_BOM_ABLE' | translate }}">
+          </dx-check-box>
+        </div>
+      
+      <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <dx-label text="{{'PUB_TEXT'| translate}}">
+            <dx-text-box [(value)]="headerItem.TextNote" [readOnly]="readonly">
+            </dx-text-box>
+          </dx-label>
+        </div>
+      
+        <div class="col-sm-3 col-xs-12" *ngIf="!patternFlag">
+          <dx-label text="{{'WAM_ITEM_CATALOGUE'| translate}}">
+            <dx-lov [(value)]="headerItem.CatalogueId" [(text)]="headerItem.CatalogueDescription" formCode="LOV-WAM-023" [allowClear]="true"
+              [readOnly]="readonly" [displayMode]="'ComboBox'"  (dataChange)="onCatalogueChanged($event)">
+            </dx-lov>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-3 col-xs-12" *ngIf="patternFlag">
+          <dx-label text="{{'WAM_ITEM_CATALOGUE'| translate}}">
+            <dx-lov [(value)]="headerItem.CatalogueId" [(text)]="headerItem.CatalogueDescription" formCode="LOV-WAM-023" [allowClear]="true"
+              [readOnly]="readonly" [displayMode]="'ComboBox'"  (dataChange)="onCatalogueChanged($event)">
+            </dx-lov>
+          </dx-label>
+        </div>
+        
+
+      </div>
+
+      <div class="margin-5"></div>
+      <div class="row">
+        <div class="col-sm-12">
+          <dx-tabs #tabs [dataSource]="tabItems" [selectedIndex]="0" (onItemClick)="selectTab($event)">
+          </dx-tabs>
+          <div [hidden]="selectedTab == 1">
+            <div class="margin-20"></div>
+            <grid-toolbar (onMenuItemClick)="onGridItemClick($event)">
+              <dx-data-grid #unitsGrid keyExpr="ID" [dataSource]="unitDataSource" [(selectedRowKeys)]="unitSelectedKeys" (onSelectionChanged)="unitSelectionChangedHandler()"
+                (onEditorPreparing)="onEditorPreparingItemsGrid($event)" (onRowInserted)="itemInserted()" (onRowUpdated)="itemInserted()"
+                (onInitNewRow)="msunGridOnInitNewRow($event)" [height]="350">
+                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                <dxo-selection mode="multiple"></dxo-selection>
+                <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+                <!--<dxi-column dataField="Automatic" caption="{{'PUB_AUTOMATIC'| translate}}" dataType="boolean"></dxi-column>-->
+                <dxi-column dataField="MeasurementUnitId" caption="{{'WAM_ITEM_MSUN_DES'| translate}}">
+                  <dxo-lookup [dataSource]="units" valueExpr="ID" displayExpr="Title">
+                  </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="Scale" caption="{{'WAM_UNIT_SCLAE'| translate}}"></dxi-column>
+                <dxi-column dataField="CommercialScale" caption="{{'WAM_CMM_UNIT_SCLAE'| translate}}"></dxi-column>
+              </dx-data-grid>
+            </grid-toolbar>
+          </div>
+          <div [hidden]="selectedTab == 0">
+            <div class="margin-20"></div>
+            <grid-toolbar (onMenuItemClick)="onGridCatalougeClick($event)">
+              <dx-data-grid #catalogueGrid keyExpr="ID" [dataSource]="catalogueDataSource" [(selectedRowKeys)]="unitSelectedKeys" (onSelectionChanged)="unitSelectionChangedHandler()"
+                (onInitNewRow)="catalogueItemOnInitNewRow($event)" (onRowInserted)="itemInserted()" (onRowUpdated)="itemInserted()"
+                [height]="350">
+                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                <dxo-selection mode="multiple"></dxo-selection>
+                <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+                <dxi-column dataField="CatalogueElementDescription" caption="{{'WAM_CAT_ELEMENT'| translate}}" editCellTemplate="CatalogueElementCode"
+                  width="180">
+                  <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+                  <div *dxTemplate="let cell of 'CatalogueElementCode'">
+                    <dx-lov formCode="LOV-WAM-025" [(value)]="cell.data.CatalogueElementId" [text]="cell.data.CatalogueElementDescription" [params]="catalogueFilter"
+                      (dataChange)="onCellElementChanged($event,cell)">
+                    </dx-lov>
+                  </div>
+                </dxi-column>
+                <dxi-column dataField="Description" caption="{{'WAM_CATALOGUE_VALUE_TITLE'| translate}}" width="180"></dxi-column>
+                <!--<dxi-column dataField="MeasurementUnitDescription" caption="{{'PUB_UNIT'| translate}}" editCellTemplate="MeasurementUnitCode" width="180">
+                <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+                <div *dxTemplate="let cell of 'MeasurementUnitCode'">
+                  <dx-lov formCode="LOV-WAM-027"
+                          [(value)]="cell.data.MeasurementUnitId"
+                          [text]="cell.data.MeasurementUnitDescription"
+                          (dataChange)="onCellUnitChanged($event,cell)">
+                  </dx-lov>
+                </div>
+              </dxi-column>-->
+                <dxi-column dataField="BaseValue" caption="{{'PUB_BASE_VALUE'| translate}}"></dxi-column>
+                <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+                <!--<dxi-column dataField="MinimumValue" caption="{{'PUB_MIN_VALUE'| translate}}" width="180"></dxi-column>
+              <dxi-column dataField="MaximumValue" caption="{{'PUB_MAX_VALUE'| translate}}" width="180"></dxi-column>-->
+                <!--<dxi-column dataField="PrintFlag" caption="{{'PUB_PRINT_FLAG'| translate}}" dataType="boolean"></dxi-column>
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>-->
+
+                <dxi-column dataField="DisplaySequence" caption="{{'PUB_DISPALY_SEQUENCE'| translate}}" dataType="number">
+                  <!--editCellTemplate="DisplaySeq"-->
+                  <!--<div *dxTemplate="let cell of 'DisplaySeq'">
+                 {{editRow.DisplaySequence}}
+                    </div>-->
+                </dxi-column>
+                <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+                <dxi-column dataField="FlagDesLatin" caption="{{'BFS_CNAC_NAM_LATIN'| translate}}" dataType="boolean"></dxi-column>
+                <!--<dxi-column dataField="PrintSequence" caption="{{'PUB_PRINT_SEQUENCE'| translate}}" width="180"></dxi-column>
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <dxi-column dataField="EffevtivityDate" caption="{{'DAT_EFFECTIVITY'| translate}}" width="180"></dxi-column>
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <dxi-column dataField="DisableDate" caption="{{'PUB_DIS_DAT'| translate}}" width="180"></dxi-column>-->
+
+              </dx-data-grid>
+
+            </grid-toolbar>
+          </div>
+
+        </div>
+      </div>
+    </dx-validation-group>
+    <wam-setitempattern-popup [(visible)]="setItemPatternPopup" [(code)]="code" [(patternId)]="patternId" [(headerItem)]="headerItem"
+      [(ItemPatternValues)]="patternValues">
+    </wam-setitempattern-popup>
+
+    <wam-setserialpattern-popup [(visible)]="setSerialPatternPopup" [(patternId)]="serialPatternId" [(headerItem)]="headerItem"
+      [(SerialPatternValues)]="serialPatternValues">
+    </wam-setserialpattern-popup>
+
+    <popup [(visible)]="businessUnitPopup" [width]="450" [height]="400" title="{{'WAM_BUSINESS_UNIT'| translate}}" (onOpening)="onbusinesUnitShow($event)">
+      <div class="col-sm-12 col-xs-12">
+        <grid-toolbar>
+          <gt-datasource loadUrl="/WAM/BusinessUnitItem/List" insertUrl="/WAM/BusinessUnitItem/Save" updateUrl="/WAM/BusinessUnitItem/Save"
+            removeUrl="/WAM/BusinessUnitItem/Delete" [(loadParams)]="saveLoadParams" [(saveParams)]="saveLoadParams">
+          </gt-datasource>
+          <dx-data-grid #businesUnitGrid keyExpr="ID" [(selectedRowKeys)]="selectedKeys" [height]="300">
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+            <dxi-column dataField="BusinessUnitName" caption="{{'PUB_CODE'| translate}}" editCellTemplate="BusinessUnitCode">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'BusinessUnitCode'">
+                <dx-lov formCode="LOV-EIM-030" [text]="cell.data.ItemCode" (dataChange)="onBusinessUnitCodeChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <!--<dxi-column dataField="BusinessUnitName" caption="نام" [width]="220" editCellTemplate="Description"></dxi-column>
+            <div *dxTemplate="let cell of 'Description'">
+              {{saveLoadParams.BusinessUnitName}}
+            </div>-->
+          </dx-data-grid>
+
+
+
+
+
+        </grid-toolbar>
+
+
+
+
+      </div>
+
+
+    </popup>
+
+
+    <popup [(visible)]="locationPopup" [width]="450" [height]="400" title="{{'WAM_LOCATION'| translate}}" (onOpening)="onlocationShow($event)">
+
+      <grid-toolbar>
+
+        <gt-datasource loadUrl="/WAM/ItemLocation/List" insertUrl="/WAM/ItemLocation/Save" updateUrl="/WAM/ItemLocation/Save" removeUrl="/WAM/ItemLocation/Delete"
+          [(loadParams)]="locationSaveLoadParams" [(saveParams)]="locationSaveLoadParams">
+        </gt-datasource>
+        <dx-data-grid #locationGrid keyExpr="ID" (onEditorPreparing)="onEditorPreparingLocationGrid($event)" [(selectedRowKeys)]="selectedKeys"
+          [height]="300">
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+          <dxi-column dataField="LocationDescription" caption="{{'PUB_DES'| translate}}" editCellTemplate="LocationDescription">
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            <div *dxTemplate="let cell of 'LocationDescription'">
+              <dx-lov formCode="LOV-WAM-104" [text]="cell.data.LocationDescription" (dataChange)="onLocationChanged($event,cell)">
+              </dx-lov>
+            </div>
+          </dxi-column>
+          <dxi-column dataField="Date" caption="تاریخ پایان تاثیر" [width]="220" dataType="date"></dxi-column>
+        </dx-data-grid>
+      </grid-toolbar>
+    </popup>
+
+
+
+    <!-- <popup  [(visible)]="warehousePopup"
+            [width]="1000"
+            [height]="310"
+            title="تحصیص به انبار"
+            (onOpening)="onShow($event)"
+            [isFullScreen]="false"
+            (onSubmitClick)="onFormSubmit($event)"
+            submitText="ذخیره"
+            [showConfirm]="true">
+          <grid-toolbar (onMenuItemClick)="onWarehouseGridItemClick($event)" [rowMenuItems]="gridItems">
+            <gt-datasource loadUrl="/WAM/Setup/WarehouseItemFile/Save"
+                           insertUrl="/WAM/ItemLocation/Save"
+                           updateUrl="/WAM/ItemLocation/Save"
+                           removeUrl="/WAM/WarehouseItemFile/Delete"
+                           [(loadParams)]="locationSaveLoadParams"
+                           [(saveParams)]="locationSaveLoadParams">
+            </gt-datasource>
+            <dx-data-grid #unitsGrid
+                          keyExpr="ID"
+                          [dataSource]="locationDataSource"
+                          (onEditorPreparing)="onEditorPreparingLocationGrid($event)"
+                          [(selectedRowKeys)]="selectedKeys"
+                          (onSelectionChanged)="selectionChangedHandler()"
+                          [height]="230">
+              <dxo-selection mode="multiple"></dxo-selection>
+              <dxo-editing mode="row"
+                           [allowUpdating]="true"
+                           [allowDeleting]="true"
+                           [allowAdding]="true"></dxo-editing>
+              <dxi-column dataField="LocationDescription" caption="{{'PUB_DES'| translate}}" editCellTemplate="LocationDescription" [width]="130">
+                <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+                <div *dxTemplate="let cell of 'LocationDescription'">
+                  <dx-lov formCode="LOV-WAM-104"
+                          [text]="cell.data.LocationDescription"
+                          (dataChange)="onLocationChanged($event,cell)">
+                  </dx-lov>
+                </div>
+              </dxi-column>
+              <dxi-column dataField="Date" caption="تاریخ پایان تاثیر" [width]="220"dataType="date"></dxi-column>
+            </dx-data-grid>
+          </grid-toolbar>
+        </form>
+        <div class="row footer-popup">
+          <dx-button type="danger" (onClick)="onCancelLocationPopup()" text="{{  'PUB_CANCEL' | translate }}" [width]="100"></dx-button>
+        </div>
+    </popup> -->
+    <!--<dx-popup class="popup"
+              [width]="800"
+              [height]="500"
+              [showTitle]="true"
+              (onShowing)="onShow($event)"
+              [showCloseButton]="true"
+              [dragEnabled]="true"
+              [closeOnOutsideClick]="true"
+              [(visible)]="setItemPatternPopup">
+      <div *dxTemplate="let data of 'content'">
+        <page-content class="rak-page">
+          <div class="padding-5">
+            <div class="margin-10"></div>
+            <div class="pattern-group-container" *ngFor="let group of model">
+              <div *ngFor="let item of group.Details">
+                <dx-label text="{{item.ParameterDescription}}{{item.Sequence}}">
+                  <dx-lov [formCode]=item.LovName
+                          [allowClear]="true"
+                          [params]=item.IPPR_LOV_PARAMETER
+                          (dataChange)="patternChanged($event,item.ID)"
+                          required="true">
+                  </dx-lov>
+                </dx-label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 pull-left">
+              <dx-button type="success" text="{{  'PUB_SAVE' | translate }}" [width]="100" (onClick)="onSaveClick()" [useSubmitBehavior]="true"></dx-button>
+            </div>
+          </div>
+        </page-content>
+      </div>
+    </dx-popup>-->
+  </page-content>
+</page>
+<!--<dx-popup class="popup" [width]="1000" [height]="470" *ngIf="formConfig.itemSearchVisible"
+          [showTitle]="true"
+          title="{{ 'PUB_SEARCH' | translate }}"
+          [showCloseButton]="true"
+          [dragEnabled]="true"
+          [closeOnOutsideClick]="true"
+          [(visible)]="formConfig.itemSearchVisible">
+  <div *dxTemplate="let data of 'content'">
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onRowDbClick)="onRowDbClick($event)">
+          <gt-datasource loadUrl="/WAM/Item/ListHeader">
+          </gt-datasource>
+          <dx-data-grid #searchDataGrid
+                        keyExpr="ID"
+                        [(selectedRowKeys)]="searchSelectedKeys"
+                        [height]="400">
+            <dxo-editing mode="row">
+            </dxo-editing>
+            <dxo-paging [enabled]="true" [pageSize]="100"></dxo-paging>
+            <dxo-remote-operations [sorting]="false"
+                                   [paging]="true"
+                                   [filtering]="false">
+            </dxo-remote-operations>
+
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="false"></dxo-paging>
+            <dxi-column dataField="Code" caption="{{'PUB_CODE'| translate}}"></dxi-column>
+            <dxi-column dataField="Description" caption="{{'PUB_TITLE'| translate}}"></dxi-column>
+            <dxi-column dataField="DescriptionLatin" caption="{{'PUB_TITLE_LATIN'| translate}}" width="150"></dxi-column>
+            <dxi-column dataField="CodeTCNL" caption="{{'PUB_ITEM_COD_TCNL'| translate}}"></dxi-column>
+            <dxi-column dataField="GroupCode" caption="{{'ITGR_CODE'| translate}}"></dxi-column>
+            <dxi-column dataField="GroupDescription" caption="{{'ITGR_DES'| translate}}"></dxi-column>
+            <dxi-column dataField="MeasurementUnitDescription" caption="{{'PUB_MUNIT'| translate}}"></dxi-column>
+
+            <dxi-column dataField="CategoryName" caption="{{'WAM_ITEM_CATEGORY'| translate}}"></dxi-column>
+            <dxi-column dataField="CatalogueDescription" caption="{{'WAM_ITEM_CATALOGUE'| translate}}"></dxi-column>
+            <dxi-column dataField="IsActive" caption="{{'PUB_ACTIVE'| translate}}"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </div>
+</dx-popup>-->
+
+<dx-popup class="popup" [(visible)]="typePopup" [width]="450" [height]="400" title="{{'WAM_ITEM_TYPE'| translate}}" (onOpening)="ontypeShow($event)">
+  <div *dxTemplate="let data of 'content'">
+    <grid-toolbar (onMenuItemClick)="onTypeGridItemClick($event)">
+      <gt-datasource loadUrl="/WAM/ItemType/List" insertUrl="/WAM/ItemType/Save" updateUrl="/WAM/ItemType/Save" removeUrl="/WAM/ItemType/Delete"
+        [(loadParams)]="typeSaveLoadParams" [(saveParams)]="typeSaveLoadParams">
+      </gt-datasource>
+      <dx-data-grid #typeGrid keyExpr="ID" [(selectedRowKeys)]="typeSelectedKeys" (onInitNewRow)="typeGridOninitNewRow($event)"
+        (onEditorPreparing)="onEditorPreparingTypeGrid($event)" [height]="300">
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+        <dxi-column dataField="Code" caption="{{'PUB_COD'| translate}}"></dxi-column>
+        <dxi-column dataField="Description" caption="{{'PUB_DES'| translate}}"></dxi-column>
+      </dx-data-grid>
+    </grid-toolbar>
+  </div>
+</dx-popup>
+<!-- #region pop up Vesion List-->
+<dx-popup class="popup" [width]="800" [height]="530" [showTitle]="true" title="{{ 'BOM_VERSION_LIST' | translate }}" [showCloseButton]="true"
+  [dragEnabled]="true" [closeOnOutsideClick]="true" [(visible)]="showVersionPopup">
+  <div *dxTemplate="let data of 'content'">
+    <!--VersionList Grid-->
+    <div class="row">
+      <grid-toolbar [rowMenuItems]="versionsGridItems" (onMenuItemClick)="onVersionGridClick($event)">
+        <gt-datasource loadUrl="/WAM/ItemRevision/List" [(loadParams)]="loadVersionListGrid" insertUrl="/WAM/ItemRevision/Save" updateUrl="/WAM/ItemRevision/Save"
+          [(saveParams)]="loadVersionListGrid" removeUrl="/WAM/ItemRevision/Delete">
+        </gt-datasource>
+        <dx-data-grid #versionListGrid keyExpr="ID" [height]="400" [(selectedRowKeys)]="versionSelectedKeys" (onInitNewRow)="versionGridOnInitNewRow($event)"
+          (onEditorPreparing)="onEditorPreparingVersionsGrid($event)">
+          <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+          <dxo-scrolling mode="virtual"></dxo-scrolling>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxi-column dataField="ItemRevisionNum" caption="{{ 'BOM_ITEM_REVISION_NUM' | translate }}">
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+          </dxi-column>
+          <dxi-column dataField="ItemRevisionDate" caption="{{ 'BOM_ITEM_REVISION_DATE' | translate }}" editCellTemplate="ItemRevisionDate"
+            dataType="dateTime">
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            <div *dxTemplate="let cell of 'ItemRevisionDate'">
+              <dx-date [(value)]="cell.data.ItemRevisionDate" [showToday]="true" [mode]="dateTime" disableKeypress="true" [readOnly]="cell.data.ItemRevisionDate!=null">
+              </dx-date>
+            </div>
+
+          </dxi-column>
+          <dxi-column dataField="ItemRevisionDescription" caption="{{ 'ITEM_REVISION_DES' | translate }}" [width]="200">
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+          </dxi-column>
+          <dxi-column dataField="RevisionStatus" caption="{{ 'PUB_STATUS' | translate }}">
+
+            <dxo-lookup [dataSource]="revisionStatusLov" valueExpr="ID" displayExpr="Title">
+            </dxo-lookup>
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+          </dxi-column>
+          <dxi-column dataField="Confirm" caption="{{ 'PUB_CONFIRM' | translate }}" editCellTemplate="cell1" cellTemplate="cell1"></dxi-column>
+          <div *dxTemplate="let cell of 'cell1'">
+            <dx-button icon="fa fa-check" type="success" [disabled]="cell.data.RevisionStatus!=10" [height]="34" (onClick)="onConfirmVersionClick(cell,$event)">
+            </dx-button>
+          </div>
+        </dx-data-grid>
+      </grid-toolbar>
+
+    </div>
+    <div class="margin-20"></div>
+
+
+    <div class="footer-popup">
+      <dx-button type="success" (onClick)="onVersionListReturnClick()" text="{{  'PUB_RETURN' | translate }}" [width]="100"></dx-button>
+    </div>
+
+  </div>
+</dx-popup>
+<!-- #endregion End pop up Vesion List-->
+
+
+<!-- #region which item-which production Popup-->
+<dx-popup [width]="950" [height]="500" [showTitle]="true" [showCloseButton]="true" [dragEnabled]="true" [closeOnOutsideClick]="false"
+  [(visible)]="ItemInProdPopup" title="{{ 'WAM_ITEM_IN_PROD' | translate }}">
+  <div *dxTemplate="let data of 'content'">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <grid-toolbar>
+          <gt-datasource loadUrl="/WAM/Item/ListItemInProd" [(loadParams)]="ItemInProdParam">
+          </gt-datasource>
+          <dx-data-grid #ItemInProdGrid keyExpr="ID" [height]="400">
+            <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"></dxo-editing>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+
+            <dxi-column caption="{{ 'WAM_ITEM' | translate }}">
+              <!-- <dxi-column dataField="BcmpCode" caption="{{ 'PUB_COD' | translate }}"></dxi-column>
+              <dxi-column dataField="BcmpCodeTCNL" caption="{{ 'PUB_ITEM_COD_TCNL' | translate }}"></dxi-column>
+              <dxi-column dataField="BcmpDescription" caption="{{ 'PUB_DES' | translate }}"></dxi-column>
+              <dxi-column dataField="BcmpDescriptionLatin" caption="{{ 'PUB_LATIN_DES' | translate }}"></dxi-column>-->
+              <dxi-column dataField="BcmpTypeDescription" caption="{{ 'MFG_TYP' | translate }}"></dxi-column>
+              <dxi-column dataField="BcmpQty" caption="{{ 'BOM_BESV_QUANTITY' | translate }}"></dxi-column>
+            </dxi-column>
+
+
+            <dxi-column caption="{{ 'MFG_PRODUCT' | translate }}">
+              <dxi-column dataField="MainCode" caption="{{ 'PUB_COD' | translate }}"></dxi-column>
+              <dxi-column dataField="MainCodeTCNL" caption="{{ 'PUB_ITEM_COD_TCNL' | translate }}"></dxi-column>
+              <dxi-column dataField="MainDescription" caption="{{ 'PUB_DES' | translate }}"></dxi-column>
+              <dxi-column dataField="MainDescriptionLatin" caption="{{ 'PUB_LATIN_DES' | translate }}"></dxi-column>
+              <dxi-column dataField="MainTypeDescription" caption="{{ 'MFG_TYP' | translate }}"></dxi-column>
+              <dxi-column dataField="MainAltDescription" caption="{{ 'PUB_ALTERNATIVE' | translate }}"></dxi-column>
+            </dxi-column>
+
+
+
+
+
+
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+
+
+  </div>
+</dx-popup>
+<!-- #endregion -->
+
+<!--inventory warehouse popup-->
+<dx-popup [width]="950" [height]="500" [showTitle]="true" [showCloseButton]="true" [dragEnabled]="true" [closeOnOutsideClick]="false"
+  [(visible)]="ItemInvWarehousePopup" title="{{ 'WAM_INVENTORY_WAREHOUSE' | translate }}">
+  <div *dxTemplate="let data of 'content'">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <grid-toolbar>
+          <gt-datasource loadUrl="/WAM/Item/ListInventoryWarehouseType" [(loadParams)]="InventoryWarehouseParam">
+          </gt-datasource>
+          <dx-data-grid #InventoryWarehouseGrid keyExpr="ID" [height]="400">
+            <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"></dxo-editing>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+
+            <dxi-column dataField="WarehouseCode" caption="{{ 'BOM_WRHS_COD' | translate }}"></dxi-column>
+            <dxi-column dataField="WarehouseName" caption="{{ 'BOM_WRHS_DES' | translate }}"></dxi-column>
+            <dxi-column dataField="TypeName" caption="{{ 'MFG_TYP' | translate }}"></dxi-column>
+            <dxi-column dataField="CountInventory" caption="{{ 'WAM_INVENTORY' | translate }}"></dxi-column>
+
+
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </div>
+</dx-popup>

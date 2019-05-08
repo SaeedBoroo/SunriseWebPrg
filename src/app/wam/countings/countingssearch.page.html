@@ -1,0 +1,43 @@
+﻿
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" [rowMenuItems]="gridItems">
+          <gt-datasource loadUrl="/WAM/Countings/List"></gt-datasource>
+          <dx-data-grid #grid
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [hoverStateEnabled]="true"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        [columnAutoWidth]="true"
+                        [rowAlternationEnabled]="true"
+                        [showBorders]="true"
+                        [showRowLines]="true"
+                        [height]="500">
+            <dxo-paging [enabled]="false"></dxo-paging>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-editing mode="row"
+                         [allowUpdating]="false"
+                         [allowDeleting]="false"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxi-column dataField="WarehouseCode" caption="{{ ' کد انبار' | translate }}"></dxi-column>
+            <dxi-column dataField="WarehouseDescription" caption="{{ 'شرح انبار' | translate }}"></dxi-column>
+            <dxi-column dataField="CountingsNumber" caption="{{ ' شماره انبار گردانی' | translate }}"></dxi-column>
+            <dxi-column dataField="CountingsDate" dataType="date" caption="{{ 'تاریخ سند انبار گردانی' | translate }}" ></dxi-column>
+            <dxi-column dataField="DoDate" caption="{{ 'تاریخ انجام انبار گردانی  ' | translate }}" dataType="date"></dxi-column>
+            <dxi-column dataField="StateDes" caption="{{ 'وضعیت ' | translate }}"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>
+

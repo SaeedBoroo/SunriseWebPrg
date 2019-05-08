@@ -1,0 +1,341 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import CustomStore from 'devextreme/data/custom_store';
+import ArrayStore from 'devextreme/data/array_store';
+import 'rxjs/add/operator/toPromise';
+import { ServiceCaller } from '../../shared/services/ServiceCaller';
+import { Deferred } from '../../shared/Deferred';
+import { confirm } from 'devextreme/ui/dialog';
+import { TranslateService } from '../../shared/services/TranslateService';
+import { BasePage } from '../../shared/BasePage';
+import { DxDataGridComponent, DxValidationGroupComponent } from 'devextreme-angular';
+import { Guid } from '../../shared/types/GUID';
+import { Notify } from '../../shared/util/Dialog';
+import { RouteData } from '../../shared/util/RouteData';
+import { DateTime, DateTimeFormat } from '../../shared/util/DateTime';
+
+@Component({
+  selector: 'wam-page-movementsearch',
+  templateUrl: './movementsearch.page.html',
+  providers: [ServiceCaller]
+})
+
+export class WAMMovementSearchPage extends BasePage implements OnInit {
+  WarehouseID: any;
+  ngOnInit() {
+  }
+  //@ViewChild('datagrid') dataGrid: DxDataGridComponent;
+  @ViewChild('movementGrid') movementGrid: DxDataGridComponent;
+  @ViewChild('form') form: DxValidationGroupComponent;
+
+
+  menuItems = [
+    {
+      name: "Search",
+      icon: "fa fa-search blue",
+      text: "جستجو",
+      visible: true
+    },
+    // {
+    //   name: "Edit",
+    //   text: "انتخاب",
+    //   icon: "fa fa-edit yellow",
+    //   visible: true
+    // },
+    {
+      name: "Back",
+      icon: "fa fa-arrow-left",
+      text: this.translate.instant("بازگشت"),
+      visible: true
+    },
+  ];
+  //LOV
+  items: any = {};
+  units: any = {};
+  itemUnitFilter: any = {};
+  lovItemSettingFilter: any = {};
+  reffrenceMovementFilter: any = { WRHS_ID: null, MVTP_ID: null };
+  MovementFilter: any = { WRHS_ID: null, MVTP_ID: null };
+  requestFilter: any = { WRHS_ID: null };
+  movementItemFilter: any = {};
+  requestItemFilter: any = {};
+
+
+  itemSelectedKeys: any = [];
+  selectedRow: any = {};
+  editRow: any = {};
+  infoPopupVisibile: boolean = false;
+  refMvmnData: any = {};
+
+  headerItem: any = {};
+  dataSource: any = {};
+  localData: any[] = [];
+  headerItemsConfig: any = {};
+  itemsLength: Number = 0;
+
+  Name: string = null;
+  type: string;
+  typeId: string = Guid.empty;
+  reffrenceMovementTypeID: string;
+  RelationType: Number;
+  ReffrenceType: Number;
+  refName: string = null;
+  refMovementType: string;
+  filter: any = {};
+  typeFilter: any = {};
+
+  //Context Parameters
+  flgSupplier: boolean = false;
+  flgCustomer: boolean = false;
+  flgCostCenter: boolean = false;
+  flgWarehouseTarget: boolean = false;
+  flgSupplierVisible: boolean = false;
+  flgCustomerVisible: boolean = false;
+  flgCostCenterVisible: boolean = false;
+  flgWarehouseTargetVisible: boolean = false;
+  flgWarehouse: boolean = false;
+  flgMovement: boolean = false;
+  flgRequest: boolean = false;
+  flgMovementVisible: boolean = false;
+  flgRequestVisible: boolean = false;
+  flgPurOrder: boolean = false;
+  flgSalOrder: boolean = false;
+  flgDate: boolean = false;
+  flgTextNote: boolean = false;
+
+  flgMovementRequired: any = {};
+  flgRequestRequired: any = {};
+
+  readonly: boolean = true;
+
+  checkQuantityCommercial: Boolean = false;
+  scale: any = {};
+  commercialScale: any = {};
+  //filters
+  //filter: any = {};
+  constructor(public service: ServiceCaller, public translate: TranslateService, private router: Router, private route: ActivatedRoute) {
+    super(translate);
+    //this.type = this.route.snapshot.data["type"];
+    this.route.queryParams.subscribe(params => {
+      this.type = params['type'];
+    });
+    this.filter.WarehouseID = Guid.empty;
+    let today = DateTime.convertForRemote(DateTime.now);
+    this.service.get("/WAM/Period/GetPeriodStart", (data) => {
+        this.filter.DateFrom = data;
+        },{filter:today}); 
+    this.clearForm();
+    this.setContext();
+
+    this.service.loadLovData("LOV-WAM-004", (data) => { this.items = data; }, { ITEM_ITCT_FILTER: null, ITEM_ITCT_FILTER_ALLOW: null });
+    service.get("/SYS/FORMS/List", (data) => {
+      this.units = data.Data;
+    }, { Code: "LOV-WAM-005" });
+  }
+  clearForm() {
+    this.headerItem = {};
+    this.headerItem = { Status: 10, MovementTypeID: this.typeId };
+    this.localData = [];
+  }
+  setContext() {
+    if (this.typeId == Guid.empty) {
+      this.typeFilter.Code = this.type;
+      this.service.get("/WAM/MovementType/List", (data) => {
+        this.headerItem.MovementTypeID = data[0].ID;
+        this.typeId = data[0].ID;
+        this.filter.MovementTypeID = this.typeId;
+        this.reffrenceMovementTypeID = data[0].ReffresnceMovementTypeID;
+        this.reffrenceMovementFilter = { MVTP_ID: this.reffrenceMovementTypeID };
+        //this.filter = { TypeID:}
+        //
+        this.MovementFilter = { MVTP_ID: this.typeId };
+        this.RelationType = data[0].RelationType;
+        this.ReffrenceType = data[0].ReffrenceType;
+        this.setLayaoutAndValidation();
+        //
+        this.movementGrid.instance.refresh();
+      }, this.typeFilter)
+    }
+    else
+      this.setLayaoutAndValidation();
+  }
+
+  setLayaoutAndValidation() {
+    switch (this.RelationType) {
+      case 1:
+        if (this.headerItem.Status == 10 && this.itemsLength == 0) {
+          this.flgCostCenter = true;
+          this.flgCostCenterVisible = true;
+          this.enableGeneralValues();
+          break;
+        }
+        if (this.headerItem.Status >= 20 || this.itemsLength > 0) {
+          this.disableAllHeaderFields();
+          this.flgCostCenterVisible = true;
+          break;
+        }
+      case 2:
+        break;
+      case 3:
+        if (this.headerItem.Status == 10 && this.itemsLength == 0) {
+          this.flgSupplier = true;
+          this.flgSupplierVisible = true;
+          this.enableGeneralValues();
+          break;
+        }
+        if (this.headerItem.Status >= 20 || this.itemsLength > 0) {
+          this.disableAllHeaderFields();
+          this.flgSupplierVisible = true;
+          break;
+        }
+      case 4:
+        if (this.headerItem.Status == 10 && this.itemsLength == 0) {
+          this.flgCustomer = true;
+          this.flgCustomerVisible = true;
+          this.enableGeneralValues();
+          break;
+        }
+        if (this.headerItem.Status >= 20 || this.itemsLength > 0) {
+          this.disableAllHeaderFields();
+          this.flgCustomerVisible = true;
+          break;
+        }
+
+      case 5:
+        if (this.headerItem.Status == 10 && this.itemsLength == 0) {
+          this.flgWarehouseTarget = true;
+          this.flgWarehouseTargetVisible = true;
+          this.enableGeneralValues();
+          break;
+        }
+        if (this.headerItem.Status >= 20 || this.itemsLength > 0) {
+          this.disableAllHeaderFields();
+          this.flgWarehouseTargetVisible = true;
+          break;
+        }
+      case 9:
+        break;
+      default:
+    }
+    switch (this.ReffrenceType) {
+      case 1:
+        if (this.headerItem.Status == 10 && this.itemsLength == 0) {
+          this.flgRequest = true;
+          this.flgRequestRequired = true;
+          this.flgRequestVisible = true;
+          break;
+        }
+        if (this.headerItem.Status >= 20 || this.itemsLength > 0) {
+          this.disableAllHeaderFields();
+          break;
+        }
+      case 2:
+        if (this.headerItem.Status == 10 && this.itemsLength == 0) {
+          this.flgMovement = true;
+          this.flgMovementVisible = true;
+          this.flgMovementRequired = true;
+          break;
+        }
+        if (this.headerItem.Status >= 20 || this.itemsLength > 0) {
+          this.disableAllHeaderFields();
+          break;
+        }
+      case 3:
+        if (this.headerItem.Status == 10 && this.itemsLength == 0) {
+          this.flgPurOrder = true;
+          break;
+        }
+        if (this.headerItem.Status >= 20 || this.itemsLength > 0) {
+          this.disableAllHeaderFields();
+          break;
+        }
+      case 4:
+        if (this.headerItem.Status == 10 && this.itemsLength == 0) {
+          this.flgSalOrder = true;
+          break;
+        }
+        if (this.headerItem.Status >= 20 || this.itemsLength > 0) {
+          this.disableAllHeaderFields();
+          break;
+        }
+      default:
+    }
+  }
+
+  disableAllHeaderFields() {
+    this.flgSupplier = false;
+    this.flgCustomer = false;
+    this.flgCostCenter = false;
+    this.flgWarehouse = false;
+    this.flgWarehouseTarget = false;
+    this.flgMovement = false;
+    this.flgRequest = false;
+    this.flgPurOrder = false;
+    this.flgSalOrder = false;
+    this.flgDate = false;
+    this.flgTextNote = false;
+  }
+  enableGeneralValues() {
+    this.flgWarehouse = true;
+    this.flgDate = true;
+    this.flgTextNote = true;
+
+  }
+  selectionChangedHandler() {
+    if (this.itemSelectedKeys.length == 0) {
+      this.itemSelectedKeys = {};
+    }
+    else if (this.itemSelectedKeys.length == 1) {
+      this.itemSelectedKeys = this.movementGrid.instance.getSelectedRowsData()[0];
+    }
+    else {
+      this.itemSelectedKeys = {};
+    }
+  }
+
+  onMenuItemClick(name) {
+    {
+      switch (name) {
+        case 'Search':
+          {
+            this.filter.WarehouseID = (this.WarehouseID != null)?this.WarehouseID:null;
+            this.movementGrid.instance.refresh();
+            //this.loadData();
+            break;
+          }
+        case "Back": {
+          this.router.navigate(["wam/movement/movement"], { queryParams: { type: this.type } });
+          break;
+        }
+
+        case 'Edit': {
+
+          var selectedID: any = this.movementGrid.instance.getSelectedRowsData()[0].ID;
+
+          console.log('selectedID');
+          console.log(selectedID);
+          if (selectedID == null) {
+            //notify("لطفا گردش موردنظرانتخاب شود.", "error", 1000);
+            Notify.error('لطفا گردش موردنظرانتخاب شود');
+          }
+          else {
+            this.router.navigate(['wam/movement/movement'], { queryParams: { ID: selectedID, type: this.type } });
+          }
+
+        }
+      }
+    }
+
+
+  }
+  onRowDbClickRouting(e) {
+     
+    var selectedID: any = this.movementGrid.instance.getSelectedRowsData()[0].ID;
+    this.router.navigate(['wam/movement/movement'], { queryParams: { ID: selectedID, type: this.type } });
+}
+
+
+WarehouseChanged(data){
+  this.WarehouseID = data.ID;
+}
+}

@@ -1,0 +1,333 @@
+﻿<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'MOVEMENTTYPE'| translate}}">
+            <dx-lov [(value)]="filter.MovementTypeValueID"
+                    formCode="LOV-WAM-106"
+                    [allowClear]="true"
+                    [readOnly]="false"
+                    (dataChange)="movementTypeChanged($event)">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'MVMN_NUM'| translate}}">
+            <dx-lov [(value)]="filter.ID"
+                    [(text)]="filter.Number"
+                    formCode="LOV-WAM-110"
+                    [(params)]="MovementFilter"
+                    [allowClear]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'MVMN_DAT'| translate}}">
+            <dx-date [(value)]="filter.Date"
+                     [readOnly]="!flgDate"
+                     class="text-left ltr">
+            </dx-date>
+          </dx-label>
+        </div>
+        <!--<div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'Status'| translate}}">
+            <dx-text-box [(value)]="filter.StatusDes"
+                         [readOnly]="true">
+            </dx-text-box>
+          </dx-label>
+        </div>-->
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'STATUS'| translate}}">
+            <dx-lov [(value)]="filter.Status"
+                    [(text)]="filter.StatusDes"
+                    formCode="LOV-WAM-002"
+                     >
+            </dx-lov>
+          </dx-label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WRHS_CODE'| translate}}">
+            <dx-lov [(value)]="filter.WarehouseID"
+                    [(text)]="filter.WareHouseDes"
+                    formCode="LOV-WAM-003"
+                    [allowClear]="true"
+                    [readOnly]="!flgWarehouse">
+            </dx-lov>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-3 col-xs-12" *ngIf="flgSupplierVisible">
+          <dx-label text="{{'SUPL_COD'| translate}}" *ngIf="flgSupplierVisible">
+            <dx-lov [(value)]="filter.SupplierID"
+                    [(text)]="filter.SupplierNam"
+                    (dataChange)="SupplierChanged($event)"
+                    [allowClear]="true"
+                    [readOnly]="!flgSupplier"
+                    formCode="LOV-PUR-100">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12" *ngIf="flgCustomerVisible">
+          <dx-label text="{{'CSTM_CODE'| translate}}" *ngIf="flgCustomerVisible">
+            <dx-lov [(value)]="filter.CustomerID"
+                    [(text)]="filter.CustomerNam"
+                    (dataChange)="CustomerChanged($event)"
+                    [allowClear]="true"
+                    [readOnly]="!flgCustomer"
+                    formCode="LOV-SAL-005">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12" *ngIf="flgCostCenterVisible">
+          <dx-label text="{{'WAM_COST_CENTER'| translate}}" *ngIf="flgCostCenterVisible">
+            <dx-lov [(value)]="filter.CostCenterID"
+                    [(text)]="filter.CostCenterDescription"
+                    (dataChange)="CostCenterChanged($event)"
+                    [allowClear]="true"
+                    [readOnly]="!flgCostCenter"
+                    formCode="LOV-CST-013">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12" *ngIf="flgWarehouseTargetVisible">
+          <dx-label text="{{'WAREHOUSETARGET'| translate}}" *ngIf="flgWarehouseTargetVisible">
+            <dx-lov [(value)]="filter.WarehouseTargetID"
+                    [(text)]="filter.WareHouseDesTarget"
+                    (dataChange)="warehouseTargetChanged($event)"
+                    [allowClear]="true"
+                    [readOnly]="!flgWarehouseTarget"
+                    formCode="LOV-WAM-003">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WAMREQUEST'| translate}}">
+            <dx-lov [(value)]="filter.RequestID"
+                    [(text)]="filter.RequestNumber"
+                    [allowClear]="true"
+                    [readOnly]="!flgRequest"
+                    [(params)]="requestFilter"
+                    formCode="LOV-WAM-038">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'MVMN_NUM_REF'| translate}}">
+            <dx-lov [(value)]="filter.RefMovementID"
+                    [(text)]="filter.RefMovementNumber"
+                    formCode="LOV-WAM-021"
+                    [allowClear]="true"
+                    [readOnly]="!flgMovement"
+                    [(params)]="reffrenceMovementFilter"
+                    #lovMvmn>
+            </dx-lov>
+          </dx-label>
+        </div>
+        <!--<div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'MVMN_DAT_REF'| translate}}">
+            <dx-text-box [(value)]="lovMvmn.data.Date"
+                         [readOnly]="true">
+            </dx-text-box>
+          </dx-label>
+        </div>-->
+      </div>
+
+      <div class="row">
+
+
+        <!--<div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'RequestDate'| translate}}">
+            <dx-text-box [(value)]="filter.RequestDate"
+                         [readOnly]="true">
+            </dx-text-box>
+          </dx-label>
+        </div>-->
+      </div>
+      <!--<div class="row">
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'PurchaseOrderNumber'| translate}}">
+            <dx-text-box [(value)]="filter.PurchaseOrderNumber"
+                         [readOnly]="true">
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-9 col-xs-12">
+          <dx-label text="{{'TextNote'| translate}}">
+            <dx-text-box [(value)]="filter.TextNote"
+                         [readOnly]="!flgTextNote">
+            </dx-text-box>
+          </dx-label>
+        </div>
+      </div>-->
+    </dx-validation-group>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="margin-20"></div>
+        <grid-toolbar (onRowDbClick)="onRowDbClick($event)">
+          <gt-datasource loadUrl="/WAM/Movement/ListHeader"
+                         [(loadParams)]="filter">
+          </gt-datasource>
+          <dx-data-grid #movementGrid
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="itemSelectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        
+                        [height]="400">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxo-editing mode="row" [allowAdding]="false" [allowUpdating]="false" [allowDeleting]="false"></dxo-editing>
+            <dxi-column dataField="TemporaryMovementTypeDes" caption="{{'MOVEMENTTYPE'| translate}}"></dxi-column>
+            <dxi-column dataField="VisibleNumber" caption="{{'MVMN_NUM'| translate}}"></dxi-column>
+            <dxi-column dataField="Date" caption="{{'MVMN_DAT'| translate}}" dataType="date"></dxi-column>
+            <dxi-column dataField="StatusDes" caption="{{'STATUS'| translate}}"></dxi-column>
+            <dxi-column dataField="WarehouseCode" caption="{{'WRHS_CODE'| translate}}"></dxi-column>
+            <dxi-column dataField="WarehouseDescription" caption="{{'WRHS_CODE'| translate}}"></dxi-column>
+            <dxi-column dataField="CustomerName" caption="{{'CSTM_CODE'| translate}}"></dxi-column>
+            <dxi-column dataField="BusinessUnitName" caption="{{'WAM_COST_CENTER'| translate}}"></dxi-column>
+            <dxi-column dataField="WareHouseDesTarget" caption="{{'WAREHOUSETARGET'| translate}}"></dxi-column>
+            <dxi-column dataField="RequestNumber" caption="{{'WAREHOUSETARGET'| translate}}"></dxi-column>
+            <dxi-column dataField="RefMovementNumber" caption="{{'MVMN_NUM_REF'| translate}}"></dxi-column>
+            <dxi-column dataField="PurchaseOrderNumber" caption="{{'PURCHASEORDERNUMBER'| translate}}"></dxi-column>
+            <dxi-column dataField="TextNote" caption="{{'TEXTNOTE'| translate}}"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-sm-12" *ngIf="false">
+        <div class="margin-20"></div>
+        <grid-toolbar (onCancelEditRow)="onCanceledItemRowGrid($event)"
+                      [rowMenuItems]="gridItems">
+          <dx-data-grid #itemGrid
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="itemSelectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        [height]="400">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+            <dxi-column dataField="Sequence" caption="ردیف" [width]="45"></dxi-column>
+            <dxi-column dataField="ItemCode" caption="{{'PUB_CODE'| translate}}" editCellTemplate="ItemCode" [width]="130">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'ItemCode'">
+                <dx-lov formCode="LOV-WAM-033"
+                        [text]="cell.data.ItemCode"
+                        [params]="movementItemFilter"
+                        (dataChange)="onCellMovementItemCodeChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="ItemDescription" caption="نام کالا" [width]="220" editCellTemplate="Description"></dxi-column>
+            <div *dxTemplate="let cell of 'Description'">
+              {{editRow.ItemDescription}}
+            </div>
+            <dxi-column dataField="UnitDescriptionCommercial" caption="{{'PUB_UNIT'| translate}}" editCellTemplate="MeasurementUnitCode" width="180">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'MeasurementUnitCode'">
+                <dx-lov formCode="LOV-WAM-034"
+                        [(value)]="cell.data.ID"
+                        [(text)]="cell.data.Title"
+                        [params]="itemUnitFilter"
+                        (dataChange)="onCellUnitChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="SecondQuantityCommercial" caption="مقدار" dataType="number" editCellTemplate="qtyCommercial">
+              <div *dxTemplate="let cell of 'qtyCommercial'">
+                <dx-text-box [value]="SecondQuantityCommercial"
+                             (valueChange)="setQty($event)">
+                </dx-text-box>
+              </div>
+              <dxi-validation-rule type="range" [min]="0.001" message="{{  'NON_ZERO' | translate }}">
+              </dxi-validation-rule>
+            </dxi-column>
+            <dxi-column dataField="UnitDescription" caption="واحد انباری" editCellTemplate="UnitDescriptionedit"> </dxi-column>
+            <div *dxTemplate="let cell of 'UnitDescriptionedit'">
+              {{editRow.UnitDescription}}
+            </div>
+            <dxi-column dataField="Quantity" caption="مقدار انباری" editCellTemplate="qty"></dxi-column>
+            <div *dxTemplate="let cell of 'qty'">
+              {{editRow.Quantity}}
+            </div>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12" *ngIf="false">
+        <div class="margin-20"></div>
+        <grid-toolbar (onCancelEditRow)="onCanceledItemRowGrid($event)"
+                      [rowMenuItems]="gridItems">
+          <dx-data-grid #itemGrid
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="itemSelectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        [height]="400">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+            <dxi-column dataField="Sequence" caption="ردیف" [width]="45"></dxi-column>
+            <dxi-column dataField="ItemCode" caption="{{'PUB_CODE'| translate}}" editCellTemplate="ItemCode" [width]="130">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'ItemCode'">
+                <dx-lov formCode="LOV-WAM-037"
+                        [text]="cell.data.ItemCode"
+                        [params]="requestItemFilter"
+                        (dataChange)="onCellReQuestItemCodeChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="ItemDescription" caption="نام کالا" [width]="220" editCellTemplate="Description"></dxi-column>
+            <div *dxTemplate="let cell of 'Description'">
+              {{editRow.ItemDescription}}
+            </div>
+            <dxi-column dataField="UnitDescriptionCommercial" caption="{{'PUB_UNIT'| translate}}" editCellTemplate="MeasurementUnitCode" width="180">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'MeasurementUnitCode'">
+                <dx-lov formCode="LOV-WAM-034"
+                        [(value)]="cell.data.ID"
+                        [(text)]="cell.data.Title"
+                        [params]="itemUnitFilter"
+                        (dataChange)="onCellUnitChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="SecondQuantityCommercial" caption="مقدار" dataType="number" editCellTemplate="qtyCommercial">
+              <div *dxTemplate="let cell of 'qtyCommercial'">
+                <dx-text-box [value]="SecondQuantityCommercial"
+                             (valueChange)="setQty($event)">
+                </dx-text-box>
+              </div>
+              <dxi-validation-rule type="range" [min]="0.001" message="{{  'NON_ZERO' | translate }}">
+              </dxi-validation-rule>
+            </dxi-column>
+            <dxi-column dataField="UnitDescription" caption="واحد انباری" editCellTemplate="UnitDescriptionedit"> </dxi-column>
+            <div *dxTemplate="let cell of 'UnitDescriptionedit'">
+              {{editRow.UnitDescription}}
+            </div>
+            <dxi-column dataField="Quantity" caption="مقدار انباری" editCellTemplate="qty"></dxi-column>
+            <div *dxTemplate="let cell of 'qty'">
+              {{editRow.Quantity}}
+            </div>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>

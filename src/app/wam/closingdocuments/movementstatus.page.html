@@ -1,0 +1,43 @@
+<page>
+  <page-toolbar helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'WRHS'| translate}}">
+            <dx-lov [(value)]="headerItem.WarehouseIDLis" [(text)]="headerItem.WarehouseDescription"
+                    formCode="LOV-WAM-003" [allowClear]="true" required="false" selectionMode="multiple" (dataChange)="warehouseChanged($event)"></dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-2">
+          <dx-label text="تا تاریخ">
+            <dx-date [(value)]="headerItem.FinishDate"
+                     [showToday]="true">
+            </dx-date>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-2 col-xs-12">
+          <dx-button text="{{ 'PUB_SHOW_DATA' | translate }}" type="success" (onClick)="onShowClick()"></dx-button>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="margin-20"></div>
+          <grid-toolbar >
+
+            <dx-data-grid #dataGrid keyExpr="ID" [dataSource]="dataSource" [(selectedRowKeys)]="selectedKeys" (onSelectionChanged)="selectionChangedHandler()"
+                          [height]="350">
+              <dxo-scrolling mode="virtual"></dxo-scrolling>
+              <dxo-selection mode="multiple"></dxo-selection>
+              <dxi-column dataField="WarehouseDescription" caption="انبار"></dxi-column>
+              <dxi-column dataField="EndDate" caption="{{ 'آخرین تاریخ قطعی سند' | translate }}" dataType="date"></dxi-column>
+            </dx-data-grid>
+          </grid-toolbar>
+        </div>
+      </div>
+    </dx-validation-group>
+  </page-content>
+</page>

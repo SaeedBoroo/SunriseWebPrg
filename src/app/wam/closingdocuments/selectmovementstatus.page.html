@@ -1,0 +1,34 @@
+﻿<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <div class="row">
+      <div class="col-sm-6 col-xs-12">
+        <dx-label text="{{'PUB_FINANCIAL_PERIODS'| translate}}">
+          <dx-lov (dataChange)="financialPeriodChanged($event)"
+                  formCode="LOV-BFS-048"
+                  [allowClear]="true"
+                  required="true">
+          </dx-lov>
+        </dx-label>
+      </div>
+      <div class="col-sm-6">
+        <dx-label text="{{ 'واحد های فروش' | translate }}">
+          <dx-tag-box [dataSource]="officesLov"
+                      [value]="officesSeletedValue"
+                      itemsExpr="Title"
+                      keyExpr="ID"
+                      displayExpr="Title"
+                      [searchEnabled]="true"
+                      [multiline]="false"
+                      [hideSelectedItems]="true"
+                      (onValueChanged)="onValueChangedOffices($event)">
+          </dx-tag-box>
+        </dx-label>
+      </div>
+    </div>
+  </page-content>
+</page>

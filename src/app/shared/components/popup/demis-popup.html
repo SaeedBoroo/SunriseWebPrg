@@ -1,0 +1,6 @@
+<popup [(visible)]="config.visible" [width]="config.width" (onSubmitClick)="config.onSubmitted($event)"
+    (onOpening)="config.onOpening($event)" [height]="config.height" title="{{config.title}}" [showCancel]="config.showCancel">
+    <ng-template #innerPopupContainer></ng-template>
+    <!-- <ng-container app-component-container></ng-container> -->
+    <!-- <ng-template [ngTemplateOutlet]="config.children" [ngTemplateOutletContext]="{$implicit: config.data}"></ng-template> -->
+</popup>

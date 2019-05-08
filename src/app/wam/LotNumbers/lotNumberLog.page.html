@@ -1,0 +1,110 @@
+<page>
+  <page-toolbar helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WAM_COST_CENTER_FROM'| translate}}">
+            <dx-lov [(value)]="headerItems.CentricIdFrom"
+                    [(text)]="headerItems.CentricAccountCodeFrom"
+                    formCode="LOV-WAM-123"
+              
+                    (dataChange)="centricFromChanged($event)"
+                    allowClear="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label-box [text]="headerItems.CentricAccountNamFrom">
+          </dx-label-box>
+
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WAM_COST_CENTER_TO'| translate}}">
+            <dx-lov [(value)]="headerItems.CentricIdTo"
+                    [(text)]="headerItems.CentricAccountCodeTo"
+                    formCode="LOV-WAM-123"
+                    required="true"
+                    (dataChange)="centricToChanged($event)"
+                    allowClear="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label-box [text]="headerItems.CentricAccountNamTo">
+          </dx-label-box>
+
+        </div>
+
+      </div>
+      <div class="margin-20"></div>
+      <div class="col-sm-5 col-xs-12">
+
+
+        <grid-toolbar>
+          <gt-datasource loadUrl="/WAM/LotNumber/List"
+                         [(loadParams)]="lotGridParams">
+          </gt-datasource>
+          <dx-data-grid #lotNumbersGrid
+                        keyExpr="ID"
+                        [(selectedRowKeys)]="lotNumbersGridSelectedKeys"
+                        (onSelectionChanged)="lotNumbersGridselectionChangedHandler()"
+                        [height]="500">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxo-editing mode="row" [allowAdding]="false" [allowUpdating]="false" [allowDeleting]="false"></dxo-editing>
+            <dxi-column dataField="Code" caption="{{'LOT_NUMBER'| translate}}" [width]="200"></dxi-column>
+
+            <dxi-column dataField="CentricTypeNam" caption="{{'CNAC_CNAT_ID'| translate}}"></dxi-column>
+
+            <dxi-column dataField="CentricCod" caption="{{'WAM_CNAC_COD'| translate}}">
+            </dxi-column>
+
+            <dxi-column dataField="CentricNam" caption="{{'BFS_CNAC_NAM'| translate}}"></dxi-column>
+
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+      <div class="col-sm-2  col-xs-12">
+        <dx-button type="success" text="{{  'WIP_TRANSFER' | translate }}"
+                   class="child-work-order text-center"
+                   [height]="36" [width]="100" [(disabled)]="formConfig.disableMoveButton"
+                   (onClick)="onMoveClick()">
+        </dx-button>
+      </div>
+      <div class="col-sm-5 col-xs-12">
+
+
+        <grid-toolbar>
+          <gt-datasource loadUrl="/WAM/LotNumber/List"
+                         [(loadParams)]="lotToGridParams">
+          </gt-datasource>
+          <dx-data-grid #lotNumbersToGrid
+                        keyExpr="ID"
+                        [(selectedRowKeys)]="lotNumbersToGridSelectedKeys"
+                        [height]="500">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-editing mode="row" [allowAdding]="false" [allowUpdating]="false" [allowDeleting]="false"></dxo-editing>
+            <dxi-column dataField="Code" caption="{{'LOT_NUMBER'| translate}}" [width]="200"></dxi-column>
+
+            <dxi-column dataField="CentricTypeNam" caption="{{'CNAC_CNAT_ID'| translate}}"></dxi-column>
+
+            <dxi-column dataField="CentricCod" caption="{{'WAM_CNAC_COD'| translate}}">
+            </dxi-column>
+
+            <dxi-column dataField="CentricNam" caption="{{'BFS_CNAC_NAM'| translate}}"></dxi-column>
+
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+
+
+    </dx-validation-group>
+
+
+  </page-content>
+</page>
+
+

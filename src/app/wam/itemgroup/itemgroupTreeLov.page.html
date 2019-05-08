@@ -1,0 +1,39 @@
+<page>
+
+  <page-content>
+    <div class="row">
+      <div class="col-sm-12">
+
+        <tree-toolbar >
+          <dx-tree-list #Treegrid
+                        [dataSource]="dataSource"
+                        keyExpr="ID"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        parentIdExpr="ParentID"
+                        [height]="350">
+            <dxo-editing mode="row"
+                         [allowAdding]="false"
+                         [allowUpdating]="false"
+                         [allowDeleting]="false">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxi-column dataField="Code" caption="{{  'ITGR_CODE' | translate }}" [width]="300"></dxi-column>
+            <dxi-column dataField="Description" caption="{{  'ITGR_DES' | translate }}" [width]="200"></dxi-column>
+            <dxi-column dataField="MeasurementUnitCommercialDescription" caption="{{  'PUB_MUNIT_CMM' | translate }}"></dxi-column>
+            <dxi-column dataField="MeasurementUnitDescription" caption="{{  'PUB_MUNIT' | translate }}"></dxi-column>
+            <dxi-column dataField="CatalogueDescription" caption="{{  'WAM_ITEM_CATALOGUE' | translate }}"></dxi-column>-->
+            <!--<dxi-column dataField="FlagItemLevel" caption="{{  'WAM_ITEM_LEVEL' | translate }}" ReadOnly="true"></dxi-column>-->
+            <dxi-column dataField="IsActive" caption="{{  'ISACTIVE' | translate }}" ReadOnly="true"></dxi-column>
+          </dx-tree-list>
+        </tree-toolbar>
+      </div>
+    </div>
+    <div class="row">
+      <div class="footer-popup">
+        <dx-button type="default" (onClick)="onSearchClick()" text="{{  'PUB_SELECT' | translate }}" [width]="100"></dx-button>
+        <dx-button type="danger" (onClick)="onCancelClick()" text="{{  'PUB_CANCEL' | translate }}" [width]="100"></dx-button>
+      </div>
+    </div>
+  </page-content>
+</page>

@@ -1,0 +1,110 @@
+<page>
+    <page-toolbar helpUrl="http://google.com"
+                  showHelp="false"
+                  [items]="menuItems"
+                  (onItemClick)="onMenuItemClick($event)">
+    </page-toolbar>
+    <page-content>
+      <dx-validation-group #form>
+        <div class="row">
+          <div class="col-sm-3 col-xs-12">
+            <dx-label text="{{'PUB_FINANCIAL_PERIODS'| translate}}">
+              <dx-lov (dataChange)="financialPeriodChanged($event)"
+                      formCode="LOV-BFS-048"
+                      [allowClear]="true"
+                      required="true">
+              </dx-lov>
+            </dx-label>
+          </div>
+          <!-- <div class="col-sm-7">
+        <dx-label text="{{ 'WAM_WAREHOUSES' | translate }}">
+          <dx-tag-box [dataSource]="warehouseLov"
+                      [value]="warehouseSeletedValue"
+                      itemsExpr="Title"
+                      keyExpr="ID"
+                      displayExpr="Title"
+                      [searchEnabled]="true"
+                      [multiline]="false"
+                      [hideSelectedItems]="true"
+                      (onValueChanged)="onWarehouseValueChanged($event)">
+          </dx-tag-box>
+        </dx-label>
+      </div> -->
+          <div class="col-sm-4 col-xs-12">
+            <dx-label text="{{'WRHS'| translate}}">
+              <dx-lov [(value)]="headerItem.WarehouseIDListIn"
+                      [(text)]="headerItem.WarehouseDescription"
+                      (dataChange)="warehouseChanged($event)"
+                      formCode="LOV-WAM-003"
+                      [allowClear]="true"
+                      selectionMode="multiple"
+                      required="true"></dx-lov>
+            </dx-label>
+          </div>
+          <div class="col-sm-2 col-xs-12">
+            <dx-check-box [(value)]="filter.FlagHasError" [readOnly]="false" text="{{'WAM_SHOM_PRBLM_MVMN'| translate}}" required="true">
+            </dx-check-box>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <dx-button text="{{ 'PUB_SHOW_DATA' | translate }}" type="success" (onClick)="onShowClick()"></dx-button>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <dx-button text="{{ 'WAM_FTC_MVMN_DATA' | translate }}" type="success" (onClick)="onFetchClick()"></dx-button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="margin-20"></div>
+            <grid-toolbar>
+              <gt-datasource loadUrl="/WAM/MovementStatus/List"
+                             [(loadParams)]="filter">
+              </gt-datasource>
+              <dx-data-grid #movementStatusGrid
+                            keyExpr="ID"
+                            [dataSource]="dataSource"
+                            [(selectedRowKeys)]="selectedKeys"
+                            (onSelectionChanged)="selectionChangedHandler()"
+                            [height]="250">
+                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-editing mode="row" [allowAdding]="false" [allowUpdating]="false" [allowDeleting]="false"></dxo-editing>
+                <dxi-column dataField="Sequence" caption="{{'ردیف'| translate}}" [width]="70"></dxi-column>
+                <dxi-column dataField="WarehouseCode" caption="{{'WRHS_CODE'| translate}}" ></dxi-column>
+                <dxi-column dataField="WarehouseDescription" caption="{{'WRHS_DES'| translate}}" ></dxi-column>
+                <dxi-column dataField="StartDate" caption="{{'PUB_DAT_FROM'| translate}}" dataType="date"></dxi-column>
+                <dxi-column dataField="EndDate" caption="{{'PUB_DAT_TO'| translate}}"  dataType="date"></dxi-column>
+                <dxi-column dataField="InputQuantity" caption="{{'WAM_QTY_IN'| translate}}"></dxi-column>
+                <dxi-column dataField="OutputQuantity" caption="{{'WAM_QTY_OUT'| translate}}"></dxi-column>
+                <dxi-column dataField="StatusDescription" caption="{{'STATUS'| translate}}"></dxi-column>
+              </dx-data-grid>
+            </grid-toolbar>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="margin-20"></div>
+            <grid-toolbar [rowMenuItems]="gridItems" (onMenuItemClick)="onErrorMenuItemClick($event)">
+              <gt-datasource loadUrl="/WAM/MovementError/List"
+                             [(loadParams)]="movementErrorFilter">
+              </gt-datasource>
+              <dx-data-grid #ErrorGrid
+                            keyExpr="ID"
+                            [dataSource]="dataSource"
+                            [(selectedRowKeys)]="errorSelectedKeys"
+                            (onSelectionChanged)="errorSelectionChangedHandler()"
+                            [height]="200">
+                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                <dxo-selection mode="multiple"></dxo-selection>
+                <dxo-editing mode="row" [allowAdding]="false" [allowUpdating]="false" [allowDeleting]="false"></dxo-editing>
+                <dxi-column dataField="MovementTypeDescription" caption="{{'نوع مدرک'| translate}}"></dxi-column>
+                <dxi-column dataField="MovementDate" caption="{{'تاریخ'| translate}}" dataType="date"></dxi-column>
+                <dxi-column dataField="MovementNumber" caption="{{'شماره'| translate}}"></dxi-column>
+                <dxi-column dataField="Description" caption="{{'شرح خطا'| translate}}"></dxi-column>
+              </dx-data-grid>
+            </grid-toolbar>
+          </div>
+        </div>
+        </dx-validation-group>
+    </page-content>
+</page>

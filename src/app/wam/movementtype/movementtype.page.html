@@ -1,0 +1,241 @@
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)"></page-toolbar>
+  <page-content>
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" [rowMenuItems]="gridItems">
+          <gt-datasource loadUrl="/WAM/MovementType/List"
+                         insertUrl="/WAM/MovementType/Save"
+                         updateUrl="/WAM/MovementType/Save"
+                         [(saveParams)]="saveParams">
+          </gt-datasource>
+          <dx-data-grid #grid
+                        keyExpr="ID"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        [(selectedRowKeys)]="selectedKeys"
+                        [height]="700">
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="false"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxi-column dataField="MovementType" caption="{{'WAM_MOVEMENT_TYPE'| translate}}">
+              <dxo-lookup [dataSource]="movementType"
+                          valueExpr="ID"
+                          displayExpr="Title">
+              </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="Code" caption="{{'PUB_CODE'| translate}}"></dxi-column>
+            <dxi-column dataField="Description" caption="{{'PUB_TITLE'| translate}}"></dxi-column>
+            <dxi-column dataField="RelationTypeID" caption="{{'WAM_RELATION_TYPE'| translate}}">
+              <dxo-lookup [dataSource]="relationtype"
+                          valueExpr="ID"
+                          displayExpr="Title">
+              </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="ReffrenceTypeID" caption="{{'WAM_REFFRENCE'| translate}}">
+              <dxo-lookup [dataSource]="reffrencetype"
+                          valueExpr="ID"
+                          displayExpr="Title">
+              </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="ReffrenceTypeSecondID" caption="{{'WAM_SECOND_REFFRENCE'| translate}}">
+              <dxo-lookup [dataSource]="reffrencetype"
+                          valueExpr="ID"
+                          displayExpr="Title">
+              </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="ReffrenceMovementTypeDescription" caption="{{'WAM_REF_MOVEMENT_TYPE'| translate}}">
+
+            </dxi-column>
+            <dxi-column dataField="GroupDescription" WAM_MOVEMENT_TYPE_GROUP caption="{{'WAM_MOVEMENT_TYPE_GROUP'| translate}}" width="180">
+
+            </dxi-column>
+            <dxi-column dataField="TempRequired" caption="{{'WAM_TEMP'| translate}}" dataType="boolean"></dxi-column>
+            <dxi-column dataField="IsActive" caption="{{'PUB_ACTIVE'| translate}}" dataType="boolean"></dxi-column>
+            <dxi-column dataField="NoReffrenceAllowed" caption="{{'WAM_NO_REF'| translate}}" dataType="boolean"></dxi-column>
+
+          </dx-data-grid>
+      
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>
+<dx-popup class="popup"
+          [width]="900"
+          [height]="290"
+          [showTitle]="true"
+          [showCloseButton]="false"
+          [dragEnabled]="true"
+          [closeOnOutsideClick]="false"
+          [(visible)]="movementTypePopup.visible">
+  <div *dxTemplate="let data of 'content'">
+    <dx-validation-group #movementTypeValidation>
+      <div class="row">
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{ 'WAM_MOVEMENT_TYPE' | translate }}">
+            <dx-lov formCode="LOV-WAM-041"
+                    [(value)]="movementTypeItems.MovementType"
+                    [allowClear]="true"
+                    required="true"
+                    [readOnly]="Disable">
+            </dx-lov>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-4 col-xs-12">
+
+          <dx-label text="{{'PUB_CODE'| translate}}">
+            <dx-text-box [(value)]="movementTypeItems.Code" [readOnly]="Disable">
+
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+
+          <dx-label text="{{'PUB_TITLE'| translate}}">
+            <dx-text-box [(value)]="movementTypeItems.Description" [readOnly]="Disable">
+
+            </dx-text-box>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{ 'WAM_RELATION_TYPE' | translate }}">
+            <dx-lov formCode="LOV-WAM-035"
+                    [(value)]="movementTypeItems.RelationTypeID"
+                    [allowClear]="true"
+                    required="true"
+                    [readOnly]="Disable">
+            </dx-lov>
+          </dx-label>
+        </div>
+
+
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{ 'WAM_REFFRENCE' | translate }}">
+            <dx-lov formCode="LOV-WAM-036"
+                    [(value)]="movementTypeItems.ReffrenceTypeID"
+                    [allowClear]="true"
+                    [readOnly]="Disable">
+            </dx-lov>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{ 'WAM_SECOND_REFFRENCE' | translate }}">
+            <dx-lov formCode="LOV-WAM-036"
+                    [(value)]="movementTypeItems.ReffrenceTypeSecondID"
+                    [allowClear]="true"
+                    [readOnly]="Disable">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{ 'WAM_REF_MOVEMENT_TYPE' | translate }}">
+            <dx-lov formCode="LOV-WAM-007"
+                    [(value)]="movementTypeItems.ReffrenceMovementTypeID"
+                    [(text)]="movementTypeItems.ReffrenceMovementTypeDescription"
+                    [allowClear]="true"
+                    [readOnly]="Disable">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{ 'WAM_MOVEMENT_TYPE_GROUP' | translate }}">
+            <dx-lov formCode="LOV-WAM-007"
+                    [(value)]="movementTypeItems.GroupId"
+                    [(text)]="movementTypeItems.GroupDescription"
+                    [allowClear]="true"
+                    [readOnly]="Disable">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-1 col-xs-12">
+          <dx-check-box [(value)]="movementTypeItems.TempRequired"
+                        text="{{ 'WAM_TEMP' | translate }}">
+          </dx-check-box>
+
+        </div>
+        <div class="col-sm-1 col-xs-12">
+          <dx-check-box [(value)]="movementTypeItems.IsActive"
+                        text="{{ 'PUB_ACTIVE' | translate }}">
+          </dx-check-box>
+
+        </div>
+        <div class="col-sm-2 col-xs-12">
+          <dx-check-box [(value)]="movementTypeItems.NoReffrenceAllowed"
+                        text="{{ 'WAM_NO_REF' | translate }}">
+          </dx-check-box>
+        </div>        
+        <div class="row footer-popup">
+          <dx-button type="success" (onClick)="onSaveMovementType()" [text]='movementTypePopup.text' [width]="130"></dx-button>
+          <dx-button type="danger" (onClick)="onCancelMovementType()" text="{{ 'PUB_CANCEL' | translate }}" [width]="130"></dx-button>
+        </div>
+      </div>
+    </dx-validation-group>
+  </div>
+</dx-popup>
+<dx-popup class="popup"
+          [width]="700"
+          [height]="500"
+          [showTitle]="true"
+          [showCloseButton]="true"
+          [dragEnabled]="true"
+          [closeOnOutsideClick]="true"
+          [(visible)]="CategoryPopup">
+  <div *dxTemplate="let data of 'content'">
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClickcoding($event)"
+                      [rowMenuItems]="gridItemscoding"
+                      (onCancelEditRow)="onCanceledItemRowGrid($event)">
+          <gt-datasource loadUrl="/WAM/MovementTypeCategory/List"
+                         insertUrl="/WAM/MovementTypeCategory/Save"
+                         [(loadParams)]="editItem"
+                         [(saveParams)]="editItem"
+                         updateUrl="/WAM/MovementTypeCategory/Save"
+                         removeUrl="/WAM/MovementTypeCategory/Delete">
+          </gt-datasource>
+          <dx-data-grid #gridCategory
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="detailSelectedKeys"
+                        [height]="380">
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <!--<dxi-column dataField="CodingCode" caption="{{'کد کدینگ'| translate}}" [width]="150" editCellTemplate="celLovCodingCode"></dxi-column>-->
+            <dxi-column dataField="CategoryName" caption="{{'نام خانواده'| translate}}" visible="false" editCellTemplate="celLovCodingCode"></dxi-column>
+            <div *dxTemplate="let cell of 'celLovCodingCode'">
+              ov
+              <dx-lov formCode="LOV-WAM-006"
+                      [(value)]="cell.data.CategoryId"
+                      [(text)]="cell.data.CategoryName"
+                      (dataChange)="onCellCodingCodeChanged($event,cell)"
+                      [required]="true">
+              </dx-lov>
+            </div>
+            <!--<div *dxTemplate="let cell of 'cell01'">
+              {{editItem.CodingName}}
+            </div>-->
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+
+  </div>
+
+</dx-popup>

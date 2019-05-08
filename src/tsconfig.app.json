@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "baseUrl": "./",
+    "module": "es2015",
+    "types": [],
+    "experimentalDecorators": true
+  },
+  "include": [
+    "./**/*.ts",
+    "../node_modules/angular-event-service/index.ts",
+    "../node_modules/angular-event-service/src/events.service.ts"
+  ],
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ]
+}

@@ -1,0 +1,14 @@
+<page>
+    <page-toolbar helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+    </page-toolbar>
+    <page-content>
+        <div class="row">
+            <div class="col-sm-6 col-xs-12">
+                <dx-label text="{{' انبار '|translate}}">
+                    <dx-lov formCode="LOV-WAM-003"  allowClear="true" [(value)]="headerItem.WarehouseID" >
+                    </dx-lov>
+                </dx-label>
+            </div>
+        </div>
+    </page-content>
+</page>

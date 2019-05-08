@@ -1,0 +1,48 @@
+<page>
+
+  <page-toolbar helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+</page>
+<page-content>
+  <div class="row">
+    <div class="col-sm-6 col-xs-12">
+      <dx-label text="{{' انبار '|translate}}">
+        <dx-lov formCode="LOV-WAM-003" (dataChange)="onDataChange($event)" allowClear="true" [(value)]="headerItem.WarehouseID" [(params)]="warehouseFilter">
+        </dx-lov>
+      </dx-label>
+    </div>
+    <div class="col-sm-6 col-xs-12">
+      <dx-label text="{{'  کد انبار '|translate}}">
+        <dx-text-box [(value)]="headerItem.WarehouseCode" [(text)]="headerItem.WarehouseCode" [readOnly]="true">
+        </dx-text-box>
+      </dx-label>
+    </div>
+  </div>
+  <div class="margin-20"></div>
+  <div class="row">
+    <div class="col-md-12 col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" >
+        <gt-datasource loadUrl="/WAM/WarehouseItemFile/Get" 
+                       updateUrl="/WAM/Setup/WarehouseItemFile/Save" 
+                       [(saveParams)]="saveParams"
+                       [loadParams]="loadParams">
+        </gt-datasource>
+        <dx-data-grid #datagrid 
+                      keyExpr="ID" 
+                      [dataSource]="dataSource" 
+                      [(selectedRowKeys)]="itemSelectedKeys"
+                      (onSelectionChanged)="selectionChangedHandler()" 
+                      [height]="380">
+          <dxo-editing mode="row" [allowUpdating]="true">
+          </dxo-editing>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-scrolling mode="virtual"></dxo-scrolling>
+          <dxi-column dataField="warehouseCode" caption="{{ 'کد انبار' | translate }}"></dxi-column>
+          <dxi-column dataField="warehouseDescription" caption="{{ 'انبار' | translate }}"></dxi-column>
+          <!-- <dxi-column dataField="Description" caption="{{ 'انبار' | translate }}"></dxi-column> -->
+          <dxi-column dataField="State" dataType="boolean" caption="{{ 'PUB_FLG_ACT' | translate }}"  width="120"></dxi-column>
+        </dx-data-grid>
+      </grid-toolbar>
+    </div>
+  </div>
+</page-content>

@@ -1,0 +1,110 @@
+﻿<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-4 col-xs-12" *ngIf="!flagSimpleMode">
+          <dx-label text="واحد سازمانی" *ngIf="!flagSimpleMode">
+            <dx-lov [(value)]="filter.BusinessUnitId"
+                    [(text)]="filter.BusinessUnitName"
+                    formCode="LOV-EIM-005"
+                    [allowClear]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="کد/سریال">
+            <dx-lov [(value)]="filter.CodeType"
+                    formCode="LOV-WAM-009"
+                    [allowClear]="true"></dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="خانواده کالا">
+            <dx-lov [(value)]="filter.CategoryId"
+                    [(text)]="filter.CategoryDescription"
+                    formCode="LOV-WAM-006"
+                    [allowClear]="true"
+                    [(params)]="categoryFilter">
+            </dx-lov>
+          </dx-label>
+        </div>
+      </div>
+      <div class="margin-5"></div>
+      <div class="row">
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="روش ایجاد">
+            <dx-lov [(value)]="filter.Method"
+                    formCode="LOV-WAM-010"
+                    [allowClear]="true"
+                    [displayMode]="'ComboBox'">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="وضعیت">
+            <dx-lov [(value)]="filter.Status"
+                    [(text)]="filter.StatusDescription"
+                    formCode="LOV-WAM-008"
+                    [allowClear]="true"
+                    [displayMode]="'ComboBox'">
+            </dx-lov>
+          </dx-label>
+        </div>
+      </div>
+      <div class="margin-5"></div>
+
+    </dx-validation-group>
+    <div class="margin-5"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar [showNew]="false"
+                      [showDelete]="false"
+                      [showEdit]="false"
+                      [showRefresh]="false"
+                      (onRowDbClick)="onRowDbClickRouting($event)"
+                      (onMenuItemClick)="onGridItemClick($event)">
+
+          <gt-datasource loadUrl="/WAM/CodingPattern/List"
+                         [(loadParams)]="filter">
+          </gt-datasource>
+          <dx-data-grid #datagrid
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [hoverStateEnabled]="true"
+                        [(selectedRowKeys)]="itemSelectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        [columnAutoWidth]="true"
+                        [rowAlternationEnabled]="true"
+                        [showBorders]="true"
+                        [showRowLines]="true"
+                        [height]="350">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxo-editing mode="cell"></dxo-editing>
+            <dxi-column dataField="BusinessUnitCode" caption="کد واحد سازمانی"  [visible] = "!flagSimpleMode"></dxi-column>
+            <dxi-column dataField="BusinessUnitName" caption="نام واحد سازمانی" [visible] = "!flagSimpleMode"></dxi-column>
+            <dxi-column dataField="CategoryDescription" caption="خانواده کالا"></dxi-column>
+            <dxi-column dataField="CodeType" caption="نوع">
+              <dxo-lookup [dataSource]="codeType"
+                          valueExpr="ID"
+                          displayExpr="Title">
+              </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="Method" caption="روش ایجاد">
+              <dxo-lookup [dataSource]="method"
+                          valueExpr="ID"
+                          displayExpr="Title">
+              </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="StatusDescription" caption="وضعیت"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>

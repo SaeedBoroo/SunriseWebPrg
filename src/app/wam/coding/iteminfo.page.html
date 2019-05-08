@@ -1,0 +1,77 @@
+<page>
+  <page-toolbar *ngIf="popupInstance == undefined" helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-4 col-xs-12">
+            <dx-label text="{{ 'WAM_ITEM_CATEGORY' | translate }}"> <dx-label-box [text]="headerItem.CategoryName"> </dx-label-box> </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'ITEM_ITGR'| translate}}"> <dx-label-box [text]="headerItem.GroupDescription"> </dx-label-box> </dx-label>
+        </div>
+
+
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{ 'WAM_ITEM_CATALOGUE' | translate }}"> <dx-label-box [text]="headerItem.CatalogueDescription"> </dx-label-box> </dx-label>
+        </div>
+      </div>
+      <div class="margin-5"></div>
+      <div class="row">
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{ 'PUB_CODE' | translate }}"> <dx-label-box [text]="headerItem.Code"> </dx-label-box> </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{ 'PUB_TITLE' | translate }}"> <dx-label-box [text]="headerItem.Description"> </dx-label-box> </dx-label>
+        </div>
+
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{ 'PUB_TITLE_LATIN' | translate }}"> <dx-label-box [text]="headerItem.DescriptionLatin"> </dx-label-box> </dx-label>
+        </div>
+
+        <div class="col-sm-1 col-xs-12">
+          <dx-check-box [(value)]="headerItem.IsActive" [readOnly]="false" text="{{'PUB_ACTIVE'| translate}}" required="true">
+          </dx-check-box>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="col-sm-2 col-xs-12">
+          <dx-label text="{{ 'PUB_MUNIT' | translate }}"> <dx-label-box [text]="headerItem.MeasurementUnitDescription"> </dx-label-box> </dx-label>
+        </div>
+        
+        <div class="col-sm-2 col-xs-12" *ngIf="!flagSimpleMode">
+          <dx-label text="{{ 'WAM_SERIAL_CONTROL_TYPE' | translate }}"> <dx-label-box [text]="headerItem.SerialControlTypeDescription"> </dx-label-box> </dx-label>
+        </div>
+
+
+
+        <div class="col-sm-2 col-xs-12" *ngIf="!flagSimpleMode">
+          <dx-label text="{{ 'WAM_LOCATION' | translate }}"> <dx-label-box [text]="headerItem.LocationDescription"> </dx-label-box> </dx-label>
+        </div>
+
+        <div class="col-sm-2 col-xs-12" *ngIf="!flagSimpleMode">
+          <dx-label text="{{ 'WAM_ALL_INVENTORY' | translate }}"> <dx-label-box [text]="headerItem.AllInventory"> </dx-label-box> </dx-label>
+        </div>
+
+        <div class="col-sm-2 col-xs-12" *ngIf="!flagSimpleMode">
+          <dx-label text="{{ 'WAM_INVENTORY' | translate }}"> <dx-label-box [text]="headerItem.Inventory"> </dx-label-box> </dx-label>
+        </div>        
+
+        <div class="col-sm-2 col-xs-12" *ngIf="!flagSimpleMode">
+          <dx-check-box [(value)]="headerItem.bomAbleFlag"
+                        [readOnly]="true"
+                        text="{{ 'WAM_BOM_ABLE' | translate }}">
+          </dx-check-box>
+        </div>
+      </div>
+      <div class="margin-5"></div>
+      </dx-validation-group>
+      <div class="row">
+        <div class="footer-popup">
+          <dx-button type="default" (onClick)="onSelectClick()" text="{{  'PUB_RETURN' | translate }}" [width]="100"></dx-button>          
+        </div>
+      </div>
+    </page-content>
+  </page>
+      

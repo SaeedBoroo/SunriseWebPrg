@@ -1,0 +1,143 @@
+<page>
+  <page-toolbar helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)"> </page-toolbar>
+  <page-content>
+    <div class="row">
+      <div class="col-sm-12">
+
+        <tree-toolbar 
+                      (onRowDbClick)="onMenuItemClick('EditSubBranch')">
+
+
+
+          <dx-tree-list #Treegrid
+                        [dataSource]="dataSource"
+                        keyExpr="ID"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        parentIdExpr="ParentID"
+                        [height]="630">
+            <dxo-editing mode="row"
+                         [allowAdding]="false"
+                         [allowUpdating]="false"
+                         [allowDeleting]="false">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxi-column dataField="Code" caption="{{  'ITGR_CODE' | translate }}" [width]="300"></dxi-column>
+            <dxi-column dataField="Description" caption="{{  'ITGR_DES' | translate }}" [width]="200"></dxi-column>
+            <dxi-column dataField="MeasurementUnitCommercialDescription" caption="{{  'PUB_MUNIT_CMM' | translate }}"></dxi-column>
+            <dxi-column dataField="MeasurementUnitDescription" caption="{{  'PUB_MUNIT' | translate }}"></dxi-column>
+            <dxi-column dataField="CatalogueDescription" caption="{{  'WAM_ITEM_CATALOGUE' | translate }}"></dxi-column>-->
+            <!--<dxi-column dataField="FlagItemLevel" caption="{{  'WAM_ITEM_LEVEL' | translate }}" ReadOnly="true"></dxi-column>-->
+            <dxi-column dataField="IsActive" caption="{{  'ISACTIVE' | translate }}" ReadOnly="true"></dxi-column>
+          </dx-tree-list>
+        </tree-toolbar>
+
+
+
+        <!--salam-->
+        <!--<dx-tree-list id="treelist"
+            [dataSource]="dataSource"
+            keyExpr="ID"
+            itemsExpr="Items"
+            hasItemsExpr="HasItems"
+            dataStructure="tree"
+                    [hoverStateEnabled]="true"
+                    [(selectedRowKeys)]="selectedKeys" (onSelectionChanged)="selectionChangedHandler()" [columnAutoWidth]="true"
+                    [rowAlternationEnabled]="true" [showBorders]="true" [showRowLines]="true" [height]="600">
+        <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false"></dxo-editing>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-scrolling mode="virtual"></dxo-scrolling>
+        <dxi-column dataField="Code" caption="{{  'ITGR_CODE' | translate }}" [width]="300"></dxi-column>
+        <dxi-column dataField="Description" caption="{{  'ITGR_DES' | translate }}" [width]="200"></dxi-column>
+        <dxi-column dataField="MeasurementUnitCommercialDescription" caption="{{  'PUB_MUNIT_CMM' | translate }}"></dxi-column>
+        <dxi-column dataField="MeasurementUnitDescription" caption="{{  'PUB_MUNIT' | translate }}"></dxi-column>
+        <dxi-column dataField="CatalogueDescription" caption="{{  'WAM_ITEM_CATALOGUE' | translate }}"></dxi-column>-->
+        <!--<dxi-column dataField="FlagItemLevel" caption="{{  'WAM_ITEM_LEVEL' | translate }}" ReadOnly="true"></dxi-column>-->
+        <!--<dxi-column dataField="IsActive" caption="{{  'ISACTIVE' | translate }}" ReadOnly="true"></dxi-column>
+        </dx-tree-list>-->
+      </div>
+
+
+      
+    </div>
+
+
+    
+    <wam-additemgroup-popup [(visible)]="addItemGroupPopup"
+                            [(flag)]="branchFlag"
+                            [(parentCode)]="currentCode"
+                            [(parentId)]="currentItgrId"
+                            [selectedRow]="selectedRow"
+                            [level]="level"
+                            [(itcdId)]="currentItcdId">
+    </wam-additemgroup-popup>
+    <popup [(visible)]="itemGroupUnitPopup" [width]="1000" [height]="500" title="واحد های مرتبط" [showConfirm]="false" (onOpening)="onUnitShow($event)">
+      <grid-toolbar>
+        <gt-datasource loadUrl="/WAM/ItemUnit/List" insertUrl="/WAM/ItemUnit/Save" updateUrl="/WAM/ItemUnit/Save" removeUrl="/WAM/ItemUnit/Delete"
+                       [(loadParams)]="saveLoadParams" [(saveParams)]="saveLoadParams">
+        </gt-datasource>
+        <dx-data-grid #unitsGrid keyExpr="ID" [dataSource]="unitDataSource" [(selectedRowKeys)]="selectedKeys" (onSelectionChanged)="selectionChangedHandler()"
+                      [height]="380">
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+          <!--<dxi-column dataField="Automatic" caption="{{'PUB_AUTOMATIC'| translate}}" readOnly="true" dataType="boolean"></dxi-column>-->
+          
+          <dxi-column dataField="MeasurementUnitId" caption="{{'WAM_ITEM_MSUN_DES'| translate}}">
+            <dxo-lookup [dataSource]="units" valueExpr="ID" displayExpr="Title">
+            </dxo-lookup>
+          </dxi-column>
+          <!--<dxi-column dataField="Scale" caption="{{'WAM_UNIT_SCLAE'| translate}}"></dxi-column>
+          <dxi-column dataField="CommercialScale" caption="{{'WAM_CMM_UNIT_SCLAE'| translate}}"></dxi-column>-->
+        </dx-data-grid>
+      </grid-toolbar>
+      
+      
+    </popup>
+    
+    <popup [(visible)]="itemGroupCataloguePopup" [width]="1000" [height]="500" title="مشخصات کاتالوگ" [showConfirm]="false" (onOpening)="onCatalogueShow($event)">
+      <grid-toolbar>
+        <gt-datasource loadUrl="/WAM/ItemCatalogueElementValue/List" insertUrl="/WAM/ItemCatalogueElementValue/Save" updateUrl="/WAM/ItemCatalogueElementValue/Save"
+                       removeUrl="/WAM/ItemCatalogueElementValue/Delete" [(loadParams)]="saveLoadParams" [(saveParams)]="saveLoadParams">
+        </gt-datasource>
+        <dx-data-grid #catalogueGrid keyExpr="ID" [dataSource]="catalogueDataSource" [(selectedRowKeys)]="selectedKeys" (onSelectionChanged)="selectionChangedHandler()"
+                      [height]="380">
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true">
+          </dxo-editing>
+          <dxi-column dataField="CatalogueElementDescription" caption="{{'WAM_CAT_ELEMENT'| translate}}" editCellTemplate="CatalogueElementCode">
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            <div *dxTemplate="let cell of 'CatalogueElementCode'">
+              <dx-lov formCode="LOV-WAM-025" [text]="cell.data.Title" (dataChange)="onCellElementChanged($event,cell)" [(params)]="catalogueFilter">
+              </dx-lov>
+            </div>
+          </dxi-column>
+          <dxi-column dataField="Description" caption="{{'WAM_CATALOGUE_VALUE_TITLE'| translate}}"></dxi-column>
+          <!--<dxi-column dataField="MeasurementUnitDescription" caption="{{'PUB_UNIT'| translate}}" editCellTemplate="MeasurementUnitCode">
+                <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+                <div *dxTemplate="let cell of 'MeasurementUnitCode'">
+                  <dx-lov formCode="LOV-WAM-027"
+                          [text]="cell.data.Title"
+                          (dataChange)="onCellUnitChanged($event,cell)">
+                  </dx-lov>
+                </div>
+              </dxi-column>-->
+          <dxi-column dataField="BaseValue" caption="{{'PUB_BASE_VALUE'| translate}}"></dxi-column>
+          <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+          <!--<dxi-column dataField="MinimumValue" caption="{{'PUB_MIN_VALUE'| translate}}"></dxi-column>
+              <dxi-column dataField="MaximumValue" caption="{{'PUB_MAX_VALUE'| translate}}"></dxi-column>-->
+          <!--<dxi-column dataField="PrintFlag" caption="{{'PUB_PRINT_FLAG'| translate}}" dataType="boolean"></dxi-column>
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>-->
+          <dxi-column dataField="DisplaySequence" caption="{{'PUB_DISPALY_SEQUENCE'| translate}}"></dxi-column>
+          <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+          <!--<dxi-column dataField="PrintSequence" caption="{{'PUB_PRINT_SEQUENCE'| translate}}"></dxi-column>
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>-->
+          <!--<dxi-column dataField="EffevtivityDate" caption="{{'DAT_EFFECTIVITY'| translate}}"></dxi-column>
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>-->
+          <!--<dxi-column dataField="DisableDate" caption="{{'PUB_DIS_DAT'| translate}}"></dxi-column>-->
+        </dx-data-grid>
+      </grid-toolbar>
+
+    </popup>
+
+  </page-content>
+</page>

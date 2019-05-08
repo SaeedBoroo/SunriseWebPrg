@@ -1,0 +1,430 @@
+<page>
+  <page-toolbar helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-lov #fastSearchLov
+            formCode="LOV-WAM-124"
+            [(value)]="SearchItems.ConrId"
+            [(params)]="formConfig.fastSearchLovParams"
+            [visible]="false"
+            [popupWidth]="1000"
+            [popupHeight]="600"
+            (dataChange)="onSearchClick($event)">
+    </dx-lov>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-3">
+          <dx-label text="{{'WAM_FROM_WRHS'| translate}}">
+            <dx-lov [(value)]="headerItems.WarehouseId"
+                    formCode="LOV-WAM-003"
+                    required="true"
+                    (dataChange)="onChangeWrhsFrom()"
+                    [readOnly]="formConfig.lockHeaderItems"
+                    allowClear="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WAM_MVMN_NUM'| translate}}">
+            <dx-text-box [(value)]="headerItems.DlvMovementNumber"
+                         [readOnly]="true">
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WAM_TO_WRHS'| translate}}">
+            <dx-lov [(value)]="headerItems.TargetWarehouseId"
+                    formCode="LOV-WAM-003"
+                    required="true"
+                    [readOnly]="true"
+                    allowClear="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'QUA_MOVEMENT'| translate}}">
+            <dx-text-box [(value)]="headerItems.RcptMovementNumber"
+                         [readOnly]="true">
+            </dx-text-box>
+          </dx-label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3  col-xs-12">
+          <dx-label text="{{'HTL_PRLI_CRT_DAT'| translate}}">
+            <dx-date [(value)]="headerItems.Date"
+                     [readOnly]="true"
+                     [mode]="'dateTime'"
+                     [showToday]="true">
+            </dx-date>
+          </dx-label>
+        </div>
+        <div class="col-sm-3  col-xs-12">
+          <dx-label text="{{'HTL_HCLR_DAT_CONFIRM'| translate}}">
+            <dx-date [(value)]="headerItems.ConfirmDate"
+                     [readOnly]="true"
+                     [mode]="'dateTime'">
+            </dx-date>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WAM_MOVEMENT_CONRS_NUM'| translate}}">
+            <dx-text-box [(value)]="headerItems.ConrNumber"
+                         [readOnly]="true">
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-3  col-xs-12">
+          <dx-label text="{{  'PUB_STATUS' | translate }}">
+            <dx-lov formCode="LOV-WAM-002"
+                    [(value)]="headerItems.Type"
+                    [readOnly]="true"
+                    [displayMode]="'ComboBox'"
+                    (valueChange)="StatusTypeChange($event)"
+                    required="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-xs-12">
+          <dx-label text="{{'TEXTNOTE'| translate}}">
+            <dx-text-box [(value)]="headerItems.Comment"
+                         [readOnly]="formConfig.lockComment">
+            </dx-text-box>
+          </dx-label>
+        </div>
+      </div>
+      <dx-accordion #accordion [dataSource]="movementConrAcardionItems"
+                    [collapsible]="true"
+                    [multiple]="true"
+                    [animationDuration]="300"
+                    [(selectedItems)]="accordionSelectedItems">
+        <div *dxTemplate="let item of 'title'">
+          <h6>
+            <i class="{{item.icon}}">&nbsp;</i>{{item.title}}
+          </h6>
+        </div>
+        <div *dxTemplate="let item of 'item'">
+          <div *ngIf="item.index==0">
+            <div class="col-sm-12">
+              <div class="margin-20"></div>
+              <grid-toolbar (onMenuItemClick)="onDlvGridMenuClick($event)"
+                            [rowMenuItems]="gridsItems">
+                <gt-datasource insertUrl="/WAM/MovementItem/Save"
+                               updateUrl="/WAM/MovementItem/Save"
+                               [(saveParams)]="dlvParams"
+                               loadUrl="/WAM/MovementItem/List"
+                               [(loadParams)]="dlvParams"
+                               removeUrl="/WAM/MovementItem/Delete">
+                </gt-datasource>
+                <dx-data-grid #DlvGrid
+                              keyExpr="ID"
+                              [(selectedRowKeys)]="dlvGridSelectedKeys"
+                              [height]="300">
+                  <dxo-scrolling mode="virtual"></dxo-scrolling>
+                  <dxo-selection mode="multiple"></dxo-selection>
+                  <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+                  <dxi-column dataField="Sequence" caption="{{'PUB_SEQENCE'| translate}}" [width]="70"></dxi-column>
+                  <dxi-column dataField="ItemCode" caption="{{'PUB_CODE'| translate}}" [width]="130">
+
+                  </dxi-column>
+
+                  <dxi-column dataField="ItemDescription" caption="{{'WAM_ITEMDES'| translate}}" [width]="220"></dxi-column>
+
+                  <dxi-column dataField="ItemTypeDescription" caption="{{'WAM_TYPE'| translate}}">
+
+                  </dxi-column>
+
+                  <dxi-column dataField="UnitDescriptionCommercial" caption="{{'PUB_UNIT'| translate}}">
+                    <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+                  </dxi-column>
+
+                  <dxi-column dataField="SecondQuantityCommercial" caption="{{  'PUB_QUANTITY' | translate }}">
+
+                  </dxi-column>
+                  <dxi-column dataField="ProjectName" caption="{{'WAM_PROJECT'| translate}}">
+
+                  </dxi-column>
+
+
+                  <dxi-column dataField="TextNote" caption="{{'WAM_TEXTNOTE'| translate}}"></dxi-column>
+                  <dxi-column dataField="LocationDescription" caption="{{'WAM_LOCATIONDESCRIPTION'| translate}}"></dxi-column>
+
+                </dx-data-grid>
+              </grid-toolbar>
+            </div>
+          </div>
+          <div *ngIf="item.index==1">
+            <div class="col-sm-12">
+              <div class="margin-20"></div>
+              <grid-toolbar (onMenuItemClick)="onRcptGridMenuClick($event)"
+                            [rowMenuItems]="gridsItems">
+                <gt-datasource insertUrl="/WAM/MovementItem/Save"
+                               updateUrl="/WAM/MovementItem/Save"
+                               [(saveParams)]="rcptParams"
+                               loadUrl="/WAM/MovementItem/List"
+                               [(loadParams)]="rcptParams"
+                               removeUrl="/WAM/MovementItem/Delete">
+                </gt-datasource>
+                <dx-data-grid #RcptGrid
+                              keyExpr="ID"
+                              [(selectedRowKeys)]="rcptGridSelectedKeys"
+                              [height]="300">
+                  <dxo-scrolling mode="virtual"></dxo-scrolling>
+                  <dxo-selection mode="multiple"></dxo-selection>
+                  <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+                  <dxi-column dataField="Sequence" caption="{{'PUB_SEQENCE'| translate}}" [width]="70"></dxi-column>
+                  <dxi-column dataField="ItemCode" caption="{{'PUB_CODE'| translate}}" [width]="130">
+
+                  </dxi-column>
+
+                  <dxi-column dataField="ItemDescription" caption="{{'WAM_ITEMDES'| translate}}" [width]="220"></dxi-column>
+
+                  <dxi-column dataField="ItemTypeDescription" caption="{{'WAM_TYPE'| translate}}">
+
+                  </dxi-column>
+
+                  <dxi-column dataField="UnitDescriptionCommercial" caption="{{'PUB_UNIT'| translate}}">
+                    <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+                  </dxi-column>
+
+                  <dxi-column dataField="SecondQuantityCommercial" caption="{{  'PUB_QUANTITY' | translate }}">
+
+                  </dxi-column>
+                  <dxi-column dataField="ProjectName" caption="{{'WAM_PROJECT'| translate}}">
+
+                  </dxi-column>
+
+
+                  <dxi-column dataField="TextNote" caption="{{'WAM_TEXTNOTE'| translate}}"></dxi-column>
+                  <dxi-column dataField="LocationDescription" caption="{{'WAM_LOCATIONDESCRIPTION'| translate}}"></dxi-column>
+
+                </dx-data-grid>
+              </grid-toolbar>
+            </div>
+          </div>
+        </div>
+      </dx-accordion>
+    </dx-validation-group>
+
+    <dx-popup class="popup"
+              [width]="900"
+              [height]="600"
+              [showTitle]="true"
+              [showCloseButton]="true"
+              [dragEnabled]="true"
+              [closeOnOutsideClick]="true"
+              [(visible)]="formConfig.movementPopupVisible"
+              [title]="formConfig.popupTitle">
+      <div *dxTemplate="let data of 'content'">
+        <dx-validation-group #movementPopupForm>
+
+          <panel-box caption="{{ 'WAM_DELIVER_ITEM' | translate }}" [collapsed]="false" [allowCollapse]="false">
+            <div class="row">
+              <div class="col-sm-1  col-xs-6">
+                <dx-label text="{{ 'PUB_SEQENCE' | translate }}">
+                  <dx-number-box [(value)]="movmentPopupItems.Sequence"
+                                 required="true"
+                                 [readOnly]="true"
+                                 [min]="1"
+                                 [max]="999999999999999">
+                    <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+                  </dx-number-box>
+                </dx-label>
+              </div>
+              <div class="col-sm-3 col-xs-12">
+                <dx-label text="{{  'HTL_HCIT_ITEM_COD' | translate }}">
+                  <dx-lov formCode="LOV-WAM-040"
+                          #lovItemList
+                          [(value)]="movmentPopupItems.ItemId"
+                          [(text)]="movmentPopupItems.ItemCode"
+                          required="true"
+                          (dataChange)="setItemTypelovParams($event)"
+                          [params]="formConfig.movementItemFilter"
+                          [allowClear]="true"></dx-lov>
+
+                </dx-label>
+              </div>
+              <div class="col-sm-4 col-xs-12">
+                <dx-label text="{{'HTL_HCIT_ITEM_DES' | translate}}">
+                  <dx-label-box [text]="lovItemList.data.Description">
+                  </dx-label-box>
+                </dx-label>
+              </div>
+              <div class="col-sm-4 col-xs-12">
+                <dx-label text="{{  'ITGR_DES_LTN' | translate }}">
+                  <dx-label-box [text]="lovItemList.data.ItemDescriptionLatin">
+                  </dx-label-box>
+                </dx-label>
+              </div>
+              <div class="col-sm-3 col-xs-12">
+                <dx-label text="{{  'WAM_ITEM_MSUN_DES' | translate }}">
+                  <dx-label-box [text]="lovItemList.data.UnitDescription">
+                  </dx-label-box>
+                </dx-label>
+              </div>
+              <div class="col-sm-3 col-xs-12">
+                <dx-label text="{{ 'WMOR_ITTP_DES' | translate }}">
+                  <dx-lov formCode="LOV-WAM-024"
+                          [(value)]="movmentPopupItems.ItemTypeId"
+                          [(text)]="movmentPopupItems.ItemTypeDescription"
+                          [readOnly]="false"
+                          required="true"
+                          [(params)]="formConfig.lovItemTypeFilter"
+                          [allowClear]="true">
+                  </dx-lov>
+                </dx-label>
+              </div>
+
+
+              <div class="col-sm-3  col-xs-6">
+                <dx-label text="{{ 'PUB_QUANTITY' | translate }}">
+                  <dx-number-box [(value)]="movmentPopupItems.SecondQuantityCommercial"
+                                 [min]="0.001" [max]="999999999999999" required="true">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="{{'PUB_REQUIRED' | translate}}"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-number-box>
+                </dx-label>
+              </div>
+              <!--<div class="col-sm-3 col-xs-12">
+                <dx-label text="{{  'WAM_PROJECT' | translate }}">
+                  <dx-lov formCode="LOV-WAM-111"
+                          [(value)]="movmentPopupItems.ProjectId"
+                          [(text)]="movmentPopupItems.ProjectName"
+                          [allowClear]="true"></dx-lov>
+
+                </dx-label>
+              </div>-->
+              <div class="col-sm-3 col-xs-12">
+                <dx-label text="{{  'WAM_LOCATIONDESCRIPTION' | translate }}">
+                  <dx-text-box [(value)]="movmentPopupItems.LocationDescription">
+                  </dx-text-box>
+                </dx-label>
+              </div>
+
+              <div class="col-sm-12 col-xs-12">
+                <dx-label text="{{  'WAM_TEXTNOTE' | translate }}">
+                  <dx-text-box [(value)]="movmentPopupItems.TextNote">
+                  </dx-text-box>
+                </dx-label>
+              </div>
+
+
+            </div>
+
+          </panel-box>
+
+          <panel-box caption="{{ 'WAM_RECIPT_ITEM' | translate }}" [collapsed]="false" [allowCollapse]="false">
+            <div class="row">
+              <!--<div class="col-sm-3  col-xs-6">
+                <dx-label text="{{ 'PUB_SEQENCE' | translate }}">
+                  <dx-number-box [(value)]="movementPopupItemsTo.Sequence"
+                                 required="true"
+                                 [readOnly]="true"
+                                 [min]="1"
+                                 [max]="999999999999999">
+                    <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+                  </dx-number-box>
+                </dx-label>
+              </div>-->
+              <div class="col-sm-4 col-xs-12">
+                <dx-label text="{{  'HTL_HCIT_ITEM_COD' | translate }}">
+                  <dx-lov formCode="LOV-WAM-040"
+                          #lovItemListTo
+                          [(value)]="movementPopupItemsTo.ItemId"
+                          [(text)]="movementPopupItemsTo.ItemCode"
+                          required="true"
+                          (dataChange)="setItemTypelovParamsTo($event)"
+                          [params]="formConfig.movementItemFilterTo"
+                          [allowClear]="true"></dx-lov>
+
+                </dx-label>
+              </div>
+              <div class="col-sm-4 col-xs-12">
+                <dx-label text="{{'HTL_HCIT_ITEM_DES' | translate}}">
+                  <dx-label-box [text]="lovItemListTo.data.Description">
+                  </dx-label-box>
+                </dx-label>
+              </div>
+              <div class="col-sm-4 col-xs-12">
+                <dx-label text="{{  'ITGR_DES_LTN' | translate }}">
+                  <dx-label-box [text]="lovItemListTo.data.ItemDescriptionLatin">
+                  </dx-label-box>
+                </dx-label>
+              </div>
+              <div class="col-sm-3 col-xs-12">
+                <dx-label text="{{  'WAM_ITEM_MSUN_DES' | translate }}">
+                  <dx-label-box [text]="lovItemListTo.data.UnitDescription">
+                  </dx-label-box>
+                </dx-label>
+              </div>
+
+              <div class="col-sm-3 col-xs-12">
+                <dx-label text="{{ 'WMOR_ITTP_DES' | translate }}">
+                  <dx-lov formCode="LOV-WAM-024"
+                          [(value)]="movementPopupItemsTo.ItemTypeId"
+                          [(text)]="movementPopupItemsTo.ItemTypeDescription"
+                          [readOnly]="false"
+                          required="true"
+                          [(params)]="formConfig.lovItemTypeFilterTo"
+                          [allowClear]="true">
+                  </dx-lov>
+                </dx-label>
+              </div>
+
+
+              <div class="col-sm-3  col-xs-6">
+                <dx-label text="{{ 'PUB_QUANTITY' | translate }}">
+                  <dx-number-box [(value)]="movementPopupItemsTo.SecondQuantityCommercial"
+                                 [min]="0.001" [max]="999999999999999" required="true">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="{{'PUB_REQUIRED' | translate}}"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-number-box>
+                </dx-label>
+              </div>
+              <div class="col-sm-3 col-xs-12">
+                <dx-label text="{{  'WAM_LOCATIONDESCRIPTION' | translate }}">
+                  <dx-text-box [(value)]="movementPopupItemsTo.LocationDescription">
+                  </dx-text-box>
+                </dx-label>
+              </div>
+              <!--<div class="col-sm-3 col-xs-12">
+                <dx-label text="{{  'WAM_PROJECT' | translate }}">
+                  <dx-lov formCode="LOV-WAM-111"
+                          [(value)]="movementPopupItemsTo.ProjectId"
+                          [(text)]="movementPopupItemsTo.ProjectName"
+                          [allowClear]="true"></dx-lov>
+
+                </dx-label>
+              </div>-->
+              <div class="col-sm-12 col-xs-12">
+                <dx-label text="{{  'WAM_TEXTNOTE' | translate }}">
+                  <dx-text-box [(value)]="movementPopupItemsTo.TextNote">
+                  </dx-text-box>
+                </dx-label>
+              </div>
+
+            </div>
+          </panel-box>
+
+          <div class="footer-popup">
+            <dx-button type="success" (onClick)="onSaveAndNextPopup()" text="{{  'PUB_SAVE_AND_NEXT' | translate }}" [width]="120"></dx-button>
+            <dx-button type="danger" (onClick)="onCancelPopup()" text="{{  'PUB_CANCEL' | translate }}" [width]="120"></dx-button>
+          </div>
+        </dx-validation-group>
+      </div>
+      <!--rowFooter-->
+    </dx-popup>
+    <wam-serial-popup [(visible)]="formConfig.serialPopupVisible" [(flgCreateTagVisible)]="tagRelatedData.flgCreateTag" [tagRelatedData]="tagRelatedData">
+    </wam-serial-popup>
+  </page-content>
+</page>
+
+

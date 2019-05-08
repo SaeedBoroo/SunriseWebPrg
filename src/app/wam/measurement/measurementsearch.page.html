@@ -1,0 +1,40 @@
+﻿<page>
+    <page-toolbar helpUrl="http://google.com"
+                  showHelp="false"
+                  [items]="menuItems"
+                  (onItemClick)="onMenuItemClick($event)">
+    </page-toolbar>
+    <page-content>
+        <dx-validation-group #form>
+        </dx-validation-group>
+        <div class="row">
+            <div class="col-sm-12">
+                <grid-toolbar (onMenuItemClick)="onGridItemClick($event)">
+                    <gt-datasource loadUrl="/WAM/MeasurementClass/ListAll">
+                    </gt-datasource>
+                    <dx-data-grid #dataGrid
+                                  keyExpr="ID"
+                                  [dataSource]="dataSource"
+                                  
+                                  (onSelectionChanged)="selectionChangedHandler()"
+                                  
+                                  [height]="500">
+                        <dxo-editing mode="row">
+                        </dxo-editing>
+                        <dxo-selection mode="single"></dxo-selection>
+                        <dxo-paging enabled="true"></dxo-paging>
+                        <dxi-column dataField="ClassCode" caption="کد کلاس"></dxi-column>
+                        <dxi-column dataField="ClassName" caption="نام کلاس"></dxi-column>
+                        <dxi-column dataField="Code" caption="کد واحد"></dxi-column>
+                        <dxi-column dataField="Description" caption="نام واحد"></dxi-column>
+                        <dxi-column dataField="BaseFlag" caption="واحد اصلی"></dxi-column>
+                        <dxi-column dataField="DescriptionLatin" caption="شرح لاتین"></dxi-column>
+                        <dxi-column dataField="DecimalFlag" caption="اعشار دارد"></dxi-column>
+                        <dxi-column dataField="DecimalQuantity" caption="تعداد ارقام اعشار"></dxi-column>
+                        <dxi-column dataField="IsActive" caption="فعال"></dxi-column>
+                    </dx-data-grid>
+                </grid-toolbar>
+            </div>
+        </div>
+    </page-content>
+</page>

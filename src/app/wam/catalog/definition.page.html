@@ -1,0 +1,84 @@
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)"></page-toolbar>
+  <page-content>
+    <div class="margin-10"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="header-title">
+          "{{  'WAM_PARAMETER_CATEGORY'| translate }}"
+        </h5>
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" [rowMenuItems]="gridItems">
+          <gt-datasource loadUrl="/WAM/CatalogueGroup/List"
+                         insertUrl="/WAM/CatalogueGroup/Save"
+                         updateUrl="/WAM/CatalogueGroup/Save"
+                         removeUrl="/WAM/CatalogueGroup/Delete"
+                         [(loadParams)]="loadParams">
+          </gt-datasource>
+          <dx-data-grid #gridMaster
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        [height]="200">
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxi-column dataField="Code" caption="{{'PUB_CODE'| translate}}" width="150">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+            </dxi-column>
+            <dxi-column dataField="Description" caption="{{'PUB_DES'| translate}}">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+            </dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+    <div class="margin-20"></div>
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="header-title">
+          "{{  'WAM_CATEGORY_ELEMENTS'| translate }}"
+        </h5>
+        <grid-toolbar  (onMenuItemClick)="onDetailGridItemClick($event)" [rowMenuItems]="gridItemsDetail">
+          <dx-data-grid #gridDetail
+                        keyExpr="ID"
+                        [dataSource]="dataSourceDetail"
+                        [(selectedRowKeys)]="selectedKeysDetail"
+                        [height]="300">
+            <gt-datasource loadUrl="/WAM/CatalogueType/List"
+                           insertUrl="/WAM/CatalogueType/Save"
+                           updateUrl="/WAM/CatalogueType/Save"
+                           removeUrl="/WAM/CatalogueType/Delete"
+                           [(loadParams)]="detailLoadParams"
+                           [(saveParams)]="detailLoadParams">
+            </gt-datasource>
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxi-column dataField="Code" caption="{{'PUB_CODE'| translate}}" width="150">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+            </dxi-column>
+            <dxi-column dataField="Name" caption="{{'PUB_DES'| translate}}">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+
+            </dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>

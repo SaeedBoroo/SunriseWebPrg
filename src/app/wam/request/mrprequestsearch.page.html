@@ -1,0 +1,48 @@
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)"
+                      (onRowDbClick)="onRowDbClickRouting($event)"
+                      [rowMenuItems]="gridItems">
+          <gt-datasource loadUrl="/WAM/Request/ListHeader"
+                         [(loadParams)]="loadParams"></gt-datasource>
+          <dx-data-grid #grid
+                        keyExpr="ID"
+                  
+                        [hoverStateEnabled]="true"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        [columnAutoWidth]="true"
+                        [rowAlternationEnabled]="true"
+                        [showBorders]="true"
+                        [showRowLines]="true"
+                        [height]="500">
+            <dxo-paging [enabled]="true"></dxo-paging>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-editing mode="row"
+                         [allowUpdating]="false"
+                         [allowDeleting]="false"
+                         [allowAdding]="false">
+            </dxo-editing>
+            <dxi-column dataField="Number" caption="{{ 'شماره درخواست' | translate }}"></dxi-column>
+            <dxi-column dataField="Date" dataType="date" caption="{{ 'تاریخ درخواست' | translate }}"></dxi-column>
+            <dxi-column dataField="RequestTypeDes" caption="{{ 'نوع درخواست' | translate }}"></dxi-column>
+            <dxi-column dataField="EmergencyType" caption="{{ 'الویت' | translate }}"></dxi-column>
+            <dxi-column dataField="WareHouseDes" caption="{{ 'انبار تحویل دهنده' | translate }}"></dxi-column>
+            <dxi-column dataField="WareHouseDesTarget" caption="{{ 'انبار درخواست کننده' | translate }}"></dxi-column>
+            <dxi-column dataField="BusinessUnitName" caption="{{ 'مرکز هزینه' | translate }}"></dxi-column>
+            <dxi-column dataField="SupplierNam" caption="{{ 'SUPL_COD' | translate }}"></dxi-column>
+            <dxi-column dataField="CustomerNam" caption="{{ 'کد مشتری' | translate }}"></dxi-column>
+            <dxi-column dataField="StatusDes" caption="{{ 'وضعیت' | translate }}"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>

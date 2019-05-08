@@ -1,0 +1,22 @@
+﻿<page>
+  <page-toolbar helpUrl="http://google.com" [showHelp]='false'  [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridMenuItemClick($event)">
+          <dx-data-grid id="gridContainer" #grid keyExpr="ID" [dataSource]="dataSource" (onContentReady)="onContentReady($event)" (onEditingStart)="onEditingStart($event)"
+             [columnAutoWidth]="true" [rowAlternationEnabled]="true" [height]="600">
+            <dxo-search-panel [visible]="true" [width]="240" placeholder="{{ 'PUB_SERACH' | translate}}...">
+            </dxo-search-panel>
+            <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true">
+            </dxo-editing>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxi-column dataField="ID"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>

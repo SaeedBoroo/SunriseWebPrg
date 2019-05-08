@@ -1,0 +1,236 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "demis": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "architect": {
+        "build": {                    
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "polyfills": "src/polyfills.ts",
+            "assets": [
+              "src/assets",
+              "src/favicon.ico"
+            ],
+            "styles": [
+              "src/assets/css/fonts.scss",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "node_modules/devextreme/dist/css/dx.common.css",
+              "node_modules/metismenu/dist/metisMenu.min.css",
+              "src/assets/css/slick.css",
+              "src/assets/css/theme-rtl.scss",
+              "src/assets/css/Rak.scss",
+              "src/assets/css/ax.controls.scss",
+              "src/assets/css/sla/factor.scss",
+              "src/assets/css/rpa/rpa-forms.scss",
+              "src/assets/css/file-explorer.scss", 
+              "src/assets/css/wfm/startProcess.scss",
+              "node_modules/uppy/dist/uppy.min.css"
+            ],
+            "scripts": [
+              "src/assets/vendor/jquery/jquery.js",
+              "src/assets/vendor/popper/popper.js",
+              "src/assets/vendor/bootstrap/js/bootstrap.js",
+              "node_modules/metismenu/dist/metisMenu.min.js",              
+              "src/assets/js/slick.js",
+              "src/assets/js/theme.js",
+              "src/assets/js/home.js"
+            ]
+          },
+          "configurations": {
+            "hmr": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.hmr.ts"
+                }
+              ]
+            },
+            "dev": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
+            },
+            "sunrise": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.sunrise.ts"
+                }
+              ]
+            },
+            "automation": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.auto.ts"
+                }
+              ]
+            },
+            "optic": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.opt.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "demis:build"
+          },
+          "configurations": {
+            "hmr": {
+              "browserTarget": "demis:build:hmr"
+            },
+            "production": {
+              "browserTarget": "demis:build:production"
+            },
+            "opt": {
+              "browserTarget": "demis:build:opt"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "demis:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "karmaConfig": "./karma.conf.js",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "scripts": [
+              "src/assets/vendor/jquery/jquery.js",
+              "src/assets/vendor/popper/popper.js",
+              "src/assets/vendor/bootstrap/js/bootstrap.js",
+              "node_modules/metismenu/dist/metisMenu.min.js",
+              "src/assets/js/slick.js",
+              "src/assets/js/theme.js",
+              "src/assets/js/home.js"
+            ],
+            "styles": [
+              "src/assets/css/fonts.scss",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "node_modules/devextreme/dist/css/dx.common.css",
+              "node_modules/metismenu/dist/metisMenu.min.css",
+              "src/assets/css/slick.css",
+              "src/assets/css/theme-rtl.scss",
+              "src/assets/css/Rak.scss",
+              "src/assets/css/ax.controls.scss",
+              "src/assets/css/sla/factor.scss",
+              "src/assets/css/rpa/cheque.scss",
+              "src/assets/css/wfm/startProcess.scss",
+              "node_modules/uppy/dist/uppy.min.css"
+            ],
+            "assets": [
+              "src/assets",
+              "src/favicon.ico"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "demis-e2e": {
+      "root": "",
+      "sourceRoot": "",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "./protractor.conf.js",
+            "devServerTarget": "demis:serve"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "demis",
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "app-root",
+      "styleext": "scss"
+    },
+    "@schematics/angular:directive": {
+      "prefix": "app-root"
+    }
+  }
+}

@@ -1,0 +1,155 @@
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WRHS_CODE'| translate}}">
+            <dx-lov [(value)]="headerItem.WarehouseID"                  
+                    (dataChange)="warehouseChanged($event)"
+                    formCode="LOV-WAM-103"
+                    [allowClear]="true"
+                    required="true"></dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WRHS_NAME'| translate}}">
+            <dx-text-box [value]="headerItem.WarehouseDescription"
+                         [text]="headerItem.WarehouseDescription"
+                         [readOnly]="true">
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-2 col-xs-12">
+          <dx-label text="{{'PUB_YEAR'| translate}}">
+            <dx-number-box [(value)]="headerItem.Year" [min]="1300" required="true">
+            </dx-number-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-2 col-xs-12">
+          <dx-button text="{{'WAM_TRANS_FROM_PREV_YEAR'| translate}}" type="success" (onClick)="InsertRows()"[disabled] ="buttonDisabled"></dx-button>
+        </div>
+      </div>
+    </dx-validation-group>
+    <div class="row">
+      <div class="col-sm-12" >
+        <div class="margin-20"></div>
+        <grid-toolbar (onMenuItemClick)="onGridWarehouseItemMenuClick($event)"
+                      (onCancelEditRow)="onCanceledItemRowGrid($event)">
+          <gt-datasource insertUrl="/WAM/MovementItem/Save"
+                         updateUrl="/WAM/MovementItem/Save"
+                         [(saveParams)]="saveParams"
+                         loadUrl="/WAM/MovementItem/List"
+                         [(loadParams)]="loadParams"
+                         removeUrl="/WAM/MovementItem/Delete">
+          </gt-datasource>
+          <dx-data-grid #itemGrid
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="itemSelectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        (onEditorPreparing)="onEditorPreparingItemsGrid($event)"
+                        (onInitNewRow)="itemGridOnInitNewRow($event)"
+                        [height]="400">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+            <dxi-column dataField="Sequence" caption="ردیف" [width]="70"></dxi-column>
+            <dxi-column dataField="ItemCode" caption="{{'PUB_CODE'| translate}}" editCellTemplate="ItemCode" [width]="130" [setCellValue]=setCellValueOfItemCode>
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'ItemCode'">
+                <dx-lov formCode="LOV-WAM-040"
+                        [text]="cell.data.ItemCode"
+                        [params]="warehouseItemFilter"
+                        [readOnly]="flgUpdateCode"
+                        (dataChange)="onCellWarehouseItemCodeChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="ItemDescription" caption="نام کالا" [width]="220"></dxi-column>
+            <dxi-column dataField="ItemTypeId" caption="{{'WAM_TYPE'| translate}}" [visible] = "!flagSimpleMode">
+              <dxo-lookup [dataSource]="lovIttp" valueExpr="ID" displayExpr="Title">
+              </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="UnitDescriptionCommercial" caption="{{'PUB_UNIT'| translate}}" editCellTemplate="MeasurementUnitCode" width="180" [setCellValue]="setCellValueOfUnitCommercial">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'MeasurementUnitCode'">
+                <dx-lov formCode="LOV-WAM-034"
+                        [text]="cell.data.UnitDescriptionCommercial"
+                        [params]="itemUnitFilter"
+                        (dataChange)="onCellUnitChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="SecondQuantityCommercial" caption="مقدار" dataType="number" [setCellValue]="setCellValueOfSecondQuantityCommercial">
+              <dxi-validation-rule type="range" [min]="0.001" message="{{  'NON_ZERO' | translate }}">
+              </dxi-validation-rule>
+            </dxi-column>
+            <!--<dxi-column dataField="UnitDescription" caption="واحد انباری" visible ="false"> </dxi-column>
+          <dxi-column dataField="Quantity" caption="مقدار انباری" visible ="false"></dxi-column>-->
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+    <!--<div class="row">
+      <div class="col-sm-12">
+        <div class="margin-20"></div>
+        <grid-toolbar (onMenuItemClick)="onGridWarehouseItemMenuClick($event)"
+                      (onCancelEditRow)="onCanceledItemRowGrid($event)"
+                      [rowMenuItems]="gridItems">
+          <gt-datasource insertUrl="/WAM/MovementItem/Save"
+                         updateUrl="/WAM/MovementItem/Save"
+                         [(saveParams)]="saveParams"
+                         loadUrl="/WAM/MovementItem/List"
+                         [(loadParams)]="loadParams"
+                         removeUrl="/WAM/MovementItem/Delete">
+          </gt-datasource>
+          <dx-data-grid #itemGrid
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="itemSelectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        (onEditorPreparing)="onEditorPreparingItemsGrid($event)"
+                        (onInitNewRow)="itemGridOnInitNewRow($event)"
+                        [height]="400">
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+            <dxi-column dataField="Sequence" caption="ردیف" [width]="70"></dxi-column>
+            <dxi-column dataField="ItemCode" caption="{{'PUB_CODE'| translate}}" editCellTemplate="ItemCode" [width]="130" [setCellValue]=setCellValueOfItemCode>
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'ItemCode'">
+                <dx-lov formCode="LOV-WAM-040"
+
+                        [text]="cell.data.ItemCode"
+                        [params]="warehouseItemFilter"
+                        [readOnly]="flgUpdateCode"
+                        (dataChange)="onCellWarehouseItemCodeChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="ItemDescription" caption="نام کالا" [width]="220"></dxi-column>
+            <dxi-column dataField="UnitDescriptionCommercial" caption="{{'PUB_UNIT'| translate}}" editCellTemplate="MeasurementUnitCode" width="180" [setCellValue]="setCellValueOfUnitCommercial">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              <div *dxTemplate="let cell of 'MeasurementUnitCode'">
+                <dx-lov formCode="LOV-WAM-034"
+                        [text]="cell.data.UnitDescriptionCommercial"
+                        [params]="itemUnitFilter"
+                        (dataChange)="onCellUnitChanged($event,cell)">
+                </dx-lov>
+              </div>
+            </dxi-column>
+            <dxi-column dataField="SecondQuantityCommercial" caption="مقدار" dataType="number" [setCellValue]="setCellValueOfSecondQuantityCommercial">
+              <dxi-validation-rule type="range" [min]="0.001" message="{{  'NON_ZERO' | translate }}">
+              </dxi-validation-rule>
+            </dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>-->
+  </page-content>
+</page>

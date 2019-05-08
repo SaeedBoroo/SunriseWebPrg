@@ -1,0 +1,122 @@
+<page>
+  <page-toolbar helpUrl="http://google.com" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-4">
+          <dx-label text="nader afshar">
+            <dx-text-box [(value)]="editItem.UFIF_NAM_UNIT">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="این فیلد اجباری است"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_TYP' | translate }}">
+            <dx-lov [(value)]="editItem.UFIF_TYP_UNIT" [(text)]="editItem.UFIF_TYP_UNIT_Caption" formCode="LOV-PRG-001"
+              [required]="true" [displayMode]="'ComboBox'"></dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_DEGREE' | translate }}">
+            <dx-lov [(value)]="editItem.UFIF_DEG_UNIT" [(text)]="editItem.UFIF_DEG_UNIT_Caption" formCode="LOV-PRG-002"
+              [required]="true" [displayMode]="'ComboBox'"></dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_ADDRESS' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_ADDR"></dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_TELL' | translate }}">
+            <dx-text-box mask="00000000000" [maskRules]="phoneRules" maskInvalidMessage=" لطفاً شماره تلفن را بصورت یازده رقمی وارد نمایید"
+              [useMaskedValue]="true" [(value)]="editItem.UFIF_NUM_TELL">
+              <!-- <dx-validator>
+                <dxi-validation-rule type="pattern" [pattern]="phonePattern" message="لطفاً شماره تلفن را بصورت یازده رقمی وارد نمایید"></dxi-validation-rule>
+              </dx-validator> -->
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_FAX' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_NUM_FAX"></dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_SITE_ADDRESS' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_SITE_ADDR"></dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_OWNER_NAM' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_NAM_OWNER"></dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_OWNER_MOBILE' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_NUM_MOBILE_OWNER"></dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_OWNER_TELL' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_NUM_TELL_OWNER"></dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_OWNER_EMAIL' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_EMAIL_ADDR_OWNER">
+              <dx-validator>              
+                <dxi-validation-rule type="email" message="لطفاً ایمیل را بصورت صحیح وارد نمایید"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_MANAGER_NAM' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_NAM_MANAGER">
+
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_MANAGER_MOBILE' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_MOBILE_MANAGER"></dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_MANAGER_TELL' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_TELL_MANAGER"></dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4">
+          <dx-label text="{{ 'PRG_UNIT_MANAGER_EMAIL' | translate }}">
+            <dx-text-box [(value)]="editItem.UFIF_EMAIL_ADDR_MANAGER">
+              <dx-validator>
+                <dxi-validation-rule type="email" message="لطفاً ایمیل را بصورت صحیح وارد نمایید"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-4" *ngIf="ALLOW_PRG_UFIF_001">
+          <dx-label text="{{ 'PRG_UNIT_COST_PERSENT' | translate }}">
+            <dx-number-box [(value)]="editItem.UFIF_COST_PERSENT"   >
+            </dx-number-box>
+          </dx-label>
+        </div>
+        
+        <div class="col-sm-4"  *ngIf="ALLOW_PRG_UFIF_001">
+          <dx-label text="{{ 'PRG_UNIT_TOLERANCE_PERSENT' | translate }}">
+            <dx-number-box [(value)]="editItem.UFIF_TOLERANCE_PERSENT" >
+            </dx-number-box>
+          </dx-label>
+        </div>        
+
+
+      </div>
+    </dx-validation-group>
+  </page-content>
+</page>

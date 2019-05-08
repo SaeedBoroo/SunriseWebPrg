@@ -1,0 +1,279 @@
+<page>
+  <page-toolbar helpUrl="http://google.com"
+                showHelp="false"
+                [items]="menuItems"
+                (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" [rowMenuItems]="gridItems">
+          <gt-datasource loadUrl="/WAM/Warehouse/List"
+                         insertUrl="/WAM/Warehouse/Save"
+                         [(saveParams)]="editItem"
+                         updateUrl="/WAM/Warehouse/Save"
+                         removeUrl="/WAM/Warehouse/Delete">
+          </gt-datasource>
+          <dx-data-grid #grid
+                        keyExpr="ID"
+                        [(selectedRowKeys)]="selectedKeys"
+                        (onSelectionChanged)="selectionChangedHandler()"
+                        [height]="550">
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxi-column dataField="Code" caption="{{'کد انبار'| translate}}" [width]="70"></dxi-column>
+            <dxi-column dataField="Description" caption="{{'نام انبار'| translate}}" [width]="100"></dxi-column>
+            <dxi-column dataField="Fax" caption="{{'فکس'| translate}}" [width]="90"></dxi-column>
+            <dxi-column dataField="Tel" caption="{{'تلفن'| translate}}" [width]="90"></dxi-column>
+            <dxi-column dataField="WareHouseTypeId" caption="{{'نوع انبار'| translate}}" [width]="130">
+              <dxo-lookup [dataSource]="WRHSTYPEDataSource"
+                          valueExpr="ID"
+                          displayExpr="Title"
+                          allowClearing="true">
+              </dxo-lookup>
+            </dxi-column>
+            <dxi-column dataField="BusinessUnitName" caption="{{ 'WAM_BSUN_NAM'| translate}}" [width]="120" editCellTemplate="celLovCode"></dxi-column>
+            <div *dxTemplate="let cell of 'celLovCode'">
+              <dx-lov formCode="LOV-EIM-029"
+                      [(value)]="cell.data.BusinessUnitId"
+                      [(text)]="cell.data.BusinessUnitName"
+                      (dataChange)="onCellChanged($event,cell)"
+                      [required]="true"></dx-lov>
+            </div>
+            <dxi-column dataField="Address" caption="{{'آدرس انبار'| translate}}" [width]="300"></dxi-column>
+            <dxi-column dataField="Active" caption="{{'فعال'| translate}}" dataType="boolean"></dxi-column>
+
+
+
+            <div *dxTemplate="let cell of 'cell01'">
+              <dx-text-box [(value)]="editItem.BusinessUnitName" readOnly="true"></dx-text-box>
+            </div>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>
+
+
+
+<!--coding werehouse -->
+<dx-popup class="popup"
+          [width]="700"
+          [height]="500"
+          [showTitle]="true"
+          [showCloseButton]="true"
+          [dragEnabled]="true"
+          [closeOnOutsideClick]="true"
+          [(visible)]="CodingWereHousePopup">
+  <div *dxTemplate="let data of 'content'">
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClickcoding($event)"
+                      [rowMenuItems]="gridItemscoding"
+                      (onCancelEditRow)="onCanceledItemRowGrid($event)">
+          <gt-datasource loadUrl="/WAM/WarehouseCoding/List"
+                         insertUrl="/WAM/WarehouseCoding/Save"
+                         [(loadParams)]="editItem"
+                         [(saveParams)]="editItem"
+                         updateUrl="/WAM/WarehouseCoding/Save"
+                         removeUrl="/WAM/WarehouseCoding/Delete">
+          </gt-datasource>
+          <dx-data-grid #gridcoding
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="selectedKeys"
+                        [height]="380">
+            <dxo-editing mode="row"
+                         [allowUpdating]="true"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <!--<dxi-column dataField="CodingCode" caption="{{'کد کدینگ'| translate}}" [width]="150" editCellTemplate="celLovCodingCode"></dxi-column>-->
+            <dxi-column dataField="CodingName" caption="{{'نام کدینگ'| translate}}" visible="false" editCellTemplate="celLovCodingCode"></dxi-column>
+            <div *dxTemplate="let cell of 'celLovCodingCode'">
+              <dx-lov formCode="LOV-WAM-055"
+                      [(value)]="cell.data.CodingId"
+                      [(text)]="cell.data.CodingName"
+                      (dataChange)="onCellCodingCodeChanged($event,cell)"
+                      [required]="true">
+              </dx-lov>
+            </div>
+            <!--<div *dxTemplate="let cell of 'cell01'">
+              {{editItem.CodingName}}
+            </div>-->
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </div>
+</dx-popup>
+
+
+<!--document werehouse -->
+<dx-popup class="popup"
+          [width]="700"
+          [height]="500"
+          [showTitle]="true"
+          [showCloseButton]="true"
+          [dragEnabled]="true"
+          [closeOnOutsideClick]="true"
+          [(visible)]="DocumentWereHousePopup">
+  <div *dxTemplate="let data of 'content'">
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClickdocument($event)" [rowMenuItems]="gridItemsdocument">
+          <gt-datasource loadUrl="/WAM/WarehouseMovementType/List"
+                         [(loadParams)]="editItem"
+                         removeUrl="/WAM/WarehouseMovementType/Delete">
+          </gt-datasource>
+          <dx-data-grid #gridType
+                        keyExpr="ID"
+                        [dataSource]="dataSource"
+                        [(selectedRowKeys)]="selectedKeys"
+                        [height]="380">
+            <dxo-editing mode="row"
+                         [allowUpdating]="false"
+                         [allowDeleting]="true"
+                         [allowAdding]="true">
+            </dxo-editing>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-paging enabled="true"></dxo-paging>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+            <dxi-column dataField="TypeCode" caption="{{'کد سند'| translate}}" [width]="150" editCellTemplate="celLovTypeCode"></dxi-column>
+            <dxi-column dataField="TypeDescription" caption="{{'نام سند'| translate}}" visible="false" editCellTemplate="cell01"></dxi-column>
+
+            <div *dxTemplate="let cell of 'celLovTypeCode'">
+              <dx-lov formCode="LOV-WAM-007" [(text)]="cell.data.TypeCode"
+                                             selectionMode="multiple"
+                                             (dataChange)="onCellTypeCodeChanged($event,cell)"
+                                             [params]="lovMovementTypeFilter"
+                                             [required]="true"></dx-lov>
+            </div>
+
+            <div *dxTemplate="let cell of 'cell01'">
+              <dx-text-box [(value)]="editItem.TypeDescription" readOnly="true"></dx-text-box>
+            </div>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </div>
+</dx-popup>
+
+<!--insert and edit warehouse popup-->
+<dx-popup class="popup"
+          [width]="700"
+          [height]="290"
+          [showTitle]="true"
+          [showCloseButton]="false"
+          [dragEnabled]="true"
+          [closeOnOutsideClick]="false"
+          [(visible)]="warehousePopupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <dx-validation-group #warehousePopup>
+
+      <div class="row">
+
+
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{  'WRHS_COD' | translate }}">
+            <dx-text-box [(value)]="warehousePopupItems.Code"
+                         required="true">
+              <dx-validator>
+                <dxi-validation-rule type="required"
+                                     message="{{'PUB_REQUIRED' | translate}}"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-9 col-xs-12">
+          <dx-label text="{{  'WRHS_DES' | translate }}">
+            <dx-text-box [(value)]="warehousePopupItems.Description"
+                         required="true">
+              <dx-validator>
+                <dxi-validation-rule type="required"
+                                     message="{{'PUB_REQUIRED' | translate}}"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{  'EIM_BSUN_NUM_FAX' | translate }}">
+            <dx-text-box [(value)]="warehousePopupItems.Fax">
+
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{  'PUB_TEL' | translate }}">
+            <dx-text-box [(value)]="warehousePopupItems.Tel">
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{  'WRHS_TYPE' | translate }}">
+            <dx-lov formCode="LOV-WAM-050"
+                    [(value)]="warehousePopupItems.WareHouseTypeId"
+                    [text]="warehousePopupItems.WorkOrderType"
+                    required="true"
+                    [displayMode]="'ComboBox'">
+            
+            </dx-lov>
+          </dx-label>
+
+
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{  'PUB_BUSINESS_UNIT' | translate }}">
+            <dx-lov formCode="LOV-WAM-146"
+                    [(value)]="warehousePopupItems.BusinessUnitId"
+                    [(text)]="warehousePopupItems.BusinessUnitName"
+                    [(params)]="lovBusinessFilter"
+                    required="true"
+                    [allowClear]="true">
+            
+            </dx-lov>
+          </dx-label>
+        </div>
+
+
+
+
+        <div class="col-sm-10 col-xs-12">
+          <dx-label text="{{  'PUB_ADDRES' | translate }}">
+            <dx-text-box [(value)]="warehousePopupItems.Address">
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-2 col-xs-12">
+          <dx-check-box text="{{  'PUB_FLG_ACT' | translate }}"
+                        [(value)]="warehousePopupItems.Active"
+                        required="true">
+
+          </dx-check-box>
+        </div>
+
+
+      </div>
+      <div class="margin-20"></div>
+      <!--rowFooter-->
+      <div class="row">
+        <div class="row footer-popup">
+          <dx-button type="success" (onClick)="onSaveClick()" [text]="popupSaveButton.text" [width]="130"></dx-button>
+          <dx-button type="danger" (onClick)="onCancelClick()" text="{{ 'PUB_CANCEL' | translate }}" [width]="130"></dx-button>
+        </div>
+      </div>
+    </dx-validation-group>
+  </div>
+</dx-popup>

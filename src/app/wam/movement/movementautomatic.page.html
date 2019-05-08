@@ -1,0 +1,81 @@
+<page>
+  <page-toolbar helpUrl="http://google.com" showHelp="false" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row">
+        <div class="col-sm-3">
+          <dx-label text="{{'REQUESTTTYPE'| translate}}">
+            <dx-lov [(value)]="insertItem.RequestTypeID" [(text)]="insertItem.RequestTypeDes" formCode="LOV-WAM-127" (dataChange)="RequesttTypeChanged($event)"
+              allowClear="true" [readOnly]="readonly" [required]="true">
+            </dx-lov>
+          </dx-label>
+        </div>
+      </div>
+    </dx-validation-group>
+    <div class="row">
+      <div class="col-sm-12">
+        <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" (onRowDbClick)="onRowDbClick($event)" [rowMenuItems]="gridItems">
+          <gt-datasource loadUrl="/WAM/RequestItem/ListHeader" [(loadParams)]="loadParams"></gt-datasource>
+          <dx-data-grid #grid keyExpr="ID" [dataSource]="dataSource" [hoverStateEnabled]="true" [(selectedRowKeys)]="selectedKeys"
+            (onSelectionChanged)="selectionChangedHandler()" [columnAutoWidth]="true" [rowAlternationEnabled]="true" [showBorders]="true"
+            [showRowLines]="true" [height]="500">
+            <dxo-paging [enabled]="true"></dxo-paging>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false">
+            </dxo-editing>
+            <dxi-column dataField="Number" caption="{{ 'شماره درخواست' | translate }}"></dxi-column>
+            <dxi-column dataField="Date" dataType="date" caption="{{ 'تاریخ درخواست' | translate }}"></dxi-column>
+            <dxi-column dataField="Sequence" caption="ردیف"></dxi-column>
+            <dxi-column dataField="WorkOrderNumber" caption="{{ 'دستور تولید' | translate }}"></dxi-column>
+
+            <dxi-column dataField="ItemCode" caption="کد کالا"></dxi-column>
+            <dxi-column dataField="ItemDescription" caption="نام کالا"></dxi-column>
+
+            <dxi-column dataField="ItemTypeDescription" caption="{{'WAM_TYPE'| translate}}"></dxi-column>
+
+            <dxi-column dataField="UnitDescriptionCommercial" caption="{{'PUB_UNIT'| translate}}">
+            </dxi-column>
+
+            <dxi-column dataField="WarehouseCode" caption="{{'WRHS_CODE_DLVR'| translate}}">
+            </dxi-column>
+
+            <dxi-column dataField="WarehouseTargetCode" caption="{{'WAM_WRHS_TARGET'| translate}}">
+            </dxi-column>
+
+            <dxi-column dataField="WIPWarehouseCode" caption="{{'WAM_WRHS_WIP'| translate}}" [visible] = "typeTarget == 262">
+            </dxi-column>
+
+            <dxi-column dataField="BusinessUnitName" caption="{{'WAM_COST_CENTER'| translate}}" [visible] = "typeTarget == 264">
+              </dxi-column>
+
+            <dxi-column dataField="CentricAccountName" caption="{{'WAM_SERIAL_CNAC'| translate}}">
+            </dxi-column>
+
+            <dxi-column dataField="UnitDescriptionCommercial" caption="{{'PUB_UNIT'| translate}}">
+              <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            </dxi-column>
+            <dxi-column dataField="SecondQuantityCommercial" caption="مقدار" dataType="number">
+            </dxi-column>
+            <!-- <dxi-column dataField="Inventory" caption="{{'WAM_INVENTORY'| translate}}" editCellTemplate="Inventory"></dxi-column>
+                    <div *dxTemplate="let cell of 'Inventory'">
+                      {{ editRow.Inventory}}
+                    </div> -->
+            <!--<dxi-column dataField="QuantityDelivered" caption="{{'WAM_QUANTITY_DELIVERED'| translate}}"  editCellTemplate="QuantityDelivered"></dxi-column>-->
+            <!-- <dxi-column dataField="prodProgress" caption="{{ 'WAM_QUANTITY_DELIVERED' | translate }}" cellTemplate="prodProgress">
+        
+                    </dxi-column>
+                    <div *dxTemplate="let cell of 'prodProgress'">
+                      <dx-progress-bar [min]="0" [max]="cell.data.SecondQuantityCommercial" [value]="cell.data.QuantityDelivered" [statusFormat]="formatProgress"
+                        [readOnly]="true">
+                      </dx-progress-bar>
+                    </div> -->
+            <dxi-column dataField="TextNote" caption="{{'TEXTNOTE'| translate}}"></dxi-column>
+            <dxi-column dataField="LocationDescription" caption="{{'WAM_LOCATIONDESCRIPTION'| translate}}"></dxi-column>
+            <dxi-column dataField="StatusDes" caption="{{'STATUS'| translate}}"></dxi-column>
+          </dx-data-grid>
+        </grid-toolbar>
+      </div>
+    </div>
+  </page-content>
+</page>

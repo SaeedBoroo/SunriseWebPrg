@@ -1,0 +1,70 @@
+<dx-popup class="popup"
+          [width]="1150"
+          [height]="500"
+          [showTitle]="true"
+          [showCloseButton]="true"
+          [dragEnabled]="true"
+          [closeOnOutsideClick]="true"
+          (onShowing)="onShow($event)"
+          [(visible)]="visible">
+  <div *dxTemplate="let data of 'content'">
+    <form (submit)="onFormSubmit($event)">
+        <div class="row">
+            <div class="col-sm-12">
+              <div class="margin-20"></div>
+              <grid-toolbar (onMenuItemClick)="onGridMovementItemMenuClick($event)"
+                            (onCancelEditRow)="onCanceledItemRowGrid($event)"
+                            [rowMenuItems]="gridItems">
+                <gt-datasource loadUrl="/WAM/MovementItem/ListAll"
+                               [(loadParams)]="loadParams">
+                </gt-datasource>
+                <dx-data-grid #itemGrid
+                              keyExpr="ID"
+                              [dataSource]="dataSource"
+                              [(selectedRowKeys)]="itemSelectedKeys"
+                              (onSelectionChanged)="selectionChangedHandler()"
+                              (onRowRemoved)="enableHeader($event)"
+                              (onInitNewRow)="itemGridOnInitNewRow($event)"
+                              [height]="300">
+                  <dxo-scrolling mode="virtual"></dxo-scrolling>
+                  <dxo-selection mode="multiple"></dxo-selection>
+                  <dxo-editing mode="row" ></dxo-editing>
+                  <dxi-column dataField="Sequence" caption="ردیف" [width]="70"></dxi-column>
+                  <dxi-column dataField="ItemCode" caption="{{'PUB_CODE'| translate}}" editCellTemplate="ItemCode" [width]="130" [setCellValue]=setCellValueOfItemCode>
+                    <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+                    <div *dxTemplate="let cell of 'ItemCode'">
+                      <dx-lov formCode="LOV-WAM-033"
+                              [(value)]="cell.data.ItemId"
+                              [text]="cell.data.ItemCode"
+                              [params]="movementItemFilter"
+                              [readOnly]="flgUpdateCode"
+                              (dataChange)="onCellMovementItemCodeChanged($event,cell)">
+                      </dx-lov>
+                    </div>
+                  </dxi-column>
+                  <dxi-column dataField="MovementTypeDescription" caption="{{'MOVEMENTTYPE'| translate}}" [width]="220"></dxi-column>
+                  <dxi-column dataField="MovementNumber" caption="{{'MVMN_NUM'| translate}}" [width]="220"></dxi-column>
+                  <dxi-column dataField="MovementDate"caption="{{'MVMN_DAT'| translate}}" [width]="220"></dxi-column>
+                  <dxi-column dataField="ItemDescription" caption="نام کالا"></dxi-column>  
+                  <dxi-column dataField="ItemTypeDescription" caption="{{'WAM_TYPE'| translate}}" [visible] = "!flagSimpleMode"></dxi-column>    
+                  <dxi-column dataField="UnitDescriptionCommercial" caption="{{'PUB_UNIT'| translate}}" editCellTemplate="MeasurementUnitCode" [setCellValue]="setCellValueOfUnitCommercial">
+                    <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+                    <div *dxTemplate="let cell of 'MeasurementUnitCode'">
+                      <dx-lov formCode="LOV-WAM-034"
+                              [text]="cell.data.UnitDescriptionCommercial"
+                              [params]="itemUnitFilter"
+                              (dataChange)="onCellUnitChanged($event,cell)">
+                      </dx-lov>
+                    </div>
+                  </dxi-column>      
+                  <dxi-column dataField="SecondQuantityCommercial" caption="مقدار" dataType="number" [setCellValue]="setCellValueOfSecondQuantityCommercial">
+                    <dxi-validation-rule type="range" [min]="0.001" message="{{  'NON_ZERO' | translate }}">
+                    </dxi-validation-rule>
+                  </dxi-column>      
+                </dx-data-grid>
+              </grid-toolbar>
+            </div>
+          </div>
+    </form>
+  </div>
+</dx-popup>

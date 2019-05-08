@@ -1,0 +1,144 @@
+﻿<!-- <dx-popup class="popup"
+          [width]="800"
+          [height]="650"
+          [showTitle]="true"
+          (onShowing)="onShow($event)"
+          [showCloseButton]="true"
+          [dragEnabled]="true"
+          [closeOnOutsideClick]="true"
+          [(visible)]="visible"> -->
+<popup [(visible)]="visible" [width]="1000" [height]="580" title="{{'WAM_INSERT_TAG'| translate}}" (onOpening)="onShow($event)"
+  [isFullScreen]="false" (onSubmitClick)="onFormSubmit()" submitText="تایید" [showConfirm]="true">
+
+  <div class="margin-10"></div>
+  <div class="row">
+    <div class="col-sm-12" *ngIf="flgCreateTagVisible">
+      <div class="row">
+        <!-- <div class="col-sm-2 col-xs-12">
+          <dx-label text="{{'PUB_VALUE'| translate}}">
+            <dx-number-box [(value)]="createTagData.Amount" [min]="1">
+            </dx-number-box>
+          </dx-label>
+        </div> -->
+        <div class="col-sm-2 col-xs-12">
+          <dx-label text="{{'PUB_CNT'| translate}}">
+            <dx-number-box [(value)]="createTagData.Quantity" [min]="1">
+            </dx-number-box>
+          </dx-label>
+        </div>
+        <div class="col-sm-4 col-xs-12">
+          <dx-label text="{{'WAM_SERIAL_CNAC'| translate}}">
+            <dx-lov [(value)]="createTagData.CentricAccountId" formCode="LOV-WAM-123" required="true" [readOnly]="false">
+            </dx-lov>
+          </dx-label>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'WAM_LOCATION'| translate}}">
+            <dx-lov [(value)]="createTagData.LocationID" formCode="LOV-WAM-104" required="true" [readOnly]="false">
+            </dx-lov>
+          </dx-label>
+        </div>
+
+        <div class="col-sm-1 col-xs-12">
+          <dx-button text="{{'PUB_CREATE'| translate}}" type="success" (onClick)="onCreateClick()"></dx-button>
+        </div>
+        <!-- <div class="col-sm-3 col-xs-12">
+              <dx-button text="{{'WAM_PRINT_ALL_TAGS'| translate}}" type="success" (onClick)="OnPatternClick()"></dx-button>
+            </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <grid-toolbar>
+        <gt-datasource loadUrl="/WAM/MovementTrace/List" insertUrl="/WAM/MovementTrace/Save" [(loadParams)]="traceLoadParam" [(saveParams)]="traceLoadParam"
+          updateUrl="/WAM/MovementTrace/Save" removeUrl="/WAM/MovementTrace/Delete">
+        </gt-datasource>
+        <dx-data-grid #traceGrid keyExpr="ID" [(selectedRowKeys)]="traceSelectedKeys" (onSelectionChanged)="traceSelectionChangedHandler()"
+          [height]="200">
+          <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false">
+          </dxo-editing>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-paging enabled="true"></dxo-paging>
+          <dxo-scrolling mode="virtual"></dxo-scrolling>
+          <!--<dxi-column dataField="CodingCode" caption="{{'کد کدینگ'| translate}}" [width]="150" editCellTemplate="celLovCodingCode"></dxi-column>-->
+          <dxi-column dataField="TraceCode" caption="{{'ردیابی'| translate}}" editCellTemplate="celLovTrace"></dxi-column>
+          <div *dxTemplate="let cell of 'celLovTrace'">
+            <dx-lov formCode="LOV-WAM-117" [(value)]="cell.data.TraceId" [(text)]="cell.data.TraceCode" (dataChange)="onCellTraceChanged($event,cell)"
+              [required]="true">
+            </dx-lov>
+          </div>
+          <dxi-column dataField="Quantity" caption="{{'WAM_QUANTITY'| translate}}"></dxi-column>
+          <!--<div *dxTemplate="let cell of 'cell01'">
+                {{editItem.CodingName}}
+              </div>-->
+        </dx-data-grid>
+      </grid-toolbar>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <grid-toolbar (onMenuItemClick)="onGridLotClick($event)">
+        <gt-datasource loadUrl="/WAM/MovementLot/List" insertUrl="/WAM/MovementLot/Save" [(loadParams)]="lotLoadParam" [(saveParams)]="lotSaveParam"
+          updateUrl="/WAM/MovementLot/Save" removeUrl="/WAM/MovementLot/Delete">
+        </gt-datasource>
+        <dx-data-grid #lotGrid keyExpr="ID" [(selectedRowKeys)]="lotSelectedKeys" (onSelectionChanged)="lotSelectionChangedHandler()"
+          (onRowInserted)="lotInserted()" (onEditorPreparing)="onEditorPreparingItemsGrid($event)" [height]="250">
+          <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true">
+          </dxo-editing>
+          <dxo-selection mode="multiple"></dxo-selection>
+          <dxo-paging enabled="true"></dxo-paging>
+          <dxo-scrolling mode="virtual"></dxo-scrolling>
+          <!--<dxi-column dataField="CodingCode" caption="{{'کد کدینگ'| translate}}" [width]="150" editCellTemplate="celLovCodingCode"></dxi-column>-->
+          <dxi-column dataField="LotNumberCode" caption="{{'WAM_SERIAL'| translate}}" editCellTemplate="celLovLot" [setCellValue]=setCellValueOfLot>
+          <div *dxTemplate="let cell of 'celLovLot'">
+            <dx-lov formCode="LOV-WAM-118" 
+                    [(value)]="cell.data.LotNumberId" 
+                    [(text)]="cell.data.LotNumberCode" 
+                    (dataChange)="onCellLotChanged($event,cell)"
+                    [readOnly]="flgCreateTagVisible" 
+                    [params]="lotFilter" 
+                    selectionMode = "multiple"
+                    [required]="true">
+            </dx-lov>
+          </div>
+        </dxi-column>
+          <!-- <dxi-column dataField="Quantity" caption="{{'WAM_QUANTITY'| translate}}"></dxi-column> -->
+
+          <dxi-column dataField="CentricAccountTypeDescription" caption="{{'WAM_CNAT'| translate}}" editCellTemplate="AccountType"
+            [width]="130" [setCellValue]=setCellValueOfAccountType>
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            <div *dxTemplate="let cell of 'AccountType'">
+              <dx-lov formCode="LOV-WAM-139" [text]="cell.data.CentricAccountTypeDescription" [readOnly]="!flgCreateTagVisible" (dataChange)="onCellAccountTypeChanged($event,cell)">
+              </dx-lov>
+            </div>
+          </dxi-column>
+
+          <dxi-column dataField="CentricAccountName" caption="{{'WAM_SERIAL_CNAC'| translate}}" editCellTemplate="CentricAccount" [width]="130">
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            <div *dxTemplate="let cell of 'CentricAccount'">
+              <dx-lov formCode="LOV-WAM-123" [text]="cell.data.CentricAccountName" [params]="CentricAccountFilter" [readOnly]="!flgCreateTagVisible"
+                (dataChange)="onCellCentricAccountChanged($event,cell)">
+              </dx-lov>
+            </div>
+          </dxi-column>
+
+          <dxi-column dataField="LocationDescription" caption="{{'WAM_LOCATION'| translate}}" editCellTemplate="Location" [width]="130"
+            [setCellValue]=setCellValueOfLocation>
+            <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            <div *dxTemplate="let cell of 'Location'">
+              <dx-lov formCode="LOV-WAM-104" [text]="cell.data.LocationDescription" [readOnly]="!flgCreateTagVisible" (dataChange)="onCellLocationChanged($event,cell)">
+              </dx-lov>
+            </div>
+          </dxi-column>
+
+          <!-- <dxi-column dataField="CentricAccountName" caption="{{'WAM_SERIAL_CNAC'| translate}}"></dxi-column> -->
+          <!-- <dxi-column dataField="LocationDescription" caption="{{'WAM_LOCATION'| translate}}"></dxi-column> -->
+        </dx-data-grid>
+      </grid-toolbar>
+    </div>
+  </div>
+  <!-- <div class="row footer-popup">
+        <dx-button type="danger" (onClick)="onCancelSerialPopup()" text="{{  'PUB_CANCEL' | translate }}" [width]="100"></dx-button>
+      </div> -->
+</popup>

@@ -1,0 +1,172 @@
+<page>
+  
+  <page-toolbar helpUrl="http://google.com" [items]="menuItems" (onItemClick)="onMenuItemClick($event)">
+  </page-toolbar>
+  <page-content>
+    <dx-validation-group #form>
+      <div class="row"  >
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+          <dx-label text="{{ 'PRG_PRICE_LIST' | translate }}">
+            <dx-lov [(value)]="headerItem.REQ_PRLID" [(text)]="headerItem.REQ_PRLNUM" formCode="LOV-PRG-003" [readOnly]="!allow_PRG_REQ_002"></dx-lov>
+          </dx-label>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+          <dx-label text="{{ 'PRG_UNIT_TYP' | translate }}">
+            <dx-lov [(value)]="headerItem.REQ_Unt_Type_Id" [(text)]="headerItem.REQ_Unt_Type_Caption" formCode="LOV-PRG-001"
+            [required]="true" [displayMode]="'ComboBox'" [readOnly]="!allow_PRG_REQ_002" >
+            </dx-lov>
+          </dx-label>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+          <dx-label text="{{ 'PRG_UNIT_DEGREE' | translate }}">
+            <dx-lov [(value)]="headerItem.REQ_Unt_Grade_Id" [(text)]="headerItem.REQ_Unt_Grade_Caption" formCode="LOV-PRG-002"
+            [displayMode]="'ComboBox'" [readOnly]="!allow_PRG_REQ_002" [required]="true" >
+            </dx-lov>
+          </dx-label>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+          <dx-label text="{{ 'PRG_REQ_SUBJ' | translate }}">
+            <dx-lov [(value)]="headerItem.REQ_SUBJ_ID" [(text)]="headerItem.REQ_SUBJ_Caption" formCode="LOV-PRG-004"
+               [displayMode]="'ComboBox'" [readOnly]="!allow_PRG_REQ_002"></dx-lov>
+          </dx-label>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <dx-label text="{{ 'PRG_REQUEST_NUM' | translate }}">
+            <dx-text-box [(value)]="headerItem.REQ_Num" [readOnly]="true">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="این فیلد اجباری است"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </dx-label>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <dx-label text="{{ 'PRG_REQUEST_PRLCREATEDATE' | translate }}">
+            <dx-date [(value)]="headerItem.REQ_CreateDate" showToday="true" [readOnly]="false">
+            </dx-date>
+          </dx-label>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <dx-label text="{{ 'PUB_DESC' | translate }}">
+            <dx-text-box [(value)]="headerItem.REQ_Desc" [readOnly]="false">
+
+            </dx-text-box>
+          </dx-label>
+        </div>
+      </div>
+    </dx-validation-group>
+    <div class="row">
+      <grid-toolbar (onMenuItemClick)="onGridItemClick($event)" [rowMenuItems]="gridItems">
+        <dx-data-grid id="gridContainer" #grid keyExpr="ID" [dataSource]="dataSource" [hoverStateEnabled]="true"
+          [(selectedRowKeys)]="selectedKeys" [rowAlternationEnabled]="true" [showRowLines]="true" 
+          (onRowClick)="rowClickEvent($event)">
+          <dxo-scrolling mode="virtual"></dxo-scrolling>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"></dxo-editing>
+          <!-- <dxi-column dataField="Row" caption="{{'PUB_ROW'| translate}}" [width]="100"></dxi-column> -->
+          <dxi-column dataField="ITEM_CODE" caption="{{'PRG_PRODUCT_CODE'| translate}}" [width]="100" editCellTemplate="ITEM_CODE"
+            [setCellValue]="setCellValueOfItemCode">
+            <dxi-validation-rule type="required" message="{{'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+            <div *dxTemplate="let cell of 'ITEM_CODE'">
+              <dx-lov formCode="LOV-WAM-201" [text]="cell.data.ITEM_CODE" [readOnly]="flgUpdateCode" (dataChange)="onItemCodeChange($event,cell)"></dx-lov>
+            </div>
+          </dxi-column>
+          <dxi-column dataField="ITEM_DESC" caption="{{'PRG_PRODUCT_NAME'| translate}}" [width]="100"></dxi-column>
+          <dxi-column dataField="MSUN_DES" caption="{{'PRG_PRODUCT_UNIT'| translate}}" [width]="50"></dxi-column>
+          <dxi-column dataField="REPS_PrimeCost"  format="fixedPoint" caption="{{'PRG_REPS_PrimeCost'| translate}}" [width]="100"></dxi-column>
+          <dxi-column dataField="REPS_ExtraCost"  format="fixedPoint"caption="{{'PRG_REPS_ExtraCost'| translate}}" [width]="100"></dxi-column>
+          <dxi-column dataField="REPS_WageCost"  format="fixedPoint" caption="{{'PRG_REPS_WageCost'| translate}}" [width]="100"></dxi-column>
+          <dxi-column dataField="REPS_CostPrecent"  format="fixedPoint" caption="{{'PRG_REPS_CostPrecent'| translate}}" [width]="100"></dxi-column>
+          <dxi-column dataField="REPS_CostPrice"  format="fixedPoint" caption="{{'PRG_REPS_CostPrice'| translate}}" [width]="100"></dxi-column>
+          <dxi-column dataField="REPS_TotalCost"  format="fixedPoint" caption="{{'PRG_REPS_TotalCost'| translate}}" [width]="100"></dxi-column>
+          <dxi-column dataField="REPS_Profit"  format="fixedPoint" caption="{{'PRG_REPS_Profit'| translate}}" [width]="100"></dxi-column>
+          <dxi-column dataField="REPS_EndPrice"  format="fixedPoint" caption="{{'PRG_REPS_EndPrice'| translate}}" [width]="100"></dxi-column>
+          <dxi-column dataField="REQP_CONFIRMED_PRICE"  format="fixedPoint" caption="{{'PRG_REQP_CONFIRMED_PRICE'| translate}}" [allowEditing]="false"></dxi-column>
+        </dx-data-grid>
+      </grid-toolbar>
+    </div>
+    <request-production-detail [REQP_ID]="REQP_ID" [REQ_Header]="this.headerItem"  ></request-production-detail>
+    
+    <!--start popup suggets save-->
+    <dx-popup class="popup" [width]="1000" [height]="270" [showTitle]="true" title="{{ 'PRG_SUGGEST_SAVE' | translate }} --- {{Production_Grid_Item_Des_Selected_Row}}"
+      [showCloseButton]="true" [dragEnabled]="true" [(visible)]="PopupVisible">
+      <div *dxTemplate="let data of 'content'">
+        <dx-validation-group #form1>
+          <div class="row">
+            <div class="col-md-4 col-sm-12 pl0">
+              <dx-label text="{{ 'PRG_REPS_PrimeCost' | translate }}">
+                <dx-number-box [(value)]="editItem.REPS_PrimeCost">
+                </dx-number-box>
+              </dx-label>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <dx-label text="{{ 'PRG_REPS_ExtraCost' | translate }}">
+                <dx-number-box [(value)]="editItem.REPS_ExtraCost">
+                </dx-number-box>
+              </dx-label>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <dx-label text="{{ 'PRG_REPS_WageCost' | translate }}">
+                <dx-number-box [(value)]="editItem.REPS_WageCost">
+                </dx-number-box>
+              </dx-label>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-12">
+              <dx-label text="{{ 'REPS_CostPrecent' | translate }}">
+                <dx-number-box [(value)]="editItem.REPS_CostPrecent">
+                </dx-number-box>
+              </dx-label>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <dx-label text="{{ 'REPS_CostPrice' | translate }}">
+                <dx-number-box [(value)]="editItem.REPS_CostPrice">
+                </dx-number-box>
+              </dx-label>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <dx-label text="{{ 'PRG_REPS_TotalCost' | translate }}">
+                <dx-number-box [(value)]="editItem.REPS_TotalCost" class="ltr text-left" [format]="formatMask.Currency">
+                </dx-number-box>
+              </dx-label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <dx-label text="{{ 'PRG_REPS_Profit' | translate }}">
+                <dx-number-box [(value)]="editItem.REPS_Profit">
+                  <dx-validator>
+                    <dxi-validation-rule type="required" message="اين فيلد اجباري است"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
+              </dx-label>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <dx-label text="{{ 'PRG_REPS_EndPrice' | translate }}">
+                <dx-number-box [(value)]="editItem.REPS_EndPrice">
+                  <dx-validator>
+                    <dxi-validation-rule type="required" message="اين فيلد اجباري است"></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
+              </dx-label>
+            </div>
+          </div>
+          <div class="footer-popup">
+            <dx-button type="success" text="ذخيره" [width]="100" (onClick)="suggest_save()" [useSubmitBehavior]="true"></dx-button>
+            <dx-button type="danger" (onClick)="PopupVisible=false" text="انصراف" [width]="100"></dx-button>
+          </div>
+        </dx-validation-group>
+      </div>
+    </dx-popup>
+    <!-- end popup suggets save -->
+
+    <show-suggests [REQP_ID]="REQP_ID"  [ITEM_DESC]="Production_Grid_Item_Des_Selected_Row" [ShowSuggestPopupVisible]="ShowSuggestPopupVisible" (hide)='setVisibleDLG($event)'></show-suggests>
+  </page-content>
+</page>
