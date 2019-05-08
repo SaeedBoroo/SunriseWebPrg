@@ -1,0 +1,70 @@
+<page>
+  <page-content>
+    <dx-lov #fastSearchLov formCode="LOV-WAM-101" [(value)]="filter.ItemId" [visible]="false" [popupWidth]="1100" [popupHeight]="700"
+      (dataChange)="onRowDbClick($event)" >
+    </dx-lov>
+    <dx-validation-group #form>
+      <div class="row" [hidden]="!visible">
+
+        <div class="col-sm-3 col-xs-12">
+          <input-group label="{{'WAM_ITEM_CATEGORY'| translate}}" (onButtonClick)="onItctLovClick()" icon="fa fa-sitemap black">
+            <dx-lov [(value)]="cat_id" [(text)]="headerItem.CategoryName" formCode="LOV-WAM-006" [(params)]="categoryFilter"
+              [allowClear]="true" [readOnly]="readonly" (dataChange)="categoryChanged($event)" required="true" [displayMode]="'ComboBox'">
+            </dx-lov>
+          </input-group>
+        </div>
+
+        <div class="col-sm-3 col-xs-12">
+          <input-group label="{{'ITEM_ITGR'| translate}}" (onButtonClick)="onGroupLovClick()" icon="fa fa-sitemap black">
+            <dx-lov [(value)]="grp_id" [(text)]="headerItem.GroupDescription" formCode="LOV-WAM-032" [allowClear]="true"
+              [readOnly]="readonly" (dataChange)="groupChanged($event)" required="true" [displayMode]="'ComboBox'">
+            </dx-lov>
+          </input-group>
+        </div>
+
+        <div class="col-sm-3 col-xs-12">
+          <dx-label text="{{'PUB_TITLE'| translate}}">
+            <dx-text-box [(value)]="headerItem.Description" required="true" [readOnly]="readonly">
+              <dx-validator>
+                <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
+              </dx-validator>
+            </dx-text-box>
+          </dx-label>
+        </div>
+
+      </div>
+
+      
+
+
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div >
+            <span>تعداد کل: {{ itemShowListDataSource.length }}</span>
+            <div class="margin-5"></div>
+            <grid-toolbar >
+              <dx-data-grid #showListGrid 
+                keyExpr="ID" [dataSource]="itemShowListDataSource"  
+                [height]="390">
+                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                <dxo-selection mode="multiple"></dxo-selection>
+                <dxo-editing mode="row" [allowAdding]="false" [allowUpdating]="false" [allowDeleting]="false"></dxo-editing>
+                <!--<dxi-column dataField="Automatic" caption="{{'PUB_AUTOMATIC'| translate}}" dataType="boolean"></dxi-column>-->
+                <dxi-column dataField="Code" caption="شناسه"></dxi-column>
+                <dxi-column dataField="Description" caption="نوع"></dxi-column>
+                <dxi-column dataField="MwasurementUnitDescription" caption="نوع اندازه گیری"></dxi-column>
+
+              </dx-data-grid>
+            </grid-toolbar>
+          </div>
+          
+
+        </div>
+      </div>
+    </dx-validation-group>
+   
+
+
+  </page-content>
+</page>

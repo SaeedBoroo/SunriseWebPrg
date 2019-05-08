@@ -19,7 +19,8 @@ import { DefinitionCategories } from '../categories/DefinitionCategories.page';
 
 @Component({
   selector: 'wam-page-item',
-  templateUrl: './item.page.html'
+  templateUrl: './item.page.html',
+  providers: [ServiceCaller]
 })
 export class WAMItemPage extends BasePage implements OnInit {
 

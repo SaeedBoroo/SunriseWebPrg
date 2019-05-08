@@ -20,7 +20,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { DevExtremeModule } from "devextreme-angular";
 //
-import { BasePage } from "./BasePage";
+import { BasePage, PopupBasePage } from "./BasePage";
 import { Deferred } from "./Deferred";
 import { LabelComponent } from "./components/label.component";
 import { PageContentComponent } from "./components/ui/content.component";
@@ -159,7 +159,8 @@ export const ROUTES: any = [
       { path: "pub/test", component: TestPage },
       { path: "pub/testui", component: UiTestPage },
       { path: "pub/hasanzade", component: HasanzadePage },
-      { path: "pub/report", component: ReportPage },
+      { path: "pub/report", component: ReportPage }
+
     ]
   },
   {
@@ -171,7 +172,6 @@ export const ROUTES: any = [
       { path: "login", component: LoginPage },
       { path: "setpass", component: ResetPasswordPage },
       { path: "404", component: NotFoundPage },
-      { path: '**', redirectTo: '/404' },
       { path: "403", component: AccessDeniedPage },
     ]
   }

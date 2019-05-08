@@ -1,10 +1,10 @@
-import { Injector, NgModule } from "@angular/core";
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 //
-import { DynamicFormPage } from "../shared/pages/dform.page";
-import { ModuleHomePage } from "../shared/pages/module-home.page";
+// import { DynamicFormPage } from "../shared/pages/dform.page";
+// import { ModuleHomePage } from "../shared/pages/module-home.page";
 import { AuthGuard } from "../shared/services/AuthGuard";
 import { MasterLayoutComponent } from "../shared/layouts/master.layout";
 //
@@ -78,8 +78,7 @@ import { WAMVerifyCountingsListPage } from "./verifycountingslist/verifycounting
 import { DefinitionCategories } from "./categories/DefinitionCategories.page";
 
 import { WAMLotNumberLog } from './LotNumbers/lotNumberLog.page';
-import { ServiceCaller } from "../shared/services/ServiceCaller";
-import { WamShowItemsPageComponent } from "./coding/item-show.page";
+import { WamShowItemsPageComponent } from "./coding/item-show-list.page";
 
 
 export const ROUTES: any = [
@@ -206,7 +205,6 @@ export const ROUTES: any = [
 
       { path: 'wam/lotNumbers/lotNumberLog', component: WAMLotNumberLog },
 
-   
     ]
   },
 ];
@@ -283,9 +281,6 @@ export const ROUTES: any = [
   exports: [
     RouterModule,
     WAMSerialPopupPage
-  ],
-  providers: [
-    ServiceCaller
   ]
 })
 

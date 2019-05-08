@@ -149,9 +149,11 @@
             </dx-lov>
           </dx-label>
         </div>
-        
-
       </div>
+
+
+
+
 
       <div class="margin-5"></div>
       <div class="row">
@@ -159,11 +161,11 @@
           <dx-tabs #tabs [dataSource]="tabItems" [selectedIndex]="0" (onItemClick)="selectTab($event)">
           </dx-tabs>
           <div [hidden]="selectedTab == 1">
-            <div class="margin-20"></div>
+            <div class="margin-5"></div>
             <grid-toolbar (onMenuItemClick)="onGridItemClick($event)">
               <dx-data-grid #unitsGrid keyExpr="ID" [dataSource]="unitDataSource" [(selectedRowKeys)]="unitSelectedKeys" (onSelectionChanged)="unitSelectionChangedHandler()"
                 (onEditorPreparing)="onEditorPreparingItemsGrid($event)" (onRowInserted)="itemInserted()" (onRowUpdated)="itemInserted()"
-                (onInitNewRow)="msunGridOnInitNewRow($event)" [height]="350">
+                (onInitNewRow)="msunGridOnInitNewRow($event)" [height]="130">
                 <dxo-scrolling mode="virtual"></dxo-scrolling>
                 <dxo-selection mode="multiple"></dxo-selection>
                 <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
@@ -182,7 +184,7 @@
             <grid-toolbar (onMenuItemClick)="onGridCatalougeClick($event)">
               <dx-data-grid #catalogueGrid keyExpr="ID" [dataSource]="catalogueDataSource" [(selectedRowKeys)]="unitSelectedKeys" (onSelectionChanged)="unitSelectionChangedHandler()"
                 (onInitNewRow)="catalogueItemOnInitNewRow($event)" (onRowInserted)="itemInserted()" (onRowUpdated)="itemInserted()"
-                [height]="350">
+                [height]="130">
                 <dxo-scrolling mode="virtual"></dxo-scrolling>
                 <dxo-selection mode="multiple"></dxo-selection>
                 <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
@@ -386,8 +388,17 @@
         </page-content>
       </div>
     </dx-popup>-->
+
+
+    <item-show-list [cat_id]="headerItem.CategoryId" [grp_id]="headerItem.GroupId"></item-show-list>
+
+
   </page-content>
 </page>
+
+
+
+
 <!--<dx-popup class="popup" [width]="1000" [height]="470" *ngIf="formConfig.itemSearchVisible"
           [showTitle]="true"
           title="{{ 'PUB_SEARCH' | translate }}"
@@ -580,3 +591,4 @@
     </div>
   </div>
 </dx-popup>
+
