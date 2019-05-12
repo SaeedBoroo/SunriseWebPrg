@@ -27,6 +27,9 @@ export class WAMItemPage extends BasePage implements OnInit {
   ngOnInit() {
 
   }
+
+
+  
   @ViewChild('versionListGrid') versionListGrid: DxDataGridComponent;
   @ViewChild('unitsGrid') unitsGrid: DxDataGridComponent;
   @ViewChild('locationGrid') locationGrid: DxDataGridComponent;
@@ -1189,4 +1192,12 @@ export class WAMItemPage extends BasePage implements OnInit {
   onCatalogueChanged(e) {
     this.catalogueFilter = { CatalogueId: e.ID };
   }
+
+
+//================Send--onvanTxt-to-Show-List-Items-Component
+  onvanTxt: any
+  keyPressToShowList(event) {
+    this.onvanTxt = event.target.value;
+  }
+
 }

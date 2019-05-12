@@ -79,6 +79,7 @@ import { DefinitionCategories } from "./categories/DefinitionCategories.page";
 
 import { WAMLotNumberLog } from './LotNumbers/lotNumberLog.page';
 import { WamShowItemsPageComponent } from "./coding/item-show-list.page";
+import { DxLoadPanelModule } from 'devextreme-angular';
 
 
 export const ROUTES: any = [
@@ -277,6 +278,7 @@ export const ROUTES: any = [
     CommonModule,
     SharedModule.forRoot(),
     RouterModule.forChild(ROUTES),
+    DxLoadPanelModule
   ],
   exports: [
     RouterModule,

@@ -33,7 +33,7 @@
 
         <div class="col-sm-3 col-xs-12">
           <dx-label text="{{'PUB_TITLE'| translate}}">
-            <dx-text-box [(value)]="headerItem.Description" required="true" [readOnly]="readonly">
+            <dx-text-box [(value)]="headerItem.Description" required="true" [readOnly]="readonly" (keyup)="keyPressToShowList($event)">
               <dx-validator>
                 <dxi-validation-rule type="required" message="{{  'PUB_REQUIRED' | translate }}"></dxi-validation-rule>
               </dx-validator>
@@ -180,7 +180,7 @@
             </grid-toolbar>
           </div>
           <div [hidden]="selectedTab == 0">
-            <div class="margin-20"></div>
+            <div class="margin-5"></div>
             <grid-toolbar (onMenuItemClick)="onGridCatalougeClick($event)">
               <dx-data-grid #catalogueGrid keyExpr="ID" [dataSource]="catalogueDataSource" [(selectedRowKeys)]="unitSelectedKeys" (onSelectionChanged)="unitSelectionChangedHandler()"
                 (onInitNewRow)="catalogueItemOnInitNewRow($event)" (onRowInserted)="itemInserted()" (onRowUpdated)="itemInserted()"
@@ -390,7 +390,13 @@
     </dx-popup>-->
 
 
-    <item-show-list [cat_id]="headerItem.CategoryId" [grp_id]="headerItem.GroupId"></item-show-list>
+    <item-show-list [cat_id]="headerItem.CategoryId"
+        [cat_name]="headerItem.CategoryName"
+        [grp_id]="headerItem.GroupId"
+        [grp_name]="headerItem.GroupDescription"
+        [onvan]="onvanTxt"
+        [VahedAnbar]="headerItem.MeasurementUnitDescription"
+         ></item-show-list>
 
 
   </page-content>
