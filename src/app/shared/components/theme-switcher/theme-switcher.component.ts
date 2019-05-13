@@ -11,7 +11,7 @@ export class ThemeSwitcherComponent implements OnInit {
     {
       name: "theme_light",
       icon: "fa fa-circle veryLightGray ",
-      text: 'معمولی',
+      text: 'روشن',
       visible: true
     },
     {
@@ -20,13 +20,13 @@ export class ThemeSwitcherComponent implements OnInit {
       text: 'تاریک',
       visible: true
     }
-    // ,
-    // {
-    //   name: "theme_blue",
-    //   icon: "fa fa-circle blue",
-    //   text: 'آبی',
-    //   visible: true
-    // }
+    ,
+    {
+      name: "theme_blue",
+      icon: "fa fa-circle blue",
+      text: 'آبی',
+      visible: true
+    }
   ]
 
   constructor() { }

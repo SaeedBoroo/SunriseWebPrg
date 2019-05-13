@@ -31,7 +31,11 @@ export class ThemeService {
 
     compactTheme() {
         require("style-loader!../../../../node_modules/devextreme/dist/css/dx.light.compact.css");
-        require("style-loader!../../../../src/assets/vendor/bootstrap/css/bootstrap.css");
+        require("style-loader!../../../../src/assets/vendor/bootstrap/css/bootstrap-rtl.css");
         require("style-loader!../../../../src/assets/css/Fixer.compact.scss");
+    }
+    material_light() {
+        require("style-loader!../../../../src/assets/css/dx.material.teal.css");
+        require("style-loader!../../../../src/assets/vendor/bootstrap/css/bootstrap-rtl.css");
     }
 }

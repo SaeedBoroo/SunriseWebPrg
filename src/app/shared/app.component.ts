@@ -40,12 +40,8 @@ if (!/localhost/.test(document.location.host)) {
 })
 export class AppComponent {
 
-    constructor(
-        private router: Router,
-        private eventsService: EventsService,
-        private themeService: ThemeService
-
-    ) {
+    constructor(private router: Router, private eventsService: EventsService, private themeService: ThemeService) 
+    {
         config({
             rtlEnabled: true,
             thousandsSeparator: ',',

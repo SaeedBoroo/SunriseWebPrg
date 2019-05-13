@@ -9,6 +9,7 @@ import { BasePage } from '../../shared/BasePage';
 import { DxDataGridComponent, DxValidationGroupComponent } from 'devextreme-angular';
 import { DXLovComponent } from '../../shared/components/dx-lov.component';
 import { DemisPopupService } from '../../shared/components/popup/demis-popup-service';
+import { and } from '@angular/router/src/utils/collection';
 
 
 
@@ -35,7 +36,6 @@ export class WamShowItemsPageComponent extends BasePage implements OnInit, OnCha
   showListGridCount: any
   dataSource: any = {};
   LocalData: any[] = [];
-  loadingVisible = false;
 
   //..
   constructor(public service: ServiceCaller, private popup: DemisPopupService,
@@ -48,14 +48,17 @@ export class WamShowItemsPageComponent extends BasePage implements OnInit, OnCha
   ngOnInit() {
 
     
+   
     this.getItemListAPI();
-    
 
   this.dataSource.store = new CustomStore({
     key: "ID",
     load: (loadOptions) => {
       let deferred: Deferred<any> = new Deferred<any>();
       deferred.resolve(this.LocalData);
+      if(this.LocalData.length == 0){
+          this.showListGrid.instance.refresh();
+      }
       return deferred.promise;
     },
     update: (key, values) => {
@@ -73,26 +76,78 @@ export class WamShowItemsPageComponent extends BasePage implements OnInit, OnCha
 
   ngOnChanges( changes: SimpleChanges ){
 
-    if(!changes.onvan.isFirstChange()  ) {   
-        let CrntValue1 = changes.onvan.currentValue;
-          this.showListGrid.instance.filter([
-            [ "Description", "contains", CrntValue1 ] 
-           ]);
-        }
+      this.showListGrid.instance.filter([
+        [
+          [ "Description", "contains", this.onvan] ,"or",
+          [ "CategoryId", "=", this.cat_id] ,"or",
+          [ "GroupId", "=", this.grp_id]
+        ],"or",
+        [
+          [ "Description", "contains", this.onvan] ,"and",
+          [ "CategoryId", "=", this.cat_id] ,"and",
+          [ "GroupId", "=", this.grp_id]
+        ]
+
+
+        // [
+        //   [
+        //     [ "Description", "contains", this.onvan] ,"or",
+        //     [ "CategoryId", "=", this.cat_id] ,"or",
+        //     [ "GroupId", "=", this.grp_id]
+        //   ], "or",
+        //   [
+        //     [ "Description", "contains", this.onvan] ,"and",
+        //     [ "CategoryId", "=", this.cat_id] ,"and",
+        //     [ "GroupId", "=", this.grp_id]
+        //   ]
+        // ],
+        //  "and",
+        // [
+        //   [
+        //     [ this.onvan , "=", undefined ] ,"or",
+        //     [ this.cat_id, "=", undefined ] ,"or",
+        //     [ this.grp_id, "=", undefined ]
+        //   ],"or",
+        //   [
+        //     [ "Description", "contains", this.onvan] ,"and",
+        //     [ "GroupId", "=", this.grp_id]
+        //   ],"or",
+        //   [
+        //     [ "Description", "contains", this.onvan] ,"and",
+        //     [ "CategoryId", "=", this.cat_id]
+        //   ],"or",
+        //   [
+        //     [ "CategoryId", "=", this.cat_id] ,"and",
+        //     [ "GroupId", "=", this.grp_id]
+        //   ]
+        // ] 
+      ]);
+
+        
+     
+      
+    
+      
+    }
+
 
        
 
-    }
+    
     
 
 getItemListAPI(){
-  this.loadingVisible = true;
-      this.service.get("/WAM/Item/List", (data) => {
+
+    this.service.get("/WAM/Item/List", (data) => {
       this.LocalData = data
-      this.showListGrid.instance.refresh();
+      
+      
       console.log('LocalData >> ', data)
     });
-  this.loadingVisible = false;
+
+
+
+     
 }
 
 }
